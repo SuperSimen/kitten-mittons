@@ -9,6 +9,8 @@
     "grunt-contrib-jshint": "^0.10.0",
     "grunt-contrib-watch": "^0.6.1",
     "grunt-include-source": "^0.3.9",
+    "grunt-open": "^0.2.3",
+    "grunt-plato": "^1.0.0",
     "grunt-wiredep": "^1.8.0"
   },
   "scripts": {

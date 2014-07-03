@@ -9,3 +9,4 @@ start.command
 client/index.html
 fonts.zip
 server/basic_server.js
+report/

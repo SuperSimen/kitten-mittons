@@ -1,11 +1,12 @@
 (function () {
 	
-	app.factory('main', function(UWAP, xmpp, model, $state, $rootScope, $http, constants, webrtc, filesharing, $timeout) {
+	app.factory('main', function(UWAP, xmpp, model, $state, $rootScope, $http, constants, webrtc, fileSender, fileReceiver, $timeout) {
 		var main = {
 			init: function() {
 				$state.go("normal");
 				gatherInfoPart1();
-				filesharing.init();
+				fileSender.init();
+				fileReceiver.init();
 			}
 		};
 
@@ -103,7 +104,6 @@
 				}
 			});
 
-
 			if (!vCardTimeout[jid]) {
 				vCardTimeout[jid] = {
 					counter: 0
@@ -119,7 +119,6 @@
 			}, 200);
 
 		};
-
 
 		main.getGroupMembers = function (groupId) {
 			if (!model.auth.token) {

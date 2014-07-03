@@ -37,6 +37,19 @@ module.exports = function(grunt) {
 					'index.html': 'index.tpl.html'
 				}
 			}
+		},
+		plato: {
+			your_task: {
+				files: {
+					'report/output/directory': ['app/**/*.js'],
+				}
+			},
+		},
+		open : {
+			report : {
+				path: 'file://localhost/Users/Simen/Dropbox/UNINETT/kitten-mittons/client/report/output/directory/index.html',
+				app: 'Google Chrome'
+			}
 		}
 	});
 
@@ -44,6 +57,9 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-jshint');
 	grunt.loadNpmTasks('grunt-wiredep');
 	grunt.loadNpmTasks('grunt-include-source');
+	grunt.loadNpmTasks('grunt-plato');
+	grunt.loadNpmTasks('grunt-open');
 
 	grunt.registerTask('default', ['jshint', 'includeSource' ,'wiredep']);
+	grunt.registerTask('report', ['plato', 'open']);
 };
