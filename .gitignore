@@ -1,0 +1,11 @@
+*.sw*
+*~
+node_modules/
+users/
+bower_components/
+secret.js
+start.command
+.DS_store
+client/index.html
+fonts.zip
+server/basic_server.js

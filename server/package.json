@@ -1,0 +1,20 @@
+{
+  "name": "server",
+  "version": "0.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cookie-session": "^1.0.2",
+    "express": "^4.4.5",
+    "node-xmpp-client": "^1.0.0-alpha3",
+    "passport": "^0.2.0",
+    "passport-oauth": "^1.0.0",
+    "request": "^2.36.0"
+  }
+}
