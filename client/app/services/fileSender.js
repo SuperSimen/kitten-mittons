@@ -31,20 +31,24 @@
 		}
 
 		fileSender.sendFile = function() {
+			startSending();
+		};
+
+		function startSending() {
 			if (!model.file.file) {return console.error("no file!!");}
 
 			var file = model.file.file;
 			var size = file.size;
 			var maxSize = 100*1024*1024;
-			//	var maxSize = 1*1024;
 			var totalSlices = Math.ceil(size / maxSize);
+			var id = generateRandomFileId();
 
-			signalFile("sof", totalSlices, file.name);
+			signalFile(id, "sof", totalSlices, file.name);
 
 			fileSender.continueFileSending = function() {
 				var totalNumber = 0;
 				if (size < maxSize) {
-					read(file, 1, 1, file.name ,signalEof);
+					read(file, 1, signalEof);
 				}
 				else {
 					fileSending(0)();
@@ -58,50 +62,62 @@
 					var blob;
 					if (i + maxSize > size) {
 						blob = file.slice(i, size);
-						read(blob, sliceCounter++, totalSlices, file.name, signalEof);
+						read(blob, sliceCounter++, signalEof);
 					}
 					else {
 						blob = file.slice(i, i + maxSize);
-						read(blob, sliceCounter++, totalSlices, file.name, fileSending(i+maxSize));
+						read(blob, sliceCounter++, fileSending(i+maxSize));
 					}
 
 				};
 			}
 
 			function signalEof() {
-				signalFile("eof", totalSlices, file.name);
+				signalFile(id, "eof", totalSlices, file.name);
 			}
-		};
 
+			function read(blob, slice, callback) {
+				var reader = new FileReader();
 
-
-		function read(file, slice, totalSlices, filename, callback) {
-			var reader = new FileReader();
-
-			reader.onerror = function(event) {
-				console.error("File could not be read! Code " + event.target.error.code);
-			};
-
-			reader.onload = function(event) {
-				var buffer = event.target.result;
-
-				var array = btoa(buffer).match(/.{1,51200}/g);
-				signalSlice("sos", slice, totalSlices, array.length, filename);
-
-				listOfCallbacks[slice] = function() {
-					for (var i in array) {
-						sendFileChunk(array[i], "ongoing", slice, totalSlices, i, array.length, filename);
-					}
-					signalSlice("eos", slice, totalSlices, array.length, filename);
-					if (callback) callback();
+				reader.onerror = function(event) {
+					console.error("File could not be read! Code " + event.target.error.code);
 				};
-			};
-			reader.readAsBinaryString(file);
+
+				reader.onload = function(event) {
+					var buffer = event.target.result;
+
+					var array = btoa(buffer).match(/.{1,51200}/g);
+					signalSlice(id, "sos", slice, totalSlices, array.length, file.name);
+
+					listOfCallbacks[slice] = function() {
+						for (var i in array) {
+							sendFileChunk(id, array[i], "ongoing", slice, totalSlices, i, array.length, file.name);
+						}
+						signalSlice(id, "eos", slice, totalSlices, array.length, file.name);
+						if (callback) callback();
+					};
+				};
+				reader.readAsBinaryString(blob);
+			}
+
 		}
+
+		var fileCounter = 0;
+
+		function generateRandomFileId() {
+			var me = model.userInfo.data.xmpp.jid;
+			var userid = me.substring(0,me.indexOf("@"));
+			var id = userid + "-" + Math.random().toString(36).substring(7) + "-" + fileCounter++;
+			console.log(id);
+			return id;
+		}
+
+
+		
 
 		var listOfCallbacks = [];
 
-		function sendFileChunk(chunk, status, slice, totalSlices, number, totalNumber, filename) {
+		function sendFileChunk(id, chunk, status, slice, totalSlices, number, totalNumber, filename) {
 			var tempFile = {
 				base64: chunk,
 				size: chunk.length,
@@ -115,7 +131,7 @@
 			webrtc.sendObject(tempFile, "fileSender");
 		}
 
-		function signalFile(status, totalSlices, filename) {
+		function signalFile(id, status, totalSlices, filename) {
 			var tempFile = {
 				status: status,
 				filename: filename,
@@ -124,7 +140,7 @@
 			webrtc.sendObject(tempFile, "fileSender");
 		}
 
-		function signalSlice(status, slice, totalSlices, totalNumber, filename) {
+		function signalSlice(id, status, slice, totalSlices, totalNumber, filename) {
 			var tempFile = {
 				slice: slice,
 				status: status,

@@ -12,10 +12,6 @@
 			<a href ng-click="selectedTab = 'realms'">Realms</a>
 		</li>
 
-		<li ng-class="{active: selectedTab === 'friends'}">
-			<a href ng-click="selectedTab = 'friends'">Friends</a>
-		</li>
-
 		<li ng-class="{active: selectedTab === 'chat'}">
 			<a href ng-click="selectedTab = 'chat'">Chat</a>
 		</li>
@@ -69,11 +65,6 @@
 	<div ng-show="selectedTab === 'realms'">
 		<div ng-repeat="realm in auth.realms">
 			<a href ng-click="setRealm(realm.realm)">{{realm.name}} - {{realm.realm}}</a>
-		</div>
-	</div>
-	<div ng-show="selectedTab === 'friends'">
-		<div ng-repeat="friend in friends.list">
-			{{friend.FN}} - {{friend.online && 'Online' || 'Offline'}} - <a href ng-click="sendMessage(friend)"> sendMessage </a>
 		</div>
 	</div>
 	<div ng-show="selectedTab === 'search'">

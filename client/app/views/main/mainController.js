@@ -1,4 +1,4 @@
-app.controller( 'mainController', function( $scope, model, main, xmpp, UWAP, $timeout, constants, $sce, webrtc, filesharing) {
+app.controller( 'mainController', function( $scope, model, main, xmpp, UWAP, $timeout, constants, $sce, webrtc, fileSender) {
 	$scope.auth = model.auth;
 	$scope.friends = model.friends;
 	$scope.search = model.search;
@@ -39,7 +39,7 @@ app.controller( 'mainController', function( $scope, model, main, xmpp, UWAP, $ti
 		}
 	};
 	$scope.sendFile = function(to) {
-		filesharing.sendFile();
+		fileSender.sendFile();
 	};
 	$scope.call = function(to) {
 		if (to)	{

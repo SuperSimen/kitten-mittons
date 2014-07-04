@@ -227,7 +227,6 @@
 			currentChannel: 0,
 			queue: [],
 			sendingData: false,
-			queueMaxLength: 0,
 			addDataChannel: function(dataChannel) {
 				this.setChannelEvents(dataChannel);
 				var object = {
@@ -275,7 +274,6 @@
 				return false;
 			},
 			sendObject: function(object, type) {
-				object.queueMaxLength = this.queueMaxLength;
 				var msg = {
 					data: object,
 					type: type
@@ -284,9 +282,6 @@
 			},
 			addToQueue: function(data) {
 				this.queue.push(data);
-				if (this.queue.length > this.queueMaxLength) {
-					this.queueMaxLength = this.queue.length;
-				}
 				if (!this.sendingData) {
 					this.sendingData = true;
 					this.restartDataSender();
@@ -321,9 +316,6 @@
 
 		var messageHandlers = {
 			list: {},
-			cleanHandler: function(event) {
-				messageHandlers.list.file(event.data);
-			},
 			mainHandler: function(event) {
 				var message = JSON.parse(event.data);
 				var data = message.data;

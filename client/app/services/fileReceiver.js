@@ -18,7 +18,6 @@
 			if (data.number % 50 === 0) {
 				console.log("incoming data: " + data.status + ", number: " + data.number);
 			}
-
 			
 			if (data.status === "sof") {
 				console.log(data);
@@ -251,7 +250,7 @@
 										console.log("saving file");
 										var link = document.createElement('a');
 										link.href = window.URL.createObjectURL(file);
-										link.download = filename;
+										link.download = file.name;
 										link.click();
 										console.log("finished saving file");
 
