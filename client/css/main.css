@@ -17,3 +17,10 @@ body {
  /* The animation code itself */
  opacity: 1;
 }
+
+.align-center {
+	text-align: center;
+}
+.align-left {
+	text-align: left;
+}

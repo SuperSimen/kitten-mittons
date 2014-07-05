@@ -1,6 +1,7 @@
 var app = angular.module( 'app', [
   'ui.router',
-  'ngAnimate'
+  'ngAnimate',
+  'mainView'
 ]);
 app.config( function ( $stateProvider) {
 	$stateProvider.state('test', {
