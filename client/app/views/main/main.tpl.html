@@ -1,7 +1,24 @@
-<div class="row fill-height">
-	<div class="col-md-2 fill-height">
+<div class="row" ng-hide="video.src"> 
+	<div class="navbar navbar-default no-margin" role="navigation">
+		<div class="container">
+			<div class="navbar-header">
+				<div class="navbar-brand"><img src="bower_components/uninett-bootstrap-theme/uninett-theme/images/UNINETT_logo.svg" alt="Uninett logo" type="image/svg+xml"></div>
+			</div>
+
+			<div class="department">Kitten Mittons</div>
+
+			<ul class="nav navbar-nav">
+				<li><a href ui-sref="normal">Normal</a></li>
+				<li><a href ui-sref="main">Main</a></li>
+				<li><a href ui-sref="video">Video</a></li>
+			</ul>
+		</div>
 	</div>
-	<div class="col-md-8 fill-height">
+</div>
+
+<div class="row hide-overflow" ng-class="{'fill-height-minus-header': !video.src, 'fill-height': video.src}">
+	<div class="col-md-10 fill-height">
+		<div ui-view="video" class="fill-height"></div>
 	</div>
 	<div class="col-md-2 fill-height border-left">
 		<div ui-view="friends" class="fill-height"></div>

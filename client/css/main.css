@@ -78,3 +78,11 @@ body {
 	position: absolute;
 	bottom: 0px;
 }
+
+.hide-overflow {
+	overflow: hidden;
+}
+
+.fill-width {
+	width: 100%;
+}

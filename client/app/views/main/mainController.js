@@ -1,3 +1,3 @@
-app.controller( 'mainController', function() {
-
+app.controller( 'mainController', function($scope, model) {
+	$scope.video = model.video;
 });

@@ -6,6 +6,8 @@
 
 		model.file = {
 		};
+		model.video = {
+		};
 
 		model.auth = {
 			constants: {

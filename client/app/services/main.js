@@ -1,9 +1,9 @@
 (function () {
 	
-	app.factory('main', function(UWAP, xmpp, model, $state, $rootScope, $http, constants, webrtc, fileSender, fileReceiver, $timeout) {
+	app.factory('main', function(UWAP, xmpp, model, $state, $rootScope, $http, constants, webrtc, fileSender, fileReceiver, $timeout, video) {
 		var main = {
 			init: function() {
-				$state.go("friends");
+				$state.go("main");
 				//gatherInfoPart1();
 				//fileSender.init();
 				//fileReceiver.init();
