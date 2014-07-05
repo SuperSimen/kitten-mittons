@@ -1,3 +1,7 @@
+html, body {
+	height: 100%;
+}
+
 body {
 	padding-top: 0px;
 }
@@ -23,4 +27,54 @@ body {
 }
 .align-left {
 	text-align: left;
+}
+
+.no-margin {
+	margin: 0px;
+}
+
+.fill-height-minus-header {
+	height: calc(100% - 70px);
+}
+.fill-height {
+	height: 100%;
+}
+.fill-height-minus-gutter {
+	height: calc(100% - 20px);
+}
+
+.uninett-color-grey {
+	background-color: #eeebe8;
+}
+
+.uninett-color-white {
+	background-color: #fff;
+}
+
+.border-left {
+	border-left-style: solid;
+	border-left-color: #fff;
+}
+.border-right {
+	border-right-style: solid;
+	border-right-color: #fff;
+}
+
+.border-top {
+	border-top-style: solid;
+	border-top-color: #fff;
+}
+
+.border-bottom {
+	border-bottom-style: solid;
+	border-bottom-color: #fff;
+}
+
+.hover-white:hover {
+	background-color: #fff;
+}
+
+.bottom {
+	position: absolute;
+	bottom: 0px;
 }
