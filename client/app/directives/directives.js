@@ -3,13 +3,9 @@
 	app.directive('baFileSelector', function () {
 
 		function link(scope, element, attr) {
-			console.log("link");
-			console.log(scope);
 			element[0].onchange = function(event) {
-				console.log("CHANGED!");
 				scope.$apply(function() {
 					scope.file.file = event.target.files[0];
-					console.log(scope.file.file);
 				});
 			};
 		}

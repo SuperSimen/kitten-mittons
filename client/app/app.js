@@ -1,8 +1,16 @@
 var app = angular.module( 'app', [
-  'ui.router'
+  'ui.router',
+  'ngAnimate'
 ]);
 app.config( function ( $stateProvider) {
-	$stateProvider.state('normal', {
+	$stateProvider.state('test', {
+		views: {
+			"main": {
+				controller: "testController",
+				templateUrl: "app/views/test/test.tpl.html"
+			}
+		}
+	}).state('normal', {
 		views: {
 			"main": {
 				controller: "mainController",

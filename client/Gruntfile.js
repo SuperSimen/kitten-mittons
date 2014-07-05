@@ -11,7 +11,7 @@ module.exports = function(grunt) {
 			}
 		},
 		watch: {
-			files: ['<%= jshint.files %>', 'app/**/*.html', 'index.tpl.html'],
+			files: ['<%= jshint.files %>', 'app/**/*.html', 'index.tpl.html', 'bower.json', 'css/*.css'],
 			tasks: ['jshint', 'includeSource' ,'wiredep'],
 			options: {
 				livereload: true,
@@ -25,13 +25,6 @@ module.exports = function(grunt) {
 			}
 		},
 		includeSource: {
-			options: {
-				templates: {
-					html: {
-						js: '<script src="{filePath}"></script>',
-					}
-				}
-			},
 			target: {
 				files: {
 					'index.html': 'index.tpl.html'

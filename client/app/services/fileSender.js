@@ -8,9 +8,11 @@
 		};
 
 		function fileHandler(data) {
+			console.log(data);
 
 			//Use better ack system
-			if (data.status === "fileAck") {
+			if (data.status === "sof_ack") {
+			console.log("sof_ack");
 				if (fileSender.continueFileSending) {
 					fileSender.continueFileSending();
 				}
@@ -18,7 +20,7 @@
 					console.error("ack without file sender");
 				}
 			}
-			else if (data.status === "sliceAck") {
+			else if (data.status === "sos_ack") {
 				if (listOfCallbacks[data.slice]) {
 					listOfCallbacks[data.slice]();
 					delete listOfCallbacks[data.slice];
@@ -46,19 +48,21 @@
 			signalFile(id, "sof", totalSlices, file.name);
 
 			fileSender.continueFileSending = function() {
+					console.log("continues");
 				var totalNumber = 0;
 				if (size < maxSize) {
 					read(file, 1, signalEof);
 				}
 				else {
-					fileSending(0)();
+					senderLoop(0)();
 				}
 			};
 
 			var sliceCounter = 1;
 
-			function fileSending(i) {
+			function senderLoop(i) {
 				return function () {
+					console.log("looping");
 					var blob;
 					if (i + maxSize > size) {
 						blob = file.slice(i, size);
@@ -66,7 +70,7 @@
 					}
 					else {
 						blob = file.slice(i, i + maxSize);
-						read(blob, sliceCounter++, fileSending(i+maxSize));
+						read(blob, sliceCounter++, senderLoop(i+maxSize));
 					}
 
 				};
@@ -117,8 +121,9 @@
 
 		var listOfCallbacks = [];
 
-		function sendFileChunk(id, chunk, status, slice, totalSlices, number, totalNumber, filename) {
+		function sendFileChunk2(id, chunk, status, slice, totalSlices, number, totalNumber, filename) {
 			var tempFile = {
+				id: id,
 				base64: chunk,
 				size: chunk.length,
 				status: status,
@@ -131,8 +136,32 @@
 			webrtc.sendObject(tempFile, "fileSender");
 		}
 
+
+		var totalOverhead = 0;
+		var overHeadCount = 0;
+		function sendFileChunk(id, chunk, status, slice, totalSlices, number, totalNumber, filename) {
+			var tempFile = {
+				id: id,
+				size: chunk.length,
+				status: status,
+				number: number,
+				totalNumber: totalNumber,
+				filename: filename,
+				slice: slice,
+				totalSlices: totalSlices
+			};
+
+
+			var string = JSON.stringify(tempFile);
+
+			overHeadCount ++;
+			totalOverhead += string.length * 2;
+			console.log("Total overhead: " + totalOverhead + " - Average overhead: " + totalOverhead / overHeadCount);
+		}
+
 		function signalFile(id, status, totalSlices, filename) {
 			var tempFile = {
+				id: id,
 				status: status,
 				filename: filename,
 				totalSlices: totalSlices
@@ -142,6 +171,7 @@
 
 		function signalSlice(id, status, slice, totalSlices, totalNumber, filename) {
 			var tempFile = {
+				id: id,
 				slice: slice,
 				status: status,
 				totalNumber: totalNumber,

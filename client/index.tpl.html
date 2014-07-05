@@ -10,15 +10,33 @@
 <!-- endbower -->
 
 <!-- include: "type": "js", "files": "app/**/*.js" -->
+<!-- include: "type": "css", "files": "css/*.css" -->
 
 </head>
 <body>
+<div class="navbar navbar-default" role="navigation">
 	<div class="container">
-		<div ui-view="main"></div>
+		<div class="navbar-header">
+			<div class="navbar-brand"><img src="bower_components/uninett-bootstrap-theme/uninett-theme/images/UNINETT_logo.svg" alt="Uninett logo" type="image/svg+xml"></div>
+		</div>
+
+		<div class="department">Kitten Mittons</div>
+
+		<ul class="nav navbar-nav">
+			<li><a href ui-sref="normal">Normal</a></li>
+			<li><a href ui-sref="test">Test</a></li>
+
+		</ul>
 	</div>
 </div>
 
-<!-- <script src="http://158.38.153.77:35729/livereload.js"></script> --!>
+
+
+<div class="container-fluid">
+	<div ui-view="main"></div>
+</div>
+
+<script src="http://localhost:35729/livereload.js"></script>
 
 </body>
 </html>

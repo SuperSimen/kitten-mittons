@@ -20,7 +20,8 @@
     "angular-bootstrap": "~0.11.0",
     "strophejs": "~1.1.1",
     "bootstrap": "~3.2.0",
-    "uninett-bootstrap-theme": "*"
+    "uninett-bootstrap-theme": "*",
+    "angular-animate": "~1.2.19"
   },
   "devDependencies": {
     "jquery": "~2.1.1"

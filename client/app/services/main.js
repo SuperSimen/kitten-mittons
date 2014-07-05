@@ -3,10 +3,10 @@
 	app.factory('main', function(UWAP, xmpp, model, $state, $rootScope, $http, constants, webrtc, fileSender, fileReceiver, $timeout) {
 		var main = {
 			init: function() {
-				$state.go("normal");
-				gatherInfoPart1();
-				fileSender.init();
-				fileReceiver.init();
+				$state.go("test");
+				//gatherInfoPart1();
+				//fileSender.init();
+				//fileReceiver.init();
 			}
 		};
 

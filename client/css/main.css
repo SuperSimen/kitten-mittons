@@ -1,0 +1,19 @@
+body {
+	padding-top: 0px;
+}
+
+.ui-view-container {
+  position: relative;
+}
+
+[ui-view].ng-enter {
+ -webkit-transition: 0.2s linear all; /* Safari/Chrome */
+ -webkit-transform:scale(0.7, 0.7);
+ opacity: 0;
+}
+
+[ui-view].ng-enter-active {
+ -webkit-transform:scale(1, 1);
+ /* The animation code itself */
+ opacity: 1;
+}
