@@ -17,7 +17,11 @@
 					"username":"test",
 					"credential":"1234"
 				}
-			]
+			],
+			uwap: {
+				orgUnit: "uwap:group:type:orgUnit",
+				adHoc: "uwap:group:type:ad-hoc"
+			}
 		};
 
 		return constants;

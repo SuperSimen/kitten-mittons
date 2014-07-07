@@ -1,32 +1,23 @@
-<div class="row color-grey fill-height">
+<div class="row color-grey fill-height border-left">
 	<div class="col-md-12 gutter fill-height-minus-gutter">
-		<h2 class="uninett-fontColor-white"> Yoo! </h2>
-		<ul class="list-unstyled">
-			<div class="row hover-white">
-				<li class="col-md-12"> Dude </li>
+		<div class="fill-top">
+			<h2 class="uninett-fontColor-white"> Yoo! </h2>
+			<div ng-repeat="group in groups.list">
+				<div class="row hover-white" ng-click="showMembers = !showMembers" ng-init="showMembers = 1">
+					<div class="col-md-12">
+						{{group.displayName}}
+					</div>
+				</div>
+				<div ng-show="showMembers" ng-repeat="friend in group.friends" class="row hover-white">
+					<div class="col-md-12">
+						<i class="fa fa-circle presence-icon" ng-class="{'online': friend.online, 'offline': !friend.online}"></i>
+						&nbsp&nbsp{{friend.FN}}
+					</div>
+				</div>
 			</div>
-			<div class="row hover-white">
-				<li class="col-md-12"> Dude </li>
-			</div>
-			<div class="row hover-white">
-				<li class="col-md-12"> Dude </li>
-			</div>
-			<div class="row hover-white">
-				<li class="col-md-12"> Dude </li>
-			</div>
-			<div class="row hover-white">
-				<li class="col-md-12"> Dude </li>
-			</div>
-			<div class="row hover-white">
-				<li class="col-md-12"> Dude </li>
-			</div>
-			<div class="row hover-white">
-				<li class="col-md-12"> Dude </li>
-			</div>
-		</ul>
-		<div class="bottom">
-			<i class="fa fa-plus-circle uninett-fontColor-white"></i> fa-plus-circle
 		</div>
-
+		<div class="fill-bottom align-center fill-width">
+			<a href><i class="fa fa-plus-circle uninett-fontColor-white icon"></i></a>
+		</div>
 	</div>
 </div>

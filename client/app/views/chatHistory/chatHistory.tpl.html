@@ -1,0 +1,18 @@
+<div class="row color-grey fill-height border-right">
+	<div class="col-md-12 gutter fill-height-minus-gutter">
+		<div class="fill-top">
+			<div ng-repeat="entry in chat.history" ng-init="active = 0" >
+				<div ng-click="active = !active" ng-class="{'chat-entry-active': active}" class="row hover-white">
+					<div class="col-md-12">
+						{{entry.name}}
+					</div>
+				</div>
+
+			</div>
+
+		</div>
+		<div class="fill-bottom align-center fill-width"> 
+			<a href><i class="fa fa-times-circle uninett-fontColor-white icon"></i></a>
+		</div>
+	</div>
+</div>

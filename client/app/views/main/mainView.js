@@ -4,7 +4,7 @@ app.config( function ($stateProvider) {
 	$stateProvider.state('main', {
 		parent: 'normal',
 		views: {
-			"friends": {
+			"view3-animated": {
 				controller: "friendsController",
 				templateUrl: "app/views/friends/friends.tpl.html"
 			}
@@ -12,9 +12,29 @@ app.config( function ($stateProvider) {
 	}).state('video', {
 		parent: 'main',
 		views: {
-			"video@normal": {
+			"view2@normal": {
 				controller: "videoController",
 				templateUrl: "app/views/video/video.tpl.html"
+			}
+		}
+	}).state('chat', {
+		parent: 'main',
+		views: {
+			"view2-animated@normal": {
+				controller: "chatController",
+				templateUrl: "app/views/chat/chat.tpl.html"
+			},
+			"view1-animated@normal": {
+				controller: "chatHistoryController",
+				templateUrl: "app/views/chatHistory/chatHistory.tpl.html"
+			}
+		}
+	}).state('file', {
+		parent: 'main',
+		views: {
+			"view2-animated@normal": {
+				controller: "fileController",
+				templateUrl: "app/views/file/file.tpl.html"
 			}
 		}
 	});

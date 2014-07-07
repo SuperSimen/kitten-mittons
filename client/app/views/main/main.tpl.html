@@ -1,4 +1,4 @@
-<div class="row" ng-hide="video.src"> 
+<div class="row"> 
 	<div class="navbar navbar-default no-margin" role="navigation">
 		<div class="container">
 			<div class="navbar-header">
@@ -11,16 +11,22 @@
 				<li><a href ui-sref="normal">Normal</a></li>
 				<li><a href ui-sref="main">Main</a></li>
 				<li><a href ui-sref="video">Video</a></li>
+				<li><a href ui-sref="chat">Chat</a></li>
+				<li><a href ui-sref="file">File</a></li>
 			</ul>
 		</div>
 	</div>
 </div>
 
-<div class="row hide-overflow" ng-class="{'fill-height-minus-header': !video.src, 'fill-height': video.src}">
-	<div class="col-md-10 fill-height">
-		<div ui-view="video" class="fill-height"></div>
+<div class="row hide-overflow fill-height-minus-navbar">
+	<div ng-class="getCol(1)" class="fill-height">
+		<div ui-view="view1-animated" class="fill-height animate-view"> </div>
 	</div>
-	<div class="col-md-2 fill-height border-left">
-		<div ui-view="friends" class="fill-height"></div>
+	<div ng-class="getCol(2)" class="fill-height">
+		<div ui-view="view2-animated" class="fill-height animate-view"></div>
+		<div ui-view="view2" class="fill-height"></div>
+	</div>
+	<div ng-class="getCol(3)" class="fill-height">
+		<div ui-view="view3-animated" class="fill-height animate-view"></div>
 	</div>
 </div>

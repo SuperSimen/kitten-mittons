@@ -10,18 +10,19 @@
 		};
 
 		model.auth = {
-			constants: {
-				orgUnit: "uwap:group:type:orgUnit"
-			},
 			token: "",
-			orgUnitGroup: {}
 		};
 
 		model.userInfo = {
 		};
 
 		model.chat = {
-			messages: [],
+			messages: [{
+				from: {
+					displayName: "simen"
+				},
+				message: "hei"
+			}],
 			addMessage: function(from, message) {
 				this.messages.push({
 					from: {
@@ -30,26 +31,52 @@
 					},
 					message: message
 				});
-			}
+			},
+			history: [
+				{name: "Simen"},
+				{name: "Simen"},
+				{name: "Simen"},
+				{name: "Simen"}
+			]
 		};
 
 		model.friends = {
 			list: {},
 			create: function(id) {
 				if (!this.list[id]) {
+					console.log("creating friend");
 					this.list[id] = {
-						id: id,
-						displayName: id.substring(id.indexOf("/") + 1)
+						id: id
 					};
 				}
-				else {
-					console.error("id already taken");
+				return this.list[id];
+			}
+		};
+
+		model.groups = {
+			list: {},
+			create: function(id, displayName) {
+				if (!this.list[id]) {
+					this.list[id] = {
+						id: id,
+						displayName: displayName,
+						addFriend: function(friend) {
+							if (!this.friends[friend.id]) {
+								this.friends[friend.id] = friend;
+							}
+						},
+						removeFriend: function(friend) {
+							delete this.friends[friend.id];
+						},
+						friends: {}
+					};
 				}
+				return this.list[id];
 			}
 		};
 
 		model.progress = {
-			value: 0
+			value: 40
 		};
 
 

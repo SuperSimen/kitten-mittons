@@ -18,10 +18,9 @@
 		};
 	});
 	app.directive('baProgressBar', function () {
-
 		function link(scope, element, attr) {
 			scope.$watch(function() {return scope.progress.value;}, function(newValue) {
-				element[0].style.cssText = "width: " + (newValue * 100) + "%;";
+				element.css({'width' : newValue + "%"});
 			});
 		}
 
@@ -36,16 +35,13 @@
 	app.directive('baCenterVideo', function ($window, $timeout) {
 
 		function link(scope, element, attr) {
-			var calculatePosition = function() {
+			function calculatePosition() {
 				return (element.height() - element.parent().height()) / 2;
-			};
-
-			function positionElement (value) {
-				console.log("positioning " + value);
-				element.css({"position" : "absolute", "top" : -value});
 			}
 
-			globalElement = element;
+			function positionElement (value) {
+				element.css({"position" : "absolute", "top" : -value});
+			}
 
 			scope.$watch(calculatePosition, function(newValue) {
 				positionElement(newValue);
@@ -53,14 +49,14 @@
 
 			function waitForVideo() {
 				if (element[0].readyState === 4) {
-					console.log("video ready");
 					positionElement(calculatePosition());
+					element.css("visibility", "visible");
 				}
 				else {
-					console.log("waiting for video");
+					element.css("visibility", "hidden");
 					$timeout(function() {
 						waitForVideo();
-					}, 500);
+					}, 50);
 				}
 			}
 			waitForVideo();

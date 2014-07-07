@@ -10,13 +10,13 @@ body {
   position: relative;
 }
 
-[ui-view].ng-enter {
+.animate-view[ui-view].ng-enter {
  -webkit-transition: 0.2s linear all; /* Safari/Chrome */
  -webkit-transform:scale(0.7, 0.7);
  opacity: 0;
 }
 
-[ui-view].ng-enter-active {
+.animate-view[ui-view].ng-enter-active {
  -webkit-transform:scale(1, 1);
  /* The animation code itself */
  opacity: 1;
@@ -33,7 +33,7 @@ body {
 	margin: 0px;
 }
 
-.fill-height-minus-header {
+.fill-height-minus-navbar {
 	height: calc(100% - 70px);
 }
 .fill-height {
@@ -49,6 +49,10 @@ body {
 
 .uninett-color-white {
 	background-color: #fff;
+}
+
+.uninett-color-black {
+	background-color: #231f20;
 }
 
 .border-left {
@@ -85,4 +89,49 @@ body {
 
 .fill-width {
 	width: 100%;
+}
+
+.fill-top {
+	height: calc(100% - 40px);
+}
+
+.fill-bottom {
+	height: 30px;
+}
+
+.fill-height-gutter {
+
+}
+
+.icon {
+	font-size: 2em;
+}
+
+.chat-history {
+
+}
+
+.chat-entry-active {
+	background-color: #fff;
+}
+
+.chat-entry {
+}
+
+.icon:hover {
+	color: #231f20;
+}
+
+.presence-icon {
+	font-size: 0.6em;
+	vertical-align: middle;
+}
+
+.presence-icon.online {
+	color: #4cc0be;
+	color: #00b086;
+	color: #006b49;
+}
+.presence-icon.offline {
+	color: #eb212e;
 }

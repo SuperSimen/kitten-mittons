@@ -1,0 +1,11 @@
+<div class="row color-grey fill-height">
+	<div class="col-md-12 gutter fill-height-minus-gutter">
+		<div class="fill-top">
+			<div ng-repeat="message in chat.messages">
+				<b>{{message.from.displayName}}</b>
+				- {{message.message}}
+			</div>
+		</div>
+		<input type="text" class="fill-bottom fill-width"/>
+	</div>
+</div>

@@ -1,4 +1,6 @@
 app.controller( 'videoController', function(video, model, $scope) {
-	video.init();
+	if (!model.video.src) {
+		video.init();
+	}
 	$scope.video = model.video;
 });

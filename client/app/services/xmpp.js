@@ -18,11 +18,14 @@
 
 		factory.api = {
 			mucUser: "http://jabber.org/protocol/muc#user",
+			mucOwner: "http://jabber.org/protocol/muc#owner",
 			discoInfo: "http://jabber.org/protocol/disco#info",
 			register: "jabber:iq:register",
 			muc: "http://jabber.org/protocol/muc",
 			vcard: "vcard-temp",
-			webrtc: "webrtc"
+			webrtc: "webrtc",
+			data: "jabber:x:data",
+			whois: "muc#roomconfig_whois"
 		};
 
 		factory.addMucPresenceHandler = function(callback) {
@@ -54,8 +57,9 @@
 
 		var sendIQ = function(iq, successCallback, errorCallback) {
 			console.log("sending iq " + iq);
-			var temp = function () {
+			var temp = function (stanza) {
 				console.log("temp");
+				console.log(stanza);
 				console.log(arguments);
 			};
 			connection.sendIQ(iq,
@@ -81,6 +85,7 @@
 		};
 		
 		function basicHandler(input) {
+			//console.log(input);
 			return true;
 		}
 
@@ -99,9 +104,10 @@
 			send(msg);
 		}
 
-		function logOff() {
+		logOff = function logOff() {
 			send($pres({type: "unavailable"}));
-		}
+		};
+
 
 		function logOn() {
 			send($pres());
@@ -112,11 +118,13 @@
 		}
 
 		factory.joinRoom = function (roomId, userId) {
-			var to = roomId + "@" + constants.xmppMucServerUrl + "/" + userId;
+			var room = roomId + "@" + constants.xmppMucServerUrl;
+			var to = room + "/" + userId;
 			console.log("joining room: " + to);
 
 			var pres = $pres({to: to}).c("x", {xmlns: factory.api.muc});
 			send(pres);
+
 		};
 
 		factory.leaveRoom = function(roomId) {
@@ -126,6 +134,35 @@
 			send(pres);
 		};
 
+		factory.sendRoomConfig = function(to) {
+			var iq = $iq({to: to, type: 'set'}).c('query', {xmlns: factory.api.mucOwner}).
+				c('x', {xmlns: factory.api.data, type: 'submit'});
+
+			var fields = [
+				{a: "FORM_TYPE", b: "http://jabber.org/protocol/muc#roomconfig"},
+				{a: 'muc#roomconfig_roomname', b: ""},
+				{a: 'muc#roomconfig_roomdesc', b: ""},
+				{a: 'muc#roomconfig_changesubject', b: ""},
+				{a: 'muc#roomconfig_publicroom', b: ""},
+				{a: 'muc#roomconfig_persistentroom', b: ""},
+				{a: 'muc#roomconfig_moderatedroom', b: ""},
+				{a: 'muc#roomconfig_membersonly', b: ""},
+				{a: 'muc#roomconfig_roomsecret', b: ""},
+				{a: 'muc#roomconfig_whois', b: "anyone"}
+			];
+
+			for (var i in fields) {
+				iq.c('field', {var: fields[i].a}).c('value').t(fields[i].b).up().up();
+			}
+			console.log("sending room config");
+			sendIQ(iq);
+		};
+
+		factory.getRoomForm = function(to) {
+			var iq = $iq({to: to, type: 'get'}).c('query', {xmlns: factory.api.mucOwner});
+			sendIQ(iq);
+
+		};
 		return factory;
 	});
 	
