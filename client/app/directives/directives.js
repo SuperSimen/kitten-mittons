@@ -19,7 +19,7 @@
 	});
 	app.directive('baProgressBar', function () {
 		function link(scope, element, attr) {
-			scope.$watch(function() {return scope.progress.value;}, function(newValue) {
+			scope.$watch(function() {return scope.progress;}, function(newValue) {
 				element.css({'width' : newValue + "%"});
 			});
 		}

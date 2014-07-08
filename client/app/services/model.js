@@ -5,46 +5,70 @@
 		var model = {};
 
 		model.file = {
+			progress: 40,
 		};
 		model.video = {
 		};
 
-		model.auth = {
-			token: "",
+		model.user = {
+			info: null,
+			token: null,
+			realms: null
 		};
 
-		model.userInfo = {
-		};
 
 		model.chat = {
-			messages: [{
-				from: {
-					displayName: "simen"
-				},
-				message: "hei"
-			}],
-			addMessage: function(from, message) {
-				this.messages.push({
-					from: {
-						jid: from,
-						displayName: from.substring(from.indexOf("/") + 1)
-					},
-					message: message
-				});
+			listOfIndices: {},
+			sortableArray: [],
+			currentId: "",
+			getCurrent: function() {
+				if (this.currentId) {
+					return this.get(this.currentId);
+				}
 			},
-			history: [
-				{name: "Simen"},
-				{name: "Simen"},
-				{name: "Simen"},
-				{name: "Simen"}
-			]
+			setCurrent: function(id) {
+				this.currentId = id;
+				if (id) {
+					this.create(id);
+				}
+				console.log("current chat is now " + this.currentId);
+			},
+			create: function(id) {
+				if (this.listOfIndices[id]) {
+					return;
+				}
+
+				this.sortableArray.push({
+					id: id,
+					mostRecentTime: 0,
+					messages: [],
+					addMessage: function(from, message) {
+						this.messages.push({
+							from: from, 
+							message: message
+						});
+					},
+				});
+				this.sort();
+			},
+			get: function(id) {
+				this.create(id);
+				return this.sortableArray[this.listOfIndices[id]];
+			},
+			sort: function() {
+				this.sortableArray.sort(function(a,b) {return b.mostRecentTime - a.mostRecentTime;});
+				for (var i in this.sortableArray) {
+					this.listOfIndices[this.sortableArray[i].id] = i;
+				}
+				console.log(this.listOfIndices);
+				console.log(this.sortableArray);
+			}
 		};
 
 		model.friends = {
 			list: {},
 			create: function(id) {
 				if (!this.list[id]) {
-					console.log("creating friend");
 					this.list[id] = {
 						id: id
 					};
@@ -74,11 +98,6 @@
 				return this.list[id];
 			}
 		};
-
-		model.progress = {
-			value: 40
-		};
-
 
 		model.search = {
 			query: "",

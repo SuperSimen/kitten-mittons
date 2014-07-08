@@ -1,11 +1,12 @@
 <div class="row color-grey fill-height">
 	<div class="col-md-12 gutter fill-height-minus-gutter">
-		<div class="fill-top">
-			<div ng-repeat="message in chat.messages">
-				<b>{{message.from.displayName}}</b>
+		<div class="fill-top auto-overflow">
+			<div class="align-center" ng-show="currentChat">Talking to {{getFriendFromId(currentChat.id).FN}}</div>
+			<div ng-repeat="message in currentChat.messages">
+				<b>{{getFriendFromId(message.from) && getFriendFromId(message.from).FN || message.from}}</b>
 				- {{message.message}}
 			</div>
 		</div>
-		<input type="text" class="fill-bottom fill-width"/>
+		<input type="text" ng-model="chatMessage" ng-keydown="chatKeyDown($event)" class="fill-bottom fill-width"/>
 	</div>
 </div>

@@ -12,11 +12,11 @@
 
 		function gatherInfoPart1 () { 
 			$http.get('/api/info').success(function(data, status) {
-				model.userInfo.data = data;
-				model.auth.token = data.token;
+				model.user.info = data;
+				model.user.token = data.token;
 
-				if (model.userInfo.data.xmpp.registered) {
-					xmpp.connect(model.userInfo.data.xmpp.jid, model.userInfo.data.xmpp.password, constants.boshUrl, connectedCallback);
+				if (model.user.info.xmpp.registered) {
+					xmpp.connect(model.user.info.xmpp.jid, model.user.info.xmpp.password, constants.xmpp.boshUrl, connectedCallback);
 				}
 
 			}).error(failedHTTP);
@@ -30,17 +30,55 @@
 		function connectedCallback() {
 			main.setVCard();
 			webrtc.init();
-			xmpp.addMucPresenceHandler(function (stanza) {
-				console.log(stanza);
-				globalStanza = stanza;
-				var from = stanza.getAttribute("from");
+			xmpp.addHandler(xmppHandlers.mucMessage, null, "message", "groupchat" );
+			xmpp.addHandler(xmppHandlers.mucPresence, constants.xmpp.mucUser, "presence" );
+			xmpp.addHandler(xmppHandlers.basicHandler);
+			xmpp.addHandler(xmppHandlers.message, null, "message", "chat");
+			
+			gatherInfoPart2();
+		}
+
+		main.sendMessage = function(to, message) {
+			var jid = to + "@" + constants.xmpp.serverUrl;
+			xmpp.sendPrivateMessage(jid, message);
+			model.chat.get(to).addMessage("Me", message);
+		};
+
+
+		var xmppHandlers = {
+			basicHandler: function(data) {
+				//console.log(data);
+			},
+			message: function(data) {
+				var message = data.getChildrenByTagName("body")[0].children[0].data;
+				var id = data.from.substring(0, data.from.indexOf("@"));
+
+				$rootScope.$apply(function() {
+					model.chat.get(id).addMessage(id, message);
+				});
+			},
+			mucMessage: function(data) {
+				console.log("received message");
+				console.log(data);
+			},
+			mucMessage2: function(stanza) {
+				if (stanza.getElementsByTagName("body")) {
+					var message = stanza.getElementsByTagName("body")[0].innerHTML;
+					var from = stanza.getAttribute("from");
+					$rootScope.$apply(function () {
+						model.chat.addMessage(from, message);
+					});
+				}
+			},
+			mucPresence: function(data) {
+				var from = data.from;
 				var groupId = from.substring(0, from.indexOf("@"));
 
-				var x = stanza.getElementsByTagName("x").item();
-				if (x.getAttribute("xmlns") === xmpp.api.mucUser) {
-					var item = x.getElementsByTagName("item").item();
-					if (item) {
-						var jid = item.getAttribute("jid");
+				var x = data.getChildrenByTagName("x");
+				if (x.length && x[0].xmlns === constants.xmpp.mucUser) {
+					var item = x[0].getChildrenByTagName("item");
+					if (item.length) {
+						var jid = item[0].jid;
 						if (jid) {
 							$rootScope.$apply(function() {
 								if (model.groups.list[groupId]) {
@@ -51,7 +89,7 @@
 										main.getVCard(jid.substring(0, jid.indexOf("/")));
 									}
 									model.groups.list[groupId].addFriend(friend);
-									if (stanza.getAttribute("type") === "unavailable") {
+									if (data.type === "unavailable") {
 										friend.online = false;
 									}
 									else {
@@ -61,14 +99,12 @@
 							});
 						}
 
-						if (item.getAttribute("role") === "moderator") {
-							var statuses = x.getElementsByTagName("status");
-
+						if (item[0].role === "moderator") {
+							var statuses = x[0].getChildrenByTagName("status");
 							var codes = {};
-							globalStatus = statuses;
 							for (var i = 0; i < statuses.length; i++) {
 								if (statuses[i]) {
-									var code = statuses[i].getAttribute("code");
+									var code = statuses[i].code;
 									if (code) {
 										codes[code] = true;
 									}
@@ -80,67 +116,41 @@
 						}
 					}
 				}
-
-				return true;
-			});
-			xmpp.addMucMessageHandler(function (stanza) {
-				console.log(stanza);
-				if (stanza.getElementsByTagName("body")) {
-					var message = stanza.getElementsByTagName("body")[0].innerHTML;
-					var from = stanza.getAttribute("from");
-					$rootScope.$apply(function () {
-						model.chat.addMessage(from, message);
-					});
-				}
-				return true;
-			});
-
-			gatherInfoPart2();
-		}
+			}
+		};
 
 
 		function gatherInfoPart2 () {
-			UWAP.getGroups(model.auth.token, function (data) {
-				model.auth.groups = data.Resources;
-				for (var i in model.auth.groups) {
-					var group = model.auth.groups[i];
+			UWAP.getGroups(model.user.token, function (data) {
+				var groups = data.Resources;
+				for (var i in groups) {
+					var group = groups[i];
 					//Only for testing
 					if (group.groupType === constants.uwap.adHoc ) {
-						var userid = model.userInfo.data.userid;
+						var userid = model.user.info.userid;
 						var groupId = encodeURIComponent(group.id).toLowerCase();
 						model.groups.create(groupId, group.displayName);
 						xmpp.joinRoom(groupId, userid.substring(0,userid.indexOf("@")));
 					}
 				}
-
 			}); 
-			UWAP.getRealms(model.auth.token, function (data) {
-				model.auth.realms = data;
+			UWAP.getRealms(model.user.token, function (data) {
+				model.user.realms = data;
 			}); 
 		}
 
 		main.setVCard = function () {
 			var properties = {};
-
-			properties.FN = model.userInfo.data.name;
-
+			properties.FN = model.user.info.name;
 			xmpp.setVCard(properties);
 		};
 
 		var vCardTimeout = {};
 		main.getVCard = function (jid) {
-			console.log("getting vcard from " + jid);
 			xmpp.getVCard(jid, function(stanza) {
-				console.log("Received vCard from " + jid);
-				console.log(stanza);
 				if (stanza.getElementsByTagName("FN")) {
-					console.log("fn");
-					console.log(jid);
 					var userId = jid.substring(0, jid.indexOf("@"));
-					console.log(userId);
 					$rootScope.$apply(function () {
-						console.log(model.friends);
-						console.log(userId);
 						model.friends.list[userId].FN = stanza.getElementsByTagName("FN")[0].innerHTML;
 					});
 				}
@@ -152,7 +162,7 @@
 
 			console.log("searching for " + model.search.query);
 
-			UWAP.getPeople(model.auth.token, (function(searchId) {
+			UWAP.getPeople(model.user.token, (function(searchId) {
 				return function (data) {
 					if (data.people.length) {
 						model.search.addPeopleToResults(data.people, searchId);

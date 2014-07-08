@@ -16,10 +16,10 @@
 
 		var peerConnection;
 		webrtc.init = function() {
-			xmpp.addHandler(handleOffer, xmpp.api.webrtc, "message", "offer");
-			xmpp.addHandler(handleAnswer, xmpp.api.webrtc, "message", "answer");
-			xmpp.addHandler(handleIceCandidate, xmpp.api.webrtc, "message", "iceCandidate");
-			xmpp.addHandler(handleWebrtc, xmpp.api.webrtc, "message");
+			xmpp.addHandler(handleOffer, constants.xmpp.webrtc, "message", "offer");
+			xmpp.addHandler(handleAnswer, constants.xmpp.webrtc, "message", "answer");
+			xmpp.addHandler(handleIceCandidate, constants.xmpp.webrtc, "message", "iceCandidate");
+			xmpp.addHandler(handleWebrtc, constants.xmpp.webrtc, "message");
 		};
 
 		function handleWebrtc(stanza) {
@@ -64,7 +64,7 @@
 					peerConnection.setLocalDescription(desc);
 					console.log(desc);
 					var offer = $msg({to: to, type: "offer"})
-					.c("x", {xmlns: xmpp.api.webrtc}).up()
+					.c("x", {xmlns: constants.xmpp.webrtc}).up()
 					.c("desc").t(JSON.stringify(desc));
 					console.log("sending offer");
 					xmpp.send(offer);
@@ -107,7 +107,7 @@
 				}
 				for (var i in this.list) {
 					var iceCandidate = $msg({to: this.to, type: "iceCandidate"})
-					.c("x", {xmlns: xmpp.api.webrtc}).up()
+					.c("x", {xmlns: constants.xmpp.webrtc}).up()
 					.c("desc").t(JSON.stringify(this.list[i]));
 					console.log("Sending iceCandidate");
 					xmpp.send(iceCandidate);
@@ -145,7 +145,7 @@
 				peerConnection.createAnswer(createAnswer(function(desc) {
 					peerConnection.setLocalDescription(desc);
 					var answer = $msg({to: from, type: "answer"})
-					.c("x", {xmlns: xmpp.api.webrtc}).up()
+					.c("x", {xmlns: constants.xmpp.webrtc}).up()
 					.c("desc").t(JSON.stringify(desc));
 					console.log("sending answer");
 					xmpp.send(answer);

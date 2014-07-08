@@ -32,4 +32,7 @@ app.controller( 'mainController', function($scope, model, $state) {
 		var state = $state.current.name;
 		return stateViewCols[state][viewNumber - 1];
 	};
+	$scope.getFriendFromId = function(id) {
+		return model.friends.list[id];
+	};
 });

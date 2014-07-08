@@ -109,7 +109,7 @@
 		var fileCounter = 0;
 
 		function generateRandomFileId() {
-			var me = model.userInfo.data.xmpp.jid;
+			var me = model.user.info.xmpp.jid;
 			var userid = me.substring(0,me.indexOf("@"));
 			var id = userid + "-" + Math.random().toString(36).substring(7) + "-" + fileCounter++;
 			console.log(id);

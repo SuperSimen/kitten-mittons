@@ -87,6 +87,10 @@ body {
 	overflow: hidden;
 }
 
+.auto-overflow {
+	overflow: auto;
+}
+
 .fill-width {
 	width: 100%;
 }

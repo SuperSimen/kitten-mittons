@@ -9,30 +9,14 @@
 
 			connection = new Strophe.Connection(bosh);
 			connection.connect(jid, password, statusCallback(connectedCallback));
-			connection.addHandler(basicHandler);
 		};
 
-		factory.addHandler = function(handler, namespace, name, type) {
-			connection.addHandler(handler, namespace, name, type);
-		};
-
-		factory.api = {
-			mucUser: "http://jabber.org/protocol/muc#user",
-			mucOwner: "http://jabber.org/protocol/muc#owner",
-			discoInfo: "http://jabber.org/protocol/disco#info",
-			register: "jabber:iq:register",
-			muc: "http://jabber.org/protocol/muc",
-			vcard: "vcard-temp",
-			webrtc: "webrtc",
-			data: "jabber:x:data",
-			whois: "muc#roomconfig_whois"
-		};
-
-		factory.addMucPresenceHandler = function(callback) {
-			connection.addHandler(callback, factory.api.mucUser, "presence");
-		};
-		factory.addMucMessageHandler = function (callback) {
-			connection.addHandler(callback, null, "message", "groupchat" );
+		factory.addHandler = function(callback, namespace, name, type, id, from) {
+			function handler(stanza) {
+				callback(parseStanza(stanza));
+				return true;
+			}
+			connection.addHandler(handler, namespace, name, type, id, from);
 		};
 
 		factory.getVCard = function(jid, callback) {
@@ -43,12 +27,12 @@
 			else {
 				iq = $iq({type: 'get'});
 			}
-			iq.c('vCard', {xmlns: factory.api.vcard});
+			iq.c('vCard', {xmlns: constants.xmpp.vcard});
 			sendIQ(iq, callback);
 		};
 
 		factory.setVCard = function(properties) {
-			var iq = $iq({type: 'set'}).c('vCard', {xmlns: factory.api.vcard});
+			var iq = $iq({type: 'set'}).c('vCard', {xmlns: constants.xmpp.vcard});
 			for (var i in properties) {
 				iq.c(i).t(properties[i]).up();
 			}
@@ -56,11 +40,13 @@
 		};
 
 		var sendIQ = function(iq, successCallback, errorCallback) {
-			console.log("sending iq " + iq);
 			var temp = function (stanza) {
-				console.log("temp");
-				console.log(stanza);
-				console.log(arguments);
+				if (!stanza) {
+					console.error("could not send IQ");
+				}
+				else {
+					console.log(stanza);
+				}
 			};
 			connection.sendIQ(iq,
 					(successCallback ? successCallback : temp),
@@ -84,11 +70,6 @@
 			connection.send(obj);
 		};
 		
-		function basicHandler(input) {
-			//console.log(input);
-			return true;
-		}
-
 		factory.sendPrivateMessage = function(to, text) {
 			var msg = $msg({to: to, type: "chat"}).c("body").t(text);
 			send(msg);
@@ -118,25 +99,24 @@
 		}
 
 		factory.joinRoom = function (roomId, userId) {
-			var room = roomId + "@" + constants.xmppMucServerUrl;
+			var room = roomId + "@" + constants.xmpp.mucServerUrl;
 			var to = room + "/" + userId;
-			console.log("joining room: " + to);
 
-			var pres = $pres({to: to}).c("x", {xmlns: factory.api.muc});
+			var pres = $pres({to: to}).c("x", {xmlns: constants.xmpp.muc});
 			send(pres);
 
 		};
 
 		factory.leaveRoom = function(roomId) {
 			roomId = "temp"; //TODO: don't do this
-			var to = roomId + "@" + constants.xmppMucServerUrl;
-			var pres = $pres({to: to, type: "unavailable"}).c("x", {xmlns: factory.api.muc});
+			var to = roomId + "@" + constants.xmpp.mucServerUrl;
+			var pres = $pres({to: to, type: "unavailable"}).c("x", {xmlns: constants.xmpp.muc});
 			send(pres);
 		};
 
 		factory.sendRoomConfig = function(to) {
-			var iq = $iq({to: to, type: 'set'}).c('query', {xmlns: factory.api.mucOwner}).
-				c('x', {xmlns: factory.api.data, type: 'submit'});
+			var iq = $iq({to: to, type: 'set'}).c('query', {xmlns: constants.xmpp.mucOwner}).
+				c('x', {xmlns: constants.xmpp.data, type: 'submit'});
 
 			var fields = [
 				{a: "FORM_TYPE", b: "http://jabber.org/protocol/muc#roomconfig"},
@@ -159,10 +139,63 @@
 		};
 
 		factory.getRoomForm = function(to) {
-			var iq = $iq({to: to, type: 'get'}).c('query', {xmlns: factory.api.mucOwner});
+			var iq = $iq({to: to, type: 'get'}).c('query', {xmlns: constants.xmpp.mucOwner});
 			sendIQ(iq);
 
 		};
+
+		function parseStanza(stanza) {
+			var object = {};
+
+			if (stanza.tagName) {
+				object.tagName = stanza.tagName;
+			}
+			for (var i = 0; i < stanza.attributes.length; i++) {
+				var node = stanza.attributes[i];
+				object[node.nodeName] = node.value;
+			}
+
+			getChildren(stanza.childNodes, object);
+
+			function getChildren(childNodes, currentObject) {
+				if (childNodes && childNodes.length) {
+					currentObject.children = [];
+					for (var i = 0; i < childNodes.length; i++) {
+						var child = childNodes[i];
+						var tempChild = {};
+						if (child.tagName) {
+							tempChild.tagName = child.tagName;
+						}
+						if (child.data) {
+							tempChild.data = child.data;
+						}
+						if (child.attributes) {
+							for (var k = 0; k < child.attributes.length; k++) {
+								node = child.attributes[k];
+								tempChild[node.nodeName] = node.value;
+							}
+						}
+						var next = getChildren(child.childNodes, tempChild);
+						if (Object.keys(next).length) {
+							currentObject.children.push(next);
+						}
+					}
+					currentObject.getChildrenByTagName = function (tag) {
+						var temp = [];
+						for (var i in currentObject.children) {
+							if (currentObject.children[i].tagName === tag) {
+								temp.push(currentObject.children[i]);
+							}
+						}
+						return temp;
+					};
+				}
+				return currentObject;
+			}
+
+			return object;
+
+		}
 		return factory;
 	});
 	
