@@ -298,6 +298,7 @@
 				return this.list[to];
 			},
 			finishedSending: function(to, id) {
+				console.log("this is not good.");
 				if (this.list[to] && this.list[to].ids[id]) {
 					delete this.list[to].ids[id];
 					console.log("deleting sender id");
@@ -369,7 +370,7 @@
 								var success = this.sendOnAvailableChannel(this.queue[0]);
 								if (!success) {
 									console.log("No working channels, timing out");
-									$timeout(this.restartDataSender, 100);
+									$timeout(this.restartDataSender, 1000);
 									return;
 								}
 								else {
@@ -385,6 +386,8 @@
 						}
 					},
 					restartDataSender: function() {
+						console.log(this.queue);
+						console.log(this.queue.length);
 						dataSenders.list[to].sender();
 					}
 				};

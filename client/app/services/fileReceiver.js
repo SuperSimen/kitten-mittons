@@ -14,6 +14,7 @@
 			storage[filename] = {};
 		}
 		function fileHandler(data, from) {
+				console.log("incoming data: " + data.status + ", number: " + data.number);
 			if (data.number % 50 === 0) {
 				console.log("incoming data: " + data.status + ", number: " + data.number);
 			}
