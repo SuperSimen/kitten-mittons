@@ -7,6 +7,8 @@
 			}
 		};
 
+		var listOfCallbacks = [];
+
 		function fileHandler(data) {
 			console.log(data);
 
@@ -32,12 +34,16 @@
 			}
 		}
 
-		fileSender.sendFile = function() {
-			startSending();
+		fileSender.sendFile = function(to) {
+			if (!model.file.file) {return console.error("no file!!");}
+			webrtc.getSender(to, "fileSender", function(sender) {
+				console.log("received sender");
+				startSending(sender);
+			});
 		};
 
-		function startSending() {
-			if (!model.file.file) {return console.error("no file!!");}
+		function startSending(sender) {
+			console.log("starting sending");
 
 			var file = model.file.file;
 			var size = file.size;
@@ -51,7 +57,7 @@
 					console.log("continues");
 				var totalNumber = 0;
 				if (size < maxSize) {
-					read(file, 1, signalEof);
+					read(file, 1, eof);
 				}
 				else {
 					senderLoop(0)();
@@ -66,7 +72,7 @@
 					var blob;
 					if (i + maxSize > size) {
 						blob = file.slice(i, size);
-						read(blob, sliceCounter++, signalEof);
+						read(blob, sliceCounter++, eof);
 					}
 					else {
 						blob = file.slice(i, i + maxSize);
@@ -76,8 +82,9 @@
 				};
 			}
 
-			function signalEof() {
+			function eof() {
 				signalFile(id, "eof", totalSlices, file.name);
+				//sender.close();
 			}
 
 			function read(blob, slice, callback) {
@@ -104,6 +111,44 @@
 				reader.readAsBinaryString(blob);
 			}
 
+
+			function sendFileChunk(id, chunk, status, slice, totalSlices, number, totalNumber, filename) {
+				var tempFile = {
+					id: id,
+					base64: chunk,
+					size: chunk.length,
+					status: status,
+					number: number,
+					totalNumber: totalNumber,
+					filename: filename,
+					slice: slice,
+					totalSlices: totalSlices
+				};
+				sender.send(tempFile);
+			}
+
+			function signalFile(id, status, totalSlices, filename) {
+				var tempFile = {
+					id: id,
+					status: status,
+					filename: filename,
+					totalSlices: totalSlices
+				};
+				sender.send(tempFile);
+			}
+
+			function signalSlice(id, status, slice, totalSlices, totalNumber, filename) {
+				var tempFile = {
+					id: id,
+					slice: slice,
+					status: status,
+					totalNumber: totalNumber,
+					totalSlices: totalSlices,
+					filename: filename
+				};
+				sender.send(tempFile);
+			}
+
 		}
 
 		var fileCounter = 0;
@@ -115,72 +160,6 @@
 			console.log(id);
 			return id;
 		}
-
-
-		
-
-		var listOfCallbacks = [];
-
-		function sendFileChunk2(id, chunk, status, slice, totalSlices, number, totalNumber, filename) {
-			var tempFile = {
-				id: id,
-				base64: chunk,
-				size: chunk.length,
-				status: status,
-				number: number,
-				totalNumber: totalNumber,
-				filename: filename,
-				slice: slice,
-				totalSlices: totalSlices
-			};
-			webrtc.sendObject(tempFile, "fileSender");
-		}
-
-
-		var totalOverhead = 0;
-		var overHeadCount = 0;
-		function sendFileChunk(id, chunk, status, slice, totalSlices, number, totalNumber, filename) {
-			var tempFile = {
-				id: id,
-				size: chunk.length,
-				status: status,
-				number: number,
-				totalNumber: totalNumber,
-				filename: filename,
-				slice: slice,
-				totalSlices: totalSlices
-			};
-
-
-			var string = JSON.stringify(tempFile);
-
-			overHeadCount ++;
-			totalOverhead += string.length * 2;
-			console.log("Total overhead: " + totalOverhead + " - Average overhead: " + totalOverhead / overHeadCount);
-		}
-
-		function signalFile(id, status, totalSlices, filename) {
-			var tempFile = {
-				id: id,
-				status: status,
-				filename: filename,
-				totalSlices: totalSlices
-			};
-			webrtc.sendObject(tempFile, "fileSender");
-		}
-
-		function signalSlice(id, status, slice, totalSlices, totalNumber, filename) {
-			var tempFile = {
-				id: id,
-				slice: slice,
-				status: status,
-				totalNumber: totalNumber,
-				totalSlices: totalSlices,
-				filename: filename
-			};
-			webrtc.sendObject(tempFile, "fileSender");
-		}
-
 
 		return fileSender;
 	});

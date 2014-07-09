@@ -13,7 +13,6 @@
 						console.log(arguments);
 					}
 				);
-
 			}
 		};
 

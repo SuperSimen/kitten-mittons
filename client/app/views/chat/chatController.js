@@ -14,4 +14,8 @@ app.controller( 'chatController', function($scope, main, model) {
 			$scope.chatMessage = "";
 		}
 	};
+
+	$scope.clickVideo = function() {
+		main.call($scope.currentChat.id);
+	};
 });

@@ -3,10 +3,15 @@
 	app.factory('main', function(UWAP, xmpp, model, $state, $rootScope, $http, constants, webrtc, fileSender, fileReceiver, $timeout, video) {
 		var main = {
 			init: function() {
-				$state.go("chat");
+				$state.go("file");
 				gatherInfoPart1();
-				//fileSender.init();
-				//fileReceiver.init();
+				fileSender.init();
+				fileReceiver.init();
+				$rootScope.$watch(function () {return model.video.remote;}, function(newValue) {
+					if (newValue) {
+						$state.go("video");
+					}
+				});
 			}
 		};
 
@@ -26,6 +31,21 @@
 				console.log(errorCode);
 			}
 		}
+
+
+		var call = {};
+		main.call = function(to) {
+			if (call.ongoing) {
+				console.log("call ongoing");
+
+			}
+			else {
+				var jid = to + "@" + constants.xmpp.serverUrl;
+				webrtc.call(jid);
+				call.ongoing = true;
+				call.to = to;
+			}
+		};
 
 		function connectedCallback() {
 			main.setVCard();
@@ -169,6 +189,11 @@
 					}
 				};
 			})(model.search.getId()), model.search.currentRealm , model.search.query);
+		};
+
+		main.sendFile = function(to) {
+			var jid = to + "@" + constants.xmpp.serverUrl;
+			fileSender.sendFile(jid);
 		};
 
 		return main;

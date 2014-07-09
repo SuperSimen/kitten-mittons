@@ -1,7 +1,9 @@
 <div class="row color-grey fill-height">
 	<div class="col-md-12 gutter fill-height-minus-gutter">
 		<div class="fill-top auto-overflow">
-			<div class="align-center" ng-show="currentChat">Talking to {{getFriendFromId(currentChat.id).FN}}</div>
+			<div class="align-center" ng-show="currentChat">Talking to {{getFriendFromId(currentChat.id).FN}}
+				<a href ng-click="clickVideo()"><i class="fa fa-video-camera uninett-fontColor-white icon large"></i></a>
+			</div>
 			<div ng-repeat="message in currentChat.messages">
 				<b>{{getFriendFromId(message.from) && getFriendFromId(message.from).FN || message.from}}</b>
 				- {{message.message}}

@@ -8,6 +8,8 @@
 			progress: 40,
 		};
 		model.video = {
+			local: "",
+			remote: ""
 		};
 
 		model.user = {

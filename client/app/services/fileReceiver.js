@@ -13,7 +13,7 @@
 		function cleanUp(filename) {
 			storage[filename] = {};
 		}
-		function fileHandler(data) {
+		function fileHandler(data, from) {
 			if (data.number % 50 === 0) {
 				console.log("incoming data: " + data.status + ", number: " + data.number);
 			}
@@ -37,7 +37,7 @@
 						slices: []
 					};
 					console.log("starting file transfer. Total number of slices: " + data.totalSlices);
-					signalFile(data.id, "sof_ack", data.totalSlices, data.filename);
+					signalFile(from, data.id, "sof_ack", data.totalSlices, data.filename);
 				});
 			}
 			else if (data.status === "sos") {
@@ -63,7 +63,7 @@
 				};
 
 				storage[data.id].totalNumbers[data.slice] = data.totalNumber;
-				signalSlice(data.id, "sos_ack", data.slice, data.totalSlices, data.totalNumber, data.filename);
+				signalSlice(from, data.id, "sos_ack", data.slice, data.totalSlices, data.totalNumber, data.filename);
 			}
 			else if (data.status === "ongoing") {
 				storage[data.id].counter++;
@@ -104,7 +104,7 @@
 				else {
 					sandbox[data.id].appendBlob(blob, false);
 				}
-				signalSlice(data.id, "eos_ack", data.slice, data.totalSlices, data.totalNumber, data.filename);
+				signalSlice(from, data.id, "eos_ack", data.slice, data.totalSlices, data.totalNumber, data.filename);
 			}
 
 			if (storage[data.id] && storage[data.id].eof &&
@@ -114,17 +114,19 @@
 			}
 		}
 
-		function signalFile(id, status, totalSlices, filename) {
+		function signalFile(to, id, status, totalSlices, filename) {
+			console.log("signalling file to " + to);
 			var tempFile = {
 				id: id,
 				status: status,
 				filename: filename,
 				totalSlices: totalSlices
 			};
-			webrtc.sendObject(tempFile, "fileReceiver");
+			webrtc.sendObject(tempFile, to, "fileReceiver");
 		}
 
-		function signalSlice(id, status, slice, totalSlices, totalNumber, filename) {
+		function signalSlice(to, id, status, slice, totalSlices, totalNumber, filename) {
+			console.log("signalling slice to " + to);
 			var tempFile = {
 				id: id,
 				slice: slice,
@@ -133,7 +135,7 @@
 				totalSlices: totalSlices,
 				filename: filename
 			};
-			webrtc.sendObject(tempFile, "fileReceiver");
+			webrtc.sendObject(tempFile, to, "fileReceiver");
 		}
 
 
@@ -189,7 +191,7 @@
 						}, errorHandler);
 					}, errorHandler); 
 				}
-				readDirectory("files");
+				deleteDirectory("files");
 			}
 		}
 

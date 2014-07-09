@@ -108,6 +108,10 @@ body {
 }
 
 .icon {
+	vertical-align: middle;
+}
+
+.icon.large {
 	font-size: 2em;
 }
 
@@ -123,13 +127,13 @@ body {
 }
 
 .icon:hover {
-	color: #231f20;
 }
 
 .presence-icon {
 	font-size: 0.6em;
 	vertical-align: middle;
 }
+
 
 .presence-icon.online {
 	color: #4cc0be;

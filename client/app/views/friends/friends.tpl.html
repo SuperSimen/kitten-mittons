@@ -8,16 +8,16 @@
 						{{group.displayName}}
 					</div>
 				</div>
-				<div ng-show="showMembers" ng-repeat="friend in group.friends" class="row hover-white" ng-click="setCurrentConversation(friend)">
+				<div ng-show="showMembers" ng-repeat="friend in group.friends" class="row hover-white" ng-click="clickOnFriend(friend)">
 					<div class="col-md-12">
-						<i class="fa fa-circle presence-icon" ng-class="{'online': friend.online, 'offline': !friend.online}"></i>
+						<i class="fa fa-circle icon presence-icon" ng-class="{'online': friend.online, 'offline': !friend.online}"></i>
 						&nbsp&nbsp{{friend.FN}}
 					</div>
 				</div>
 			</div>
 		</div>
 		<div class="fill-bottom align-center fill-width">
-			<a href><i class="fa fa-plus-circle uninett-fontColor-white icon"></i></a>
+			<a href><i class="fa fa-plus-circle uninett-fontColor-white icon large"></i></a>
 		</div>
 	</div>
 </div>
