@@ -10,18 +10,11 @@
 
 		var storage = {};
 
-		function cleanUp(filename) {
-			storage[filename] = {};
+		function cleanUp(id) {
+			storage[id] = {};
 		}
 		var prevValue = 0;
 		function fileHandler(data, from) {
-
-			if (parseInt(data.number) !== parseInt(prevValue) + 1) {
-				console.log("order not correct");
-				console.log("prev value: " + prevValue + " - current value: " + data.number);
-			}
-			prevValue = data.number;
-
 			if (data.number % 50 === 0) {
 				console.log("incoming data: " + data.status + ", number: " + data.number);
 			}
@@ -29,6 +22,9 @@
 			if (data.status === "sof") {
 				console.log(data);
 				initiateFileSystem(data.id, data.filename, data.size, data.totalSlices, function() {
+					if (storage[data.id]) {
+						return console.error("data.id is not unique. aborting...");
+					}
 					storage[data.id] = {
 						filename: data.filename,
 						counter: 0,
@@ -88,7 +84,6 @@
 			}
 			else if (data.status === "eof") {
 				storage[data.id].eof = true;
-				console.log("File finished, max sender queue length : " + data.queueMaxLength);
 			}
 			else {
 				console.log("You should not see this. Status: " + data.status);
@@ -119,6 +114,7 @@
 				storage[data.id].counter === storage[data.id].getTotalNumber()) {
 
 				cleanUp(data.id);
+				signalFile(from, data.id, "eof_ack", data.totalSlices, data.filename);
 			}
 		}
 

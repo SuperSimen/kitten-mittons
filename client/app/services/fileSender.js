@@ -3,43 +3,37 @@
 	app.factory('fileSender', function(webrtc, model) {
 		var fileSender = {
 			init: function() {
-				webrtc.addMessageHandler(fileHandler, "fileReceiver");
+				webrtc.addMessageHandler(dataHandlers.main, "fileReceiver");
 			}
 		};
 
-		var listOfCallbacks = [];
-
-		function fileHandler(data) {
-			console.log(data);
-
-			//Use better ack system
-			if (data.status === "sof_ack") {
-			console.log("sof_ack");
-				if (fileSender.continueFileSending) {
-					fileSender.continueFileSending();
+		var dataHandlers = {
+			list: {},
+			main: function(data) {
+				if (data.id && dataHandlers.list[data.id]) {
+					dataHandlers.list[data.id](data);
 				}
 				else {
-					console.error("ack without file sender");
+					console.log("hot data");
+					console.log(data);
 				}
-			}
-			else if (data.status === "sos_ack") {
-				if (listOfCallbacks[data.slice]) {
-					listOfCallbacks[data.slice]();
-					delete listOfCallbacks[data.slice];
-				}
-				else {
-					console.error("ack without file sender");
-				}
+			},
 
+			add: function(handler, id) {
+				if (dataHandlers.list[id]) {
+					return console.error("handler id exists");
+				}
+				dataHandlers.list[id] = handler;
 			}
-		}
+		};
+
 
 		fileSender.sendFile = function(to) {
 			if (!model.file.file) {return console.error("no file!!");}
-			webrtc.getSender(to, "fileSender", function(sender) {
-				console.log("received sender");
-				startSending(sender);
-			});
+			var sender = webrtc.getFileSender(to, "fileSender");
+			console.log("sender");
+			console.log(sender);
+			startSending(sender);
 		};
 
 		function startSending(sender) {
@@ -51,18 +45,44 @@
 			var totalSlices = Math.ceil(size / maxSize);
 			var id = generateRandomFileId();
 
+			dataHandlers.add(fileHandler, id);
+			var listOfCallbacks = [];
+
+			function fileHandler(data) {
+				if (data.status === "sof_ack") {
+					console.log("sof_ack");
+					if (continueFileSending) {
+						continueFileSending();
+					}
+					else {
+						console.error("ack without file sender");
+					}
+				}
+				else if (data.status === "sos_ack") {
+					if (listOfCallbacks[data.slice]) {
+						listOfCallbacks[data.slice]();
+						delete listOfCallbacks[data.slice];
+					}
+					else {
+						console.error("ack without file sender");
+					}
+				}
+				else if (data.status === "eof_ack") {
+					sender.finished();
+					//sender = null;
+				}
+			}
+
 			signalFile(id, "sof", totalSlices, file.name);
 
-			fileSender.continueFileSending = function() {
-					console.log("continues");
-				var totalNumber = 0;
+			function continueFileSending () {
 				if (size < maxSize) {
 					read(file, 1, eof);
 				}
 				else {
 					senderLoop(0)();
 				}
-			};
+			}
 
 			var sliceCounter = 1;
 
@@ -84,7 +104,7 @@
 
 			function eof() {
 				signalFile(id, "eof", totalSlices, file.name);
-				sender.close();
+	
 			}
 
 			function read(blob, slice, callback) {
@@ -124,7 +144,7 @@
 					slice: slice,
 					totalSlices: totalSlices
 				};
-				sender.send(tempFile);
+				sender.send(tempFile, "fileSender");
 			}
 
 			function signalFile(id, status, totalSlices, filename) {
@@ -134,7 +154,7 @@
 					filename: filename,
 					totalSlices: totalSlices
 				};
-				sender.send(tempFile);
+				sender.send(tempFile, "fileSender");
 			}
 
 			function signalSlice(id, status, slice, totalSlices, totalNumber, filename) {
@@ -146,7 +166,7 @@
 					totalSlices: totalSlices,
 					filename: filename
 				};
-				sender.send(tempFile);
+				sender.send(tempFile, "fileSender");
 			}
 
 		}

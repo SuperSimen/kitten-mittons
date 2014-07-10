@@ -1,6 +1,3 @@
-app.controller( 'videoController', function(video, model, $scope) {
-	if (!model.video.local) {
-		//video.init();
-	}
+app.controller( 'videoController', function(model, $scope) {
 	$scope.video = model.video;
 });

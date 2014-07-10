@@ -1,6 +1,6 @@
 (function () {
 
-	app.factory('main', function(UWAP, xmpp, model, $state, $rootScope, $http, constants, webrtc, fileSender, fileReceiver, $timeout, video) {
+	app.factory('main', function(UWAP, xmpp, model, $state, $rootScope, $http, constants, webrtc, fileSender, fileReceiver, $timeout) {
 		var main = {
 			init: function() {
 				$state.go("file");

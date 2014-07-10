@@ -6,11 +6,9 @@
 			iceServers: constants.iceServers
 		};
 
-		var options = {
-			videoFromCaller: true,
-			audioFromCaller: false,
-			videoFromAnswerer: true,
-			audioFromAnswerer: false
+		var userMediaOptions = {
+			audio: false,
+			video: true
 		};
 
 		webrtc.init = function() {
@@ -21,16 +19,14 @@
 		function handleWebrtc(stanza) {
 			return true;
 		}
-
 			
 		var localStream;	
-		function getUserMedia(callback, includeAudio, includeVideo) {
+		function getUserMedia(callback) {
 			if (localStream) {
 				return localStream;
 			}
 
-			navigator.webkitGetUserMedia(
-				{audio: includeAudio, video: includeVideo},
+			navigator.webkitGetUserMedia(userMediaOptions,
 				function(stream) {
 					localStream = stream;
 					callback(stream);
@@ -45,31 +41,22 @@
 		};
 
 		function videoCall (to) {
+			getUserMedia(continueCall);
 
-			if (!(options.videoFromCaller || options.audioFromCaller)) {
-				continueCall(to)(null);
-			}
-			else {
-				getUserMedia(continueCall(to), options.audioFromCaller, options.videoFromCaller);
-			}
+			function continueCall (stream) {
+				var peerConnection = new webkitRTCPeerConnection(config);
 
-			function continueCall (to) {
-				return function(stream) {
-					var peerConnection = new webkitRTCPeerConnection(config);
-					peerConnection.createDataChannel("klj", {});
-					var id = peerConnections.add(peerConnection, to);
+				var id = peerConnections.add(peerConnection, to);
 
-					if (stream) peerConnection.addStream(stream);
-					peerConnection.createOffer(createOffer(function(desc) {
-						peerConnection.setLocalDescription(desc);
-						console.log(desc);
-						var offer = $msg({to: to, type: "offer", id: id})
-						.c("x", {xmlns: constants.xmpp.webrtc, type: "video"}).up()
-						.c("desc").t(JSON.stringify(desc));
-						console.log("sending offer");
-						xmpp.send(offer);
-					}));
-				};
+				peerConnection.createOffer(createOffer(function(desc) {
+					peerConnection.setLocalDescription(desc);
+					console.log(desc);
+					var offer = $msg({to: to, type: "offer", id: id})
+					.c("x", {xmlns: constants.xmpp.webrtc, type: "video"}).up()
+					.c("desc").t(JSON.stringify(desc));
+					console.log("sending offer");
+					xmpp.send(offer);
+				}));
 			}
 		}
 
@@ -104,8 +91,10 @@
 					iceCandidates.setReadyToSend(true);
 				}
 				peerConnection.ondatachannel = function(event) {
+					console.log("this should only be visible for receiver");
 					var dataChannel = event.channel;
-					dataSenders.getSender(to).addDataChannel(dataChannel);
+					dataSenders.getSender(to, true).addDataChannel(dataChannel);
+					dataSenders.getSender(to, true).addPeerConnection(dataChannel);
 
 					dataChannel.onerror = function (error) {
 						console.log("Data Channel Error:", error);
@@ -122,8 +111,10 @@
 				xmpp.addHandler(this.createAnswerHandler(peerConnection, answerHandlerCallback), constants.xmpp.webrtc, "message", "answer", id);
 				xmpp.addHandler(this.createIceHandler(peerConnection), constants.xmpp.webrtc, "message", "iceCandidate", id);
 
+
 				return id;
 			},
+
 			createIceCandidates: function(to, id) {
 				return {
 					list: [],
@@ -222,12 +213,7 @@
 
 			var type = data.getChildrenByTagName("x")[0].type;
 			if (type === "video") {
-				if (!(options.audioFromAnswerer || options.videoFromAnswerer)) {
-					continueOfferHandling(null);
-				}
-				else {
-					getUserMedia(continueOfferHandling, options.audioFromAnswerer, options.videoFromAnswerer);
-				}
+				getUserMedia(continueOfferHandling);
 			}
 			else {
 				continueOfferHandling(null);
@@ -281,72 +267,134 @@
 
 		var dataSenders = {
 			list: {},
-			getSender: function(to, id) {
+			getSender: function(to, getActualSender) {
 				console.log("new sender to: " + to);
 				if (!this.list[to]) {
 					this.list[to] = this.createSenderObject(to);
 				}
-				if (id) {
-					if (this.list[to].ids[id]) {
-						console.error("id not unique");
-						return;
-					}
 
-					this.list[to].ids[id] = true;
-				}
-
-				return this.list[to];
-			},
-			finishedSending: function(to, id) {
-				console.log("this is not good.");
-				if (this.list[to] && this.list[to].ids[id]) {
-					delete this.list[to].ids[id];
-					console.log("deleting sender id");
-					if (Object.keys(this.list[to].ids).length === 0) {
-						console.log("deleting sender");
-						delete this.list[to];
-					}
-
+				if (getActualSender) {
+					return this.list[to];
 				}
 				else {
-					console.error("cannot remove id");
+					return {
+						id: "id",
+						send: function(object, type) {
+							dataSenders.list[to].sendObject(object, type);
+						},
+						finished: function() {
+							console.log("finished");
+							//this.list[to].removeFileId(id);
+						}
+					};
 				}
+
+
 			},
 			createSenderObject: function(to) {
 				return {	
-					list: [],
+					dataChannels: [],
 					currentChannel: 0,
 					queue: [],
-					ids: {},
+					instanceIds: [],
 					sendingData: false,
-					addDataChannel: function(dataChannel) {
-						var object = {
-							channel: dataChannel,
-							timeout: false
+					listOfPeerConnections: [],
+					addPeerConnection: function(peerConnection) {
+						this.listOfPeerConnections.push(peerConnection);
+					},
+					readyToCreatePeerConnection: true,
+					newPeerConnection: function(callback) {
+						if (!this.readyToCreatePeerConnection) {
+							$timeout(callback, 100);
+							return;
+						}
+						console.log("creating peerconnection");
+						var peerConnection = new webkitRTCPeerConnection(config);
+						var id = peerConnections.add(peerConnection, to);
+
+						var dataChannel = peerConnection.createDataChannel("channel", {
+							ordered: false
+						}); 
+
+						dataChannel.onerror = function (error) {
+							console.log("Data Channel Error:", error);
 						};
-						this.list.push(object);
-						console.log("Number of data channels: " + this.list.length);
+
+						dataChannel.onmessage = messageHandlers.mainHandler(to);
+
+						dataChannel.onopen = function () {
+							console.log("datachannel opened from sender");
+							dataSenders.list[to].addDataChannel(dataChannel);
+							dataSenders.list[to].readyToCreatePeerConnection = false;
+							$timeout(function() {
+								dataSenders.list[to].readyToCreatePeerConnection = true;
+							}, 10000);
+
+							if (callback) {
+								$timeout(callback, 100);
+							}
+						};
+
+						dataChannel.onclose = function () {
+							dataSenders.list[to].removeDataChannel(dataChannel);
+							console.log("The Data Channel is Closed");
+						};
+
+						this.addPeerConnection(peerConnection);
+
+						peerConnection.createOffer(createOffer(function(desc) {
+							peerConnection.setLocalDescription(desc);
+							console.log(desc);
+							var offer = $msg({to: to, type: "offer", id: id})
+							.c("x", {xmlns: constants.xmpp.webrtc, type: "data"}).up()
+							.c("desc").t(JSON.stringify(desc));
+							console.log("sending offer");
+							xmpp.send(offer);
+						}));
+					},
+					removeInstanceId: function(instanceId) {
+						for (var i in instanceIds) {
+							if (this.instanceIds[i] === instanceId) {
+								instanceIds.splice(i,1);
+								console.log("deleting fileId");
+								return;
+							}
+						}
+						console.log("could not find and delete fileId");
+					},
+					addInstanceId: function(instanceId) {
+						this.instanceIds.push(instanceId);
+					},
+					addDataChannel: function(dataChannel) {
+						this.dataChannels.push(dataChannel);
+					},
+					removeDataChannel: function(dataChannel) {
+						console.log("trying to remove dataChannel");
+						for (var i in this.dataChannels) {
+							if (this.dataChannels[i] === dataChannel) {
+								this.dataChannels.splice(i,1);
+								console.log("removed dataChannel");
+								return;
+							}
+						}
+						console.log("could not find datachannel");
+
 					},
 					incrementCurrentChannel: function() {
-						if (++this.currentChannel === this.list.length) {
+						if (++this.currentChannel === this.dataChannels.length) {
 							this.currentChannel = 0;
 						}
 					},
 					sendOnAvailableChannel: function(object) {
 						var counter = 0;
-						while (counter++ !== this.list.length) {
+						while (counter++ !== this.dataChannels.length) {
 							try {
-								this.list[this.currentChannel].channel.send(object);
+								this.dataChannels[this.currentChannel].send(object);
 								return true;
 							}
 							catch (err) {
 							}
 							this.incrementCurrentChannel();
-						}
-						function resetTimeout(channelId) {
-							return function() {
-								dataSender.list[channelId].timeout = false;
-							};
 						}
 						return false;
 					},
@@ -365,12 +413,17 @@
 						}
 					},
 					sender: function() {
-						if (this.list.length) {
+						if (this.dataChannels.length) {
 							while(this.queue.length) {
 								var success = this.sendOnAvailableChannel(this.queue[0]);
 								if (!success) {
-									console.log("No working channels, timing out");
-									$timeout(this.restartDataSender, 100);
+									console.log("No working channels, timing out. number of dataChannels: " + this.dataChannels.length);
+									if (this.listOfPeerConnections.length < 5) {
+										this.newPeerConnection(this.restartDataSender);
+									}
+									else {
+										$timeout(this.restartDataSender, 100);
+									}
 									return;
 								}
 								else {
@@ -380,9 +433,13 @@
 							this.sendingData = false;
 
 						}
+						else if(!this.listOfPeerConnections.length) {
+							console.log("No peerConnections, creating one");
+							this.newPeerConnection(this.restartDataSender);
+						}
 						else {
-							console.log("no channels");
-							console.log(dataSenders);
+							console.log("data channel not yet established, waiting");
+							$timeout(this.restartDataSender, 1000);
 						}
 					},
 					restartDataSender: function() {
@@ -395,57 +452,13 @@
 
 		webrtc.sendObject = function(object, to, type) {
 			var sender = dataSenders.getSender(to);
-			sender.sendObject(object, type);
+			sender.send(object, type);
 		};
 
-		webrtc.getSender = function(to, type, callback) {
+		webrtc.getFileSender = function(to, type) {
 			console.log("initiating file sender");
 
-			var dataId = Math.random().toString(32).substring(2);
-			var sender = dataSenders.getSender(to, dataId);
-			console.log("this is this");
-			console.log(this);
-
-			var peerConnection = new webkitRTCPeerConnection(config);
-			var id = peerConnections.add(peerConnection, to);
-
-			var dataChannel = peerConnection.createDataChannel("channel1", {
-				ordered: false
-			}); 
-
-			dataChannel.onerror = function (error) {
-				console.log("Data Channel Error:", error);
-			};
-
-			dataChannel.onmessage = messageHandlers.mainHandler(to);
-
-			dataChannel.onopen = function () {
-				console.log("datachannel opened from sender");
-				callback({
-					send: function(object) {
-						sender.sendObject(object, type);
-					},
-					close: function() {
-						//dataSenders.finishedSending(to, dataId);
-						//peerConnection.close();
-					}
-				});
-			};
-			dataChannel.onclose = function () {
-				console.log("The Data Channel is Closed");
-			};
-
-			sender.addDataChannel(dataChannel);
-			peerConnection.createOffer(createOffer(function(desc) {
-				peerConnection.setLocalDescription(desc);
-				console.log(desc);
-				var offer = $msg({to: to, type: "offer", id: id})
-				.c("x", {xmlns: constants.xmpp.webrtc, type: "data"}).up()
-				.c("desc").t(JSON.stringify(desc));
-				console.log("sending offer");
-				xmpp.send(offer);
-			}));
-
+			return dataSenders.getSender(to);
 		};
 
 		var messageHandlers = {
