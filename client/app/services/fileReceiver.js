@@ -13,8 +13,15 @@
 		function cleanUp(filename) {
 			storage[filename] = {};
 		}
+		var prevValue = 0;
 		function fileHandler(data, from) {
-				console.log("incoming data: " + data.status + ", number: " + data.number);
+
+			if (parseInt(data.number) !== parseInt(prevValue) + 1) {
+				console.log("order not correct");
+				console.log("prev value: " + prevValue + " - current value: " + data.number);
+			}
+			prevValue = data.number;
+
 			if (data.number % 50 === 0) {
 				console.log("incoming data: " + data.status + ", number: " + data.number);
 			}
@@ -196,11 +203,13 @@
 			}
 		}
 
-		var sandbox = {};
+		var sandbox = {
+			counter: 0
+		};
 		function onInitFs(id, filenameInput, totalSlices, callback) {
 			return function(fs) {
 				console.log('Opened file system: ' + fs.name);
-				var filename = "files/" + filenameInput;
+				var filename = "files/" + filenameInput + "-" + Math.random().toString(32).substring(2) + "-" + sandbox.counter++;
 
 				continueFileInit(1);
 
@@ -260,7 +269,7 @@
 										console.log("saving file");
 										var link = document.createElement('a');
 										link.href = window.URL.createObjectURL(file);
-										link.download = file.name;
+										link.download = filenameInput;
 										link.click();
 										console.log("finished saving file");
 

@@ -84,7 +84,7 @@
 
 			function eof() {
 				signalFile(id, "eof", totalSlices, file.name);
-				//sender.close();
+				sender.close();
 			}
 
 			function read(blob, slice, callback) {

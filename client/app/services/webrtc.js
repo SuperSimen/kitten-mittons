@@ -370,7 +370,7 @@
 								var success = this.sendOnAvailableChannel(this.queue[0]);
 								if (!success) {
 									console.log("No working channels, timing out");
-									$timeout(this.restartDataSender, 1000);
+									$timeout(this.restartDataSender, 100);
 									return;
 								}
 								else {
@@ -386,8 +386,6 @@
 						}
 					},
 					restartDataSender: function() {
-						console.log(this.queue);
-						console.log(this.queue.length);
 						dataSenders.list[to].sender();
 					}
 				};
