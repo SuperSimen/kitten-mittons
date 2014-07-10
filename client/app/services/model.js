@@ -5,7 +5,22 @@
 		var model = {};
 
 		model.file = {
-			progress: 40,
+			list: {},
+			add: function(id, filename, user, sending) {
+
+				if (this.list[id]) {
+					return console.error("not unique file id");
+				}
+				this.list[id] = {
+					filename: filename,
+					user: user,
+					sending: sending,
+					progress: 0
+				};
+			},
+			remove: function(id) {
+				delete this.list[id];
+			}
 		};
 		model.video = {
 			local: "",

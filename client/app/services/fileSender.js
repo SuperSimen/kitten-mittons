@@ -1,6 +1,6 @@
 (function () {
 
-	app.factory('fileSender', function(webrtc, model) {
+	app.factory('fileSender', function($rootScope, webrtc, model) {
 		var fileSender = {
 			init: function() {
 				webrtc.addMessageHandler(dataHandlers.main, "fileReceiver");
@@ -29,21 +29,36 @@
 
 
 		fileSender.sendFile = function(to) {
-			if (!model.file.file) {return console.error("no file!!");}
-			var sender = webrtc.getFileSender(to, "fileSender");
-			console.log("sender");
-			console.log(sender);
-			startSending(sender);
-		};
+			if (!model.file.selectedFile) {return console.error("no file!!");}
+			var progress = {
+				counter: 0,
+				calculate: function() {
+					if (this.totalSlices && this.sliceSize) {
+						return (this.counter / (this.totalSlices * this.sliceSize)) * 100;
+					}
+					return false;
+				}
+			};
+			var sender = webrtc.getFileSender(to, "fileSender", function(status) {
+				if (status === "sent") {
+					progress.counter++;
+					var value = progress.calculate();
+					if (value) {
+						$rootScope.$apply(function() {
+							model.file.list[id].progress = value;
+						});
+					}
+				}
+			});
 
-		function startSending(sender) {
-			console.log("starting sending");
-
-			var file = model.file.file;
+			var file = model.file.selectedFile;
 			var size = file.size;
 			var maxSize = 100*1024*1024;
 			var totalSlices = Math.ceil(size / maxSize);
 			var id = generateRandomFileId();
+			
+			progress.totalSlices = totalSlices;
+			model.file.add(id, file.name, to, true);
 
 			dataHandlers.add(fileHandler, id);
 			var listOfCallbacks = [];
@@ -69,6 +84,9 @@
 				}
 				else if (data.status === "eof_ack") {
 					sender.finished();
+					$rootScope.$apply(function() {
+						model.file.remove(id);
+					});
 					//sender = null;
 				}
 			}
@@ -118,6 +136,8 @@
 					var buffer = event.target.result;
 
 					var array = btoa(buffer).match(/.{1,51200}/g);
+					if (!progress.sliceSize) progress.sliceSize = array.length;
+
 					signalSlice(id, "sos", slice, totalSlices, array.length, file.name);
 
 					listOfCallbacks[slice] = function() {
@@ -168,8 +188,7 @@
 				};
 				sender.send(tempFile, "fileSender");
 			}
-
-		}
+		};
 
 		var fileCounter = 0;
 

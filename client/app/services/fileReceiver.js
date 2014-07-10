@@ -1,6 +1,6 @@
 (function () {
 
-	app.factory('fileReceiver', function(webrtc) {
+	app.factory('fileReceiver', function($rootScope, webrtc, model) {
 		var fileReceiver = {
 			init: function() {
 				webrtc.addMessageHandler(fileHandler, "fileSender");
@@ -20,6 +20,10 @@
 			}
 			
 			if (data.status === "sof") {
+				$rootScope.$apply(function() {
+					model.file.add(data.id, data.filename, from, false);
+				});
+
 				console.log(data);
 				initiateFileSystem(data.id, data.filename, data.size, data.totalSlices, function() {
 					if (storage[data.id]) {
@@ -70,6 +74,14 @@
 				signalSlice(from, data.id, "sos_ack", data.slice, data.totalSlices, data.totalNumber, data.filename);
 			}
 			else if (data.status === "ongoing") {
+				if (!storage[data.id].sliceSize) storage[data.id].sliceSize = data.totalNumber;
+
+				var progress = (storage[data.id].counter / (storage[data.id].totalSlices * storage[data.id].sliceSize)) * 100;
+
+				$rootScope.$apply(function() {
+					model.file.list[data.id].progress = progress;
+				});
+
 				storage[data.id].counter++;
 				storage[data.id].slices[data.slice].counter++;
 				var byteArrays = base64toByteArrays(data.base64);
@@ -114,7 +126,10 @@
 				storage[data.id].counter === storage[data.id].getTotalNumber()) {
 
 				cleanUp(data.id);
-				signalFile(from, data.id, "eof_ack", data.totalSlices, data.filename);
+				model.file.remove(data.id);
+				$rootScope.$apply(function() {
+					signalFile(from, data.id, "eof_ack", data.totalSlices, data.filename);
+				});
 			}
 		}
 

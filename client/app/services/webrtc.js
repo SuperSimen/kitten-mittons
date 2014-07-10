@@ -267,7 +267,7 @@
 
 		var dataSenders = {
 			list: {},
-			getSender: function(to, getActualSender) {
+			getSender: function(to, getActualSender, statusCallback) {
 				console.log("new sender to: " + to);
 				if (!this.list[to]) {
 					this.list[to] = this.createSenderObject(to);
@@ -280,7 +280,7 @@
 					return {
 						id: "id",
 						send: function(object, type) {
-							dataSenders.list[to].sendObject(object, type);
+							dataSenders.list[to].sendObject(object, type, statusCallback);
 						},
 						finished: function() {
 							console.log("finished");
@@ -389,7 +389,11 @@
 						var counter = 0;
 						while (counter++ !== this.dataChannels.length) {
 							try {
-								this.dataChannels[this.currentChannel].send(object);
+								var message = JSON.stringify(object.msg);
+								this.dataChannels[this.currentChannel].send(message);
+								if (object.callback) {
+									object.callback("sent");
+								}
 								return true;
 							}
 							catch (err) {
@@ -398,12 +402,14 @@
 						}
 						return false;
 					},
-					sendObject: function(object, type) {
-						var msg = {
-							data: object,
-							type: type
-						};
-						this.addToQueue(JSON.stringify(msg));
+					sendObject: function(object, type, callback) {
+						this.addToQueue({
+							msg: {
+								data: object,
+								type: type,
+							},
+							callback: callback
+						});
 					},
 					addToQueue: function(data) {
 						this.queue.push(data);
@@ -418,12 +424,14 @@
 								var success = this.sendOnAvailableChannel(this.queue[0]);
 								if (!success) {
 									console.log("No working channels, timing out. number of dataChannels: " + this.dataChannels.length);
-									if (this.listOfPeerConnections.length < 5) {
-										this.newPeerConnection(this.restartDataSender);
-									}
-									else {
-										$timeout(this.restartDataSender, 100);
-									}
+									//if (this.listOfPeerConnections.length < 5) {
+									//	this.newPeerConnection(this.restartDataSender);
+									//}
+									//else {
+									//	$timeout(this.restartDataSender, 100);
+									//}
+									
+									$timeout(this.restartDataSender, 100);
 									return;
 								}
 								else {
@@ -455,10 +463,10 @@
 			sender.send(object, type);
 		};
 
-		webrtc.getFileSender = function(to, type) {
+		webrtc.getFileSender = function(to, type, statusCallback) {
 			console.log("initiating file sender");
 
-			return dataSenders.getSender(to);
+			return dataSenders.getSender(to, false, statusCallback);
 		};
 
 		var messageHandlers = {
