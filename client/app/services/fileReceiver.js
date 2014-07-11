@@ -143,7 +143,7 @@
 				filename: filename,
 				totalSlices: totalSlices
 			};
-			webrtc.sendObject(tempFile, to, "fileReceiver");
+			webrtc.sendObject(tempFile, to, "fileReceiver", true);
 		}
 
 		function signalSlice(to, id, status, slice, totalSlices, totalNumber, filename) {
@@ -156,7 +156,7 @@
 				totalSlices: totalSlices,
 				filename: filename
 			};
-			webrtc.sendObject(tempFile, to, "fileReceiver");
+			webrtc.sendObject(tempFile, to, "fileReceiver", true);
 		}
 
 

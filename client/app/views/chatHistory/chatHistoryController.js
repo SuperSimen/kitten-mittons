@@ -6,7 +6,15 @@ app.controller( 'chatHistoryController', function($scope, model) {
 	});
 
 	$scope.clickEntry = function(id) {
-		console.log("clicke on " + id);
 		model.chat.setCurrent(id);
+	};
+
+	$scope.isActive = function(id) {
+		if (id === model.chat.currentId) {
+			return true;
+		}
+		else {
+			return false;
+		}
 	};
 });

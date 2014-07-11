@@ -1,6 +1,6 @@
 <div class="row"> 
 	<div class="navbar navbar-default no-margin" role="navigation">
-		<div class="container">
+		<div class="container default-cursor">
 			<div class="navbar-header">
 				<div class="navbar-brand"><img src="bower_components/uninett-bootstrap-theme/uninett-theme/images/UNINETT_logo.svg" alt="Uninett logo" type="image/svg+xml"></div>
 			</div>
@@ -8,10 +8,9 @@
 			<div class="department">Kitten Mittons</div>
 
 			<ul class="nav navbar-nav">
-				<li><a href ui-sref="video">Video</a></li>
-				<li><a href ui-sref="video.active">Video.active</a></li>
-				<li><a href ui-sref="chat">Chat</a></li>
-				<li><a href ui-sref="file">File</a></li>
+				<li><a href ng-click="gotoState('chat')">Chat</a></li>
+				<li><a href ng-click="gotoState('video')">Video</a></li>
+				<li><a href ng-click="gotoState('file')">File</a></li>
 			</ul>
 		</div>
 	</div>

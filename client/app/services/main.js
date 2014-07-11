@@ -3,13 +3,13 @@
 	app.factory('main', function(UWAP, xmpp, model, $state, $rootScope, $http, constants, webrtc, fileSender, fileReceiver, $timeout) {
 		var main = {
 			init: function() {
-				$state.go("file");
+				$state.go("chat");
 				gatherInfoPart1();
 				fileSender.init();
 				fileReceiver.init();
-				$rootScope.$watch(function () {return model.video.remote;}, function(newValue) {
+				$rootScope.$watch(function () {return model.video.remote.src;}, function(newValue) {
 					if (newValue) {
-						$state.go("video");
+						$state.go("video.active");
 					}
 				});
 			}

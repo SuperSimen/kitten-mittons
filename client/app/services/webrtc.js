@@ -37,6 +37,7 @@
 		}
 
 		webrtc.call = function (to) {
+			model.video.remote.userId = to.substring(0, to.indexOf("@"));
 			videoCall(to);
 		};
 
@@ -45,6 +46,7 @@
 
 			function continueCall (stream) {
 				var peerConnection = new webkitRTCPeerConnection(config);
+				if (stream) peerConnection.addStream(stream);
 
 				var id = peerConnections.add(peerConnection, to);
 
@@ -198,7 +200,6 @@
 
 
 		function handleOffer (data) {
-			console.log(data);
 			var from = data.from;
 			var desc = JSON.parse(data.getChildrenByTagName("desc")[0].children[0].data);
 			var id = data.id;
@@ -214,6 +215,7 @@
 			var type = data.getChildrenByTagName("x")[0].type;
 			if (type === "video") {
 				getUserMedia(continueOfferHandling);
+				model.video.remote.userId = from.substring(0, from.indexOf("@"));
 			}
 			else {
 				continueOfferHandling(null);
@@ -268,7 +270,6 @@
 		var dataSenders = {
 			list: {},
 			getSender: function(to, getActualSender, statusCallback) {
-				console.log("new sender to: " + to);
 				if (!this.list[to]) {
 					this.list[to] = this.createSenderObject(to);
 				}
@@ -417,6 +418,7 @@
 					},
 					addToQueue: function(data, priority) {
 						if (priority) {
+							console.log("adding message to the front of the queue");
 							this.queue.unshift(data);
 						}
 						else {
@@ -467,9 +469,9 @@
 			}
 		};
 
-		webrtc.sendObject = function(object, to, type) {
+		webrtc.sendObject = function(object, to, type, priority) {
 			var sender = dataSenders.getSender(to);
-			sender.send(object, type);
+			sender.send(object, type, priority);
 		};
 
 		webrtc.getFileSender = function(to, type, statusCallback) {

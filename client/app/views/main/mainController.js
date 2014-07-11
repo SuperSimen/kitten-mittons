@@ -36,4 +36,18 @@ app.controller( 'mainController', function($scope, model, $state) {
 		}
 		return model.friends.list[id];
 	};
+	$scope.gotoState = function(state) {
+		console.log("going to state");
+		if (state === "video") {
+			if (model.video.remote.src) {
+				$state.go("video.active");
+			}
+			else {
+				$state.go("video");
+			}
+		}
+		else {
+			$state.go(state);
+		}
+	};
 });
