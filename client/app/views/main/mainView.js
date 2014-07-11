@@ -1,8 +1,8 @@
 var mainView = angular.module( 'mainView', []);
 
 app.config( function ($stateProvider) {
-	$stateProvider.state('main', {
-		parent: 'normal',
+	$stateProvider.state('friendsVisible', {
+		parent: 'base',
 		views: {
 			"view3-animated": {
 				controller: "friendsController",
@@ -10,29 +10,36 @@ app.config( function ($stateProvider) {
 			}
 		}
 	}).state('video', {
-		parent: 'main',
+		parent: 'friendsVisible',
 		views: {
-			"view2@normal": {
+			"view2@base": {
 				controller: "videoController",
 				templateUrl: "app/views/video/video.tpl.html"
 			}
 		}
-	}).state('chat', {
-		parent: 'main',
+	}).state('video.active', {
 		views: {
-			"view2-animated@normal": {
+			"view3-animated@base": {
 				controller: "chatController",
 				templateUrl: "app/views/chat/chat.tpl.html"
 			},
-			"view1-animated@normal": {
+		}
+	}).state('chat', {
+		parent: 'friendsVisible',
+		views: {
+			"view2-animated@base": {
+				controller: "chatController",
+				templateUrl: "app/views/chat/chat.tpl.html"
+			},
+			"view1-animated@base": {
 				controller: "chatHistoryController",
 				templateUrl: "app/views/chatHistory/chatHistory.tpl.html"
 			}
 		}
 	}).state('file', {
-		parent: 'main',
+		parent: 'friendsVisible',
 		views: {
-			"view2-animated@normal": {
+			"view2-animated@base": {
 				controller: "fileController",
 				templateUrl: "app/views/file/file.tpl.html"
 			}

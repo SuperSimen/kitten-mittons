@@ -17,16 +17,11 @@ app.controller( 'mainController', function($scope, model, $state) {
 			"col-xs-10",
 			"col-xs-2",
 		],
-		main: [
+		"video.active": [
 			"hidden",
 			"col-xs-10",
 			"col-xs-2",
-		],
-		normal: [
-			"hidden",
-			"hidden",
-			"hidden",
-		],
+		]
 	};
 	$scope.getCol = function(viewNumber) {
 		var state = $state.current.name;

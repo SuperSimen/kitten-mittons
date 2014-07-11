@@ -260,7 +260,7 @@
 			console.log(e);
 
 			$rootScope.$apply(function() {
-				model.video.remote = $sce.trustAsResourceUrl(URL.createObjectURL(e.stream));
+				model.video.remote.src = $sce.trustAsResourceUrl(URL.createObjectURL(e.stream));
 			});
 		}
 

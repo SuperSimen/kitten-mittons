@@ -97,7 +97,20 @@
 				var x = data.getChildrenByTagName("x");
 				if (x.length && x[0].xmlns === constants.xmpp.mucUser) {
 					var item = x[0].getChildrenByTagName("item");
+
+					var statuses = x[0].getChildrenByTagName("status");
+					var codes = {};
+					for (var i = 0; i < statuses.length; i++) {
+						if (statuses[i]) {
+							var code = statuses[i].code;
+							if (code) {
+								codes[code] = true;
+							}
+						}
+					}
+
 					if (item.length) {
+
 						var jid = item[0].jid;
 						if (jid) {
 							$rootScope.$apply(function() {
@@ -106,6 +119,9 @@
 									var friend = model.friends.list[userName];
 									if (!friend) {
 										friend = model.friends.create(userName);
+										if (codes["110"]) {
+											friend.me = true;
+										}
 										main.getVCard(jid.substring(0, jid.indexOf("/")));
 									}
 									model.groups.list[groupId].addFriend(friend);
@@ -120,20 +136,11 @@
 						}
 
 						if (item[0].role === "moderator") {
-							var statuses = x[0].getChildrenByTagName("status");
-							var codes = {};
-							for (var i = 0; i < statuses.length; i++) {
-								if (statuses[i]) {
-									var code = statuses[i].code;
-									if (code) {
-										codes[code] = true;
-									}
-								}
-							}
 							if (codes["110"] && !codes["100"]) {
 								xmpp.sendRoomConfig(from.substring(0, from.indexOf("/")));
 							}
 						}
+
 					}
 				}
 			}

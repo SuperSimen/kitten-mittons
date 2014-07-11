@@ -9,9 +9,11 @@
 					</div>
 				</div>
 				<div ng-show="showMembers" ng-repeat="friend in group.friends" class="row hover-white" ng-click="clickOnFriend(friend)">
-					<div class="col-md-12">
-						<i class="fa fa-circle icon presence-icon" ng-class="{'online': friend.online, 'offline': !friend.online}"></i>
-						&nbsp&nbsp{{friend.FN}}
+					<div ng-hide="friend.me">
+						<div class="col-md-12">
+							<i class="fa fa-circle icon presence-icon" ng-class="{'online': friend.online, 'offline': !friend.online}"></i>
+							&nbsp&nbsp{{friend.FN}}
+						</div>
 					</div>
 				</div>
 			</div>

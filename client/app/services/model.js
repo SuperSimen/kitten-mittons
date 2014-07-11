@@ -24,7 +24,10 @@
 		};
 		model.video = {
 			local: "",
-			remote: ""
+			remote: {
+				src: "",
+				userId: ""
+			}
 		};
 
 		model.user = {
@@ -69,6 +72,9 @@
 				this.sort();
 			},
 			get: function(id) {
+				if (!id) {
+					return;
+				}
 				this.create(id);
 				return this.sortableArray[this.listOfIndices[id]];
 			},

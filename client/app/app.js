@@ -4,20 +4,9 @@ var app = angular.module( 'app', [
 	'mainView'
 ]);
 app.config( function ( $stateProvider) {
-	$stateProvider.state('test', {
-		controller: "testController",
-		templateUrl: "app/views/test/test.tpl.html"
-	}).state('normal', {
-		views: {
-			"": {
-				controller: "mainController",
-				templateUrl: "app/views/main/main.tpl.html"
-			},
-			"dust@main": {
-				template: "hei"
-			}
-
-		}
+	$stateProvider.state('base', {
+		controller: "mainController",
+		templateUrl: "app/views/main/main.tpl.html"
 	});
 });
 
