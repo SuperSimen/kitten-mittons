@@ -1,4 +1,4 @@
-<div class="row"> 
+<div class="row" ng-controller="navBarController"> 
 	<div class="navbar navbar-default no-margin" role="navigation">
 		<div class="container default-cursor">
 			<div class="navbar-header">
@@ -8,9 +8,9 @@
 			<div class="department">Kitten Mittons</div>
 
 			<ul class="nav navbar-nav">
-				<li><a href ng-click="gotoState('chat')">Chat</a></li>
-				<li><a href ng-click="gotoState('video')">Video</a></li>
-				<li><a href ng-click="gotoState('file')">File</a></li>
+				<li ng-class="{'active': isActive('chat')}" ><a href ng-click="gotoState('chat')">Chat<span class="badge" ng-show="chat.unread != 0" ng-bind="chat.unread"></span></a></li>
+				<li ng-class="{'active': isActive('video')}"><a href ng-click="gotoState('video')">Video</a></li>
+				<li ng-class="{'active': isActive('file')}"><a href ng-click="gotoState('file')">File<span class="badge" ng-show="file.unseen != 0" ng-bind="file.unseen"></span></a></li>
 			</ul>
 		</div>
 	</div>

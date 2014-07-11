@@ -11,9 +11,9 @@
 		var storage = {};
 
 		function cleanUp(id) {
+			storage[id].sender.finished();
 			storage[id] = {};
 		}
-		var prevValue = 0;
 		function fileHandler(data, from) {
 			if (data.number % 50 === 0) {
 				console.log("incoming data: " + data.status + ", number: " + data.number);
@@ -44,6 +44,8 @@
 						},
 						slices: []
 					};
+					storage[data.id].sender = webrtc.getFileSender(from, "fileReceiver");
+
 					console.log("starting file transfer. Total number of slices: " + data.totalSlices);
 					signalFile(from, data.id, "sof_ack", data.totalSlices, data.filename);
 				});
@@ -127,27 +129,33 @@
 			if (storage[data.id] && storage[data.id].eof &&
 				storage[data.id].counter === storage[data.id].getTotalNumber()) {
 
-				cleanUp(data.id);
 				$rootScope.$apply(function() {
 					model.file.remove(data.id);
 				});
 				signalFile(from, data.id, "eof_ack", data.totalSlices, data.filename);
+
+
+				cleanUp(data.id);
 			}
 		}
 
+
 		function signalFile(to, id, status, totalSlices, filename) {
-			console.log("signalling file to " + to);
 			var tempFile = {
 				id: id,
 				status: status,
 				filename: filename,
 				totalSlices: totalSlices
 			};
-			webrtc.sendObject(tempFile, to, "fileReceiver", true);
+			if (storage[id].sender) {
+				storage[id].sender.send(tempFile, true);
+			}
+			else {
+				console.error("no sender");
+			}
 		}
 
 		function signalSlice(to, id, status, slice, totalSlices, totalNumber, filename) {
-			console.log("signalling slice to " + to);
 			var tempFile = {
 				id: id,
 				slice: slice,
@@ -156,7 +164,12 @@
 				totalSlices: totalSlices,
 				filename: filename
 			};
-			webrtc.sendObject(tempFile, to, "fileReceiver", true);
+			if (storage[id].sender) {
+				storage[id].sender.send(tempFile, true);
+			}
+			else {
+				console.error("no sender");
+			}
 		}
 
 
@@ -181,9 +194,6 @@
 			return byteArrays;
 		}
 
-		function initiateFileSystem(id, filename, fileSize, totalSlices, callback) {
-			window.webkitRequestFileSystem(window.TEMPORARY, 1024, onInitFs(id, filename, totalSlices, callback), errorHandler);
-		}
 
 		function prepareSandbox() {
 			window.webkitRequestFileSystem(window.TEMPORARY, 0, onInit, errorHandler);
@@ -213,6 +223,17 @@
 					}, errorHandler); 
 				}
 				deleteDirectory("files");
+			}
+		}
+
+		function initiateFileSystem(id, filename, fileSize, totalSlices, callback) {
+			if (fileSize > 1024*1024) {
+				navigator.webkitPersistentStorage.requestQuota(fileSize, function(grantedBytes) {
+					window.webkitRequestFileSystem(window.PERSISTENT, grantedBytes, onInitFs(id, filename, totalSlices, callback), errorHandler);
+				}, errorHandler);
+			}
+			else {
+				window.webkitRequestFileSystem(window.TEMPORARY, fileSize, onInitFs(id, filename, totalSlices, callback), errorHandler);
 			}
 		}
 

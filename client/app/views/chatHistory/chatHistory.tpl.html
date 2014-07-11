@@ -6,8 +6,8 @@
 					<div ng-click="clickEntry(entry.id)" ng-class="{'active': isActive(entry.id)}" class="row hover-white chat-entry">
 						<div class="col-md-12">
 							{{getFriendFromId(entry.id).FN}}
+							<span class="badge" ng-bind="getUnread(entry.id)"></span>
 						</div>
-
 					</div>
 
 			</div>

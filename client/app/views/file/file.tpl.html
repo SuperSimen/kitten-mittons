@@ -1,6 +1,9 @@
 <div class="row color-grey fill-height">
-	<div class="col-md-12 gutter fill-height-minus-gutter">
+	<div class="col-md-12 gutter fill-height-minus-gutter auto-overflow">
 		<input type="file" ba-file-selector file="file.selectedFile"/>		
+		<div ng-repeat="log in file.log">
+			{{log.failed && failed || log.filename + (log.sent && ' was sent to ' || ' was downloaded from ') + getFriendFromId(log.user).FN}}
+		</div>
 		<div ng-repeat="f in file.list">
 			<div>{{f.sending && "Sending " + f.filename + " to " || "Receiving " + f.filename + " from "}} {{getFriendFromId(f.user).FN}}</div>
 			<div class="progress">

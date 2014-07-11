@@ -1,6 +1,6 @@
 (function () {
 
-	app.factory('model', function() {
+	app.factory('model', function($state) {
 		
 		var model = {};
 
@@ -17,10 +17,22 @@
 					sending: sending,
 					progress: 0
 				};
+
+				if ($state.current.name !== "file") {
+					this.unseen ++;
+				}
 			},
-			remove: function(id) {
+			remove: function(id, failed) {
+				this.log.push({
+					filename: this.list[id].filename,
+					user: this.list[id].user,
+					sent: this.list[id].sending,
+					failed: failed
+				});
 				delete this.list[id];
-			}
+			},
+			unseen: 0,
+			log: []
 		};
 		model.video = {
 			local: "",
@@ -38,6 +50,7 @@
 
 
 		model.chat = {
+			unread: 0,
 			listOfIndices: {},
 			sortableArray: [],
 			currentId: "",
@@ -62,11 +75,28 @@
 					id: id,
 					mostRecentTime: 0,
 					messages: [],
+					unread: 0,
 					addMessage: function(from, message) {
 						this.messages.push({
 							from: from, 
 							message: message
 						});
+
+						if ($state.current.name !== "chat") {
+							if ($state.current.name === "video.active" && model.video.remote.userId === id) {
+
+							}
+							else {
+								if (model.chat.currentId !== id) {
+									this.unread ++;
+								}
+
+								model.chat.unread ++;
+							}
+						}
+						else if (model.chat.currentId !== id) {
+							this.unread ++;
+						}
 					},
 				});
 				this.sort();

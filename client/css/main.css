@@ -143,3 +143,7 @@ body {
 .presence-icon.offline {
 	color: #eb212e;
 }
+
+.badge {
+	margin-left: 5px;
+}

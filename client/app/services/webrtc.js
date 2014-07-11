@@ -93,7 +93,6 @@
 					iceCandidates.setReadyToSend(true);
 				}
 				peerConnection.ondatachannel = function(event) {
-					console.log("this should only be visible for receiver");
 					var dataChannel = event.channel;
 					dataSenders.getSender(to, true).addDataChannel(dataChannel);
 					dataSenders.getSender(to, true).addPeerConnection(dataChannel);
@@ -269,7 +268,8 @@
 
 		var dataSenders = {
 			list: {},
-			getSender: function(to, getActualSender, statusCallback) {
+			counter: 0,
+			getSender: function(to, getActualSender, type, statusCallback) {
 				if (!this.list[to]) {
 					this.list[to] = this.createSenderObject(to);
 				}
@@ -278,13 +278,18 @@
 					return this.list[to];
 				}
 				else {
+					var id = Math.random().toString(32).substring(2) + this.counter++;
+					this.list[to].addInstanceId(id);
 					return {
-						id: "id",
-						send: function(object, type, priority) {
+						send: function(object, priority) {
 							dataSenders.list[to].sendObject(object, type, statusCallback, priority);
 						},
 						finished: function() {
 							console.log("finished");
+							dataSenders.list[to].removeInstanceId(id);
+							if (dataSenders.list[to].instanceIds.length === 0) {
+								dataSenders.list[to].clean();
+							}
 							//this.list[to].removeFileId(id);
 						}
 					};
@@ -357,11 +362,27 @@
 							$timeout(callback, 100);
 						}
 					},
+					clean: function() {
+						if (this.queue.length === 0) {
+							console.log("trying to clean, queue is empty");
+							while (this.listOfPeerConnections.length) {
+								this.listOfPeerConnections[0].close();
+								this.listOfPeerConnections.shift();
+							}
+							console.log("finished cleaning peerConnections");
+						}
+						else {
+							$timeout(function() {
+								console.log("trying to clean, queue is not empty, timing out");
+								dataSenders.list[to].clean();
+							}, 5000);
+						}
+					},
 					removeInstanceId: function(instanceId) {
-						for (var i in instanceIds) {
+						for (var i in this.instanceIds) {
 							if (this.instanceIds[i] === instanceId) {
-								instanceIds.splice(i,1);
-								console.log("deleting fileId");
+								this.instanceIds.splice(i,1);
+								console.log("deleting instanceId");
 								return;
 							}
 						}
@@ -434,7 +455,7 @@
 							while(this.queue.length) {
 								var success = this.sendOnAvailableChannel(this.queue[0]);
 								if (!success) {
-									console.log("No working channels, timing out. number of dataChannels: " + this.dataChannels.length);
+									console.log("No working channels, timing out. number of dataChannels: " + this.dataChannels.length + " number of peerConnections: " + this.listOfPeerConnections.length);
 									if (this.dataChannels.length < 5) {
 										this.newPeerConnection(this.restartDataSender);
 									}
@@ -469,15 +490,10 @@
 			}
 		};
 
-		webrtc.sendObject = function(object, to, type, priority) {
-			var sender = dataSenders.getSender(to);
-			sender.send(object, type, priority);
-		};
-
 		webrtc.getFileSender = function(to, type, statusCallback) {
 			console.log("initiating file sender");
 
-			return dataSenders.getSender(to, false, statusCallback);
+			return dataSenders.getSender(to, false, type, statusCallback);
 		};
 
 		var messageHandlers = {

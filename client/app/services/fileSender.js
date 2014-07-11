@@ -167,7 +167,7 @@
 					slice: slice,
 					totalSlices: totalSlices
 				};
-				sender.send(tempFile, "fileSender");
+				sender.send(tempFile);
 			}
 
 			function signalFile(id, status, totalSlices, filename) {
@@ -177,7 +177,7 @@
 					filename: filename,
 					totalSlices: totalSlices
 				};
-				sender.send(tempFile, "fileSender");
+				sender.send(tempFile);
 			}
 
 			function signalSlice(id, status, slice, totalSlices, totalNumber, filename) {
@@ -189,7 +189,7 @@
 					totalSlices: totalSlices,
 					filename: filename
 				};
-				sender.send(tempFile, "fileSender");
+				sender.send(tempFile);
 			}
 		};
 

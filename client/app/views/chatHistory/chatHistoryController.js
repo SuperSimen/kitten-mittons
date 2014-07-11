@@ -7,6 +7,7 @@ app.controller( 'chatHistoryController', function($scope, model) {
 
 	$scope.clickEntry = function(id) {
 		model.chat.setCurrent(id);
+		model.chat.getCurrent().unread = 0;
 	};
 
 	$scope.isActive = function(id) {
@@ -15,6 +16,16 @@ app.controller( 'chatHistoryController', function($scope, model) {
 		}
 		else {
 			return false;
+		}
+	};
+
+	$scope.getUnread = function(id) {
+		var unread = model.chat.get(id).unread;
+		if (unread) {
+			return unread;
+		}
+		else {
+			return "";
 		}
 	};
 });

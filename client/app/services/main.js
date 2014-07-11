@@ -3,7 +3,7 @@
 	app.factory('main', function(UWAP, xmpp, model, $state, $rootScope, $http, constants, webrtc, fileSender, fileReceiver, $timeout) {
 		var main = {
 			init: function() {
-				$state.go("chat");
+				$state.go("file");
 				gatherInfoPart1();
 				fileSender.init();
 				fileReceiver.init();
