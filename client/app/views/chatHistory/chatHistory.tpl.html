@@ -4,7 +4,6 @@
 			<div ng-repeat="entry in history" ng-init="active = 0" >
 				<div ng-click="clickEntry(entry.id)" ng-class="{'chat-entry-active': entry.id === chat.currentId}" class="row hover-white">
 					<div class="col-md-12">
-						{{entry.id}}
 						{{getFriendFromId(entry.id).FN}}
 					</div>
 				</div>

@@ -33,7 +33,10 @@ app.controller( 'mainController', function($scope, model, $state) {
 		return stateViewCols[state][viewNumber - 1];
 	};
 	$scope.getFriendFromId = function(id) {
-		if (id.indexOf("@")) {
+		if (!id) {
+			return;
+		}
+		if (id.indexOf("@") != -1) {
 			id = id.substring(0, id.indexOf("@"));
 		}
 		return model.friends.list[id];

@@ -279,8 +279,8 @@
 				else {
 					return {
 						id: "id",
-						send: function(object, type) {
-							dataSenders.list[to].sendObject(object, type, statusCallback);
+						send: function(object, type, priority) {
+							dataSenders.list[to].sendObject(object, type, statusCallback, priority);
 						},
 						finished: function() {
 							console.log("finished");
@@ -308,6 +308,12 @@
 							$timeout(callback, 100);
 							return;
 						}
+
+						dataSenders.list[to].readyToCreatePeerConnection = false;
+						$timeout(function() {
+							dataSenders.list[to].readyToCreatePeerConnection = true;
+						}, 10000);
+
 						console.log("creating peerconnection");
 						var peerConnection = new webkitRTCPeerConnection(config);
 						var id = peerConnections.add(peerConnection, to);
@@ -325,14 +331,7 @@
 						dataChannel.onopen = function () {
 							console.log("datachannel opened from sender");
 							dataSenders.list[to].addDataChannel(dataChannel);
-							dataSenders.list[to].readyToCreatePeerConnection = false;
-							$timeout(function() {
-								dataSenders.list[to].readyToCreatePeerConnection = true;
-							}, 10000);
 
-							if (callback) {
-								$timeout(callback, 100);
-							}
 						};
 
 						dataChannel.onclose = function () {
@@ -351,6 +350,11 @@
 							console.log("sending offer");
 							xmpp.send(offer);
 						}));
+
+
+						if (callback) {
+							$timeout(callback, 100);
+						}
 					},
 					removeInstanceId: function(instanceId) {
 						for (var i in instanceIds) {
@@ -402,17 +406,22 @@
 						}
 						return false;
 					},
-					sendObject: function(object, type, callback) {
+					sendObject: function(object, type, callback, priority) {
 						this.addToQueue({
 							msg: {
 								data: object,
 								type: type,
 							},
 							callback: callback
-						});
+						}, priority);
 					},
-					addToQueue: function(data) {
-						this.queue.push(data);
+					addToQueue: function(data, priority) {
+						if (priority) {
+							this.queue.unshift(data);
+						}
+						else {
+							this.queue.push(data);
+						}
 						if (!this.sendingData) {
 							this.sendingData = true;
 							this.restartDataSender();
@@ -424,14 +433,14 @@
 								var success = this.sendOnAvailableChannel(this.queue[0]);
 								if (!success) {
 									console.log("No working channels, timing out. number of dataChannels: " + this.dataChannels.length);
-									//if (this.listOfPeerConnections.length < 5) {
-									//	this.newPeerConnection(this.restartDataSender);
-									//}
-									//else {
-									//	$timeout(this.restartDataSender, 100);
-									//}
+									if (this.dataChannels.length < 5) {
+										this.newPeerConnection(this.restartDataSender);
+									}
+									else {
+										$timeout(this.restartDataSender, 100);
+									}
 									
-									$timeout(this.restartDataSender, 100);
+									//$timeout(this.restartDataSender, 100);
 									return;
 								}
 								else {

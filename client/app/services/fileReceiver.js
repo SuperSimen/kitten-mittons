@@ -76,11 +76,13 @@
 			else if (data.status === "ongoing") {
 				if (!storage[data.id].sliceSize) storage[data.id].sliceSize = data.totalNumber;
 
-				var progress = (storage[data.id].counter / (storage[data.id].totalSlices * storage[data.id].sliceSize)) * 100;
+				if (data.number % 25 === 0) {
+					var progress = (storage[data.id].counter / (storage[data.id].totalSlices * storage[data.id].sliceSize)) * 100;
 
-				$rootScope.$apply(function() {
-					model.file.list[data.id].progress = progress;
-				});
+					$rootScope.$apply(function() {
+						model.file.list[data.id].progress = progress;
+					});
+				}
 
 				storage[data.id].counter++;
 				storage[data.id].slices[data.slice].counter++;
@@ -126,10 +128,10 @@
 				storage[data.id].counter === storage[data.id].getTotalNumber()) {
 
 				cleanUp(data.id);
-				model.file.remove(data.id);
 				$rootScope.$apply(function() {
-					signalFile(from, data.id, "eof_ack", data.totalSlices, data.filename);
+					model.file.remove(data.id);
 				});
+				signalFile(from, data.id, "eof_ack", data.totalSlices, data.filename);
 			}
 		}
 

@@ -42,11 +42,14 @@
 			var sender = webrtc.getFileSender(to, "fileSender", function(status) {
 				if (status === "sent") {
 					progress.counter++;
-					var value = progress.calculate();
-					if (value) {
-						$rootScope.$apply(function() {
-							model.file.list[id].progress = value;
-						});
+					if (progress.counter % 25 === 0) {
+						var value = progress.calculate();
+						if (value) {
+							$rootScope.$apply(function() {
+								model.file.list[id].progress = value;
+							});
+						}
+
 					}
 				}
 			});

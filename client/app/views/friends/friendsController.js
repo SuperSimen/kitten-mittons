@@ -9,5 +9,9 @@ app.controller( 'friendsController', function(main, $state, $scope, model) {
 		else if (currentState === "file") {
 			main.sendFile(friend.id);
 		}
+		else if (currentState === "video") {
+			main.call(friend.id);
+		}
+
 	};
 });
