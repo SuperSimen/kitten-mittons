@@ -94,19 +94,10 @@
 				}
 				peerConnection.ondatachannel = function(event) {
 					var dataChannel = event.channel;
+
 					dataSenders.getSender(to, true).addDataChannel(dataChannel);
 					dataSenders.getSender(to, true).addPeerConnection(dataChannel);
 
-					dataChannel.onerror = function (error) {
-						console.log("Data Channel Error:", error);
-					};
-					dataChannel.onmessage = messageHandlers.mainHandler(to);
-					dataChannel.onopen = function () {
-						console.log("datachannel opened from receiver");
-					};
-					dataChannel.onclose = function () {
-						console.log("The Data Channel is Closed");
-					};
 				};
 
 				xmpp.addHandler(this.createAnswerHandler(peerConnection, answerHandlerCallback), constants.xmpp.webrtc, "message", "answer", id);
@@ -288,14 +279,17 @@
 							console.log("finished");
 							dataSenders.list[to].removeInstanceId(id);
 							if (dataSenders.list[to].instanceIds.length === 0) {
-								dataSenders.list[to].clean();
+								console.log("here");
+								dataSenders.list[to].clean(function() {
+								console.log("here inside");
+									if (dataSenders.list[to]) {
+										//delete dataSenders.list[to];
+									}
+								});
 							}
-							//this.list[to].removeFileId(id);
 						}
 					};
 				}
-
-
 			},
 			createSenderObject: function(to) {
 				return {	
@@ -316,8 +310,10 @@
 						}
 
 						dataSenders.list[to].readyToCreatePeerConnection = false;
-						$timeout(function() {
-							dataSenders.list[to].readyToCreatePeerConnection = true;
+						this.timeoutPromise = $timeout(function() {
+							if (dataSenders.list[to]) {
+								dataSenders.list[to].readyToCreatePeerConnection = true;
+							}
 						}, 10000);
 
 						console.log("creating peerconnection");
@@ -328,24 +324,9 @@
 							ordered: false
 						}); 
 
-						dataChannel.onerror = function (error) {
-							console.log("Data Channel Error:", error);
-						};
-
-						dataChannel.onmessage = messageHandlers.mainHandler(to);
-
-						dataChannel.onopen = function () {
-							console.log("datachannel opened from sender");
-							dataSenders.list[to].addDataChannel(dataChannel);
-
-						};
-
-						dataChannel.onclose = function () {
-							dataSenders.list[to].removeDataChannel(dataChannel);
-							console.log("The Data Channel is Closed");
-						};
 
 						this.addPeerConnection(peerConnection);
+						this.addDataChannel(dataChannel);
 
 						peerConnection.createOffer(createOffer(function(desc) {
 							peerConnection.setLocalDescription(desc);
@@ -362,21 +343,17 @@
 							$timeout(callback, 100);
 						}
 					},
-					clean: function() {
-						if (this.queue.length === 0) {
-							console.log("trying to clean, queue is empty");
-							while (this.listOfPeerConnections.length) {
-								this.listOfPeerConnections[0].close();
-								this.listOfPeerConnections.shift();
-							}
-							console.log("finished cleaning peerConnections");
+					clean: function(callback) {
+						console.log("CLEANING!!!!!!!!!!");
+
+						while (this.listOfPeerConnections.length) {
+							this.listOfPeerConnections[0].close();
+							this.listOfPeerConnections.shift();
 						}
-						else {
-							$timeout(function() {
-								console.log("trying to clean, queue is not empty, timing out");
-								dataSenders.list[to].clean();
-							}, 5000);
-						}
+
+						this.currentChannel = 0;
+
+						if (callback) callback();
 					},
 					removeInstanceId: function(instanceId) {
 						for (var i in this.instanceIds) {
@@ -392,7 +369,23 @@
 						this.instanceIds.push(instanceId);
 					},
 					addDataChannel: function(dataChannel) {
-						this.dataChannels.push(dataChannel);
+
+						dataChannel.onerror = function (error) {
+							console.log("Data Channel Error:", error);
+						};
+						dataChannel.onmessage = messageHandlers.mainHandler(to);
+						dataChannel.onopen = function () {
+							dataSenders.list[to].dataChannels.push(dataChannel);
+							console.log("adding datachannel, number of datachannels: " + dataSenders.list[to].dataChannels.length);
+							console.log("to: " + to);
+						};
+						dataChannel.onclose = function () {
+							if (dataSenders.list[to]) {
+								dataSenders.list[to].removeDataChannel(dataChannel);
+							}
+							console.log("The Data Channel is Closed");
+						};
+
 					},
 					removeDataChannel: function(dataChannel) {
 						console.log("trying to remove dataChannel");
@@ -404,16 +397,15 @@
 							}
 						}
 						console.log("could not find datachannel");
-
 					},
 					incrementCurrentChannel: function() {
-						if (++this.currentChannel === this.dataChannels.length) {
+						if (++this.currentChannel >= this.dataChannels.length) {
 							this.currentChannel = 0;
 						}
 					},
 					sendOnAvailableChannel: function(object) {
 						var counter = 0;
-						while (counter++ !== this.dataChannels.length) {
+						while (counter++ < this.dataChannels.length) {
 							try {
 								var message = JSON.stringify(object.msg);
 								this.dataChannels[this.currentChannel].send(message);
@@ -438,7 +430,7 @@
 						}, priority);
 					},
 					addToQueue: function(data, priority) {
-						if (priority) {
+						if (false) {
 							console.log("adding message to the front of the queue");
 							this.queue.unshift(data);
 						}
