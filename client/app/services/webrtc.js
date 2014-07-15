@@ -1,13 +1,13 @@
 (function () {
 
-	app.factory('webrtc', function(constants, model, $rootScope, $sce, xmpp, $timeout) {
+	app.factory('webrtc', function(constants, model, $rootScope, $sce, xmpp, $timeout, utility) {
 		var webrtc = {};
 		var config = {
 			iceServers: constants.iceServers
 		};
 
 		var userMediaOptions = {
-			audio: false,
+			audio: true,
 			video: true
 		};
 
@@ -20,43 +20,109 @@
 			return true;
 		}
 			
-		var localStream;	
 		function getUserMedia(callback) {
-			if (localStream) {
-				return localStream;
+			if (model.video.local.stream) {
+				callback(model.video.local.stream);
+				return;
 			}
 
 			navigator.webkitGetUserMedia(userMediaOptions,
 				function(stream) {
-					localStream = stream;
+					model.video.local.src = $sce.trustAsResourceUrl(URL.createObjectURL(stream));
+					model.video.local.stream = stream;
 					callback(stream);
 				}, function() {
 					console.log(arguments);
 				}
 			);
+			model.video.local.videoEnabled = userMediaOptions.video;
+			model.video.local.audioEnabled = userMediaOptions.audio;
 		}
 
+
 		webrtc.call = function (to) {
-			model.video.remote.userId = to.substring(0, to.indexOf("@"));
-			videoCall(to);
+			if (!model.video.active) {
+				model.video.active = true;
+				model.video.remote.userId = utility.getIdFromJid(to);
+				videoCall(to);
+			}
+			else {
+				console.log("call already active");
+			}
 		};
 
+		webrtc.hangup = function() { 
+			if (model.video.active) {
+				video.close();
+			}
+			else {
+				console.error("no active call");
+			}
+		};
+
+		webrtc.enableVideo = function(enable) {
+			video.enableVideo(enable);
+
+		};
+		webrtc.enableAudio = function(enable) {
+			video.enableAudio(enable);
+		};
+
+		var video = {
+			stream: null,
+			setPeerConnection: function(peerConnection) {
+				peerConnection.oniceconnectionstatechange = this.onIceChange;
+				this.stream = peerConnection.getLocalStreams()[0];
+				this.peerConnection = peerConnection;
+			},
+			peerConnection: null,
+			onIceChange: function (event) {
+				switch (event.target.iceConnectionState) {
+					case "disconnected":
+					case "closed":
+						$rootScope.$apply(function() {
+							model.video.active = false;
+							model.video.remote.src = "";
+						});
+						video.peerConnection = null;
+				}
+			},
+			close: function() {
+				if (this.peerConnection) {
+					this.peerConnection.close();
+					this.peerConnection = null;
+				}
+			},
+			enableVideo: function(enable) {
+				if (this.stream) {
+					this.stream.getVideoTracks()[0].enabled = enable;
+				}
+			},
+			enableAudio: function(enable) {
+				if (this.stream) {
+					this.stream.getAudioTracks()[0].enabled = enable;
+				}
+			}
+
+		};
+
+
 		function videoCall (to) {
+			console.log("video call");
 			getUserMedia(continueCall);
 
 			function continueCall (stream) {
 				var peerConnection = new webkitRTCPeerConnection(config);
-				if (stream) peerConnection.addStream(stream);
+				peerConnection.addStream(stream);
+				video.setPeerConnection(peerConnection);
 
 				var id = peerConnections.add(peerConnection, to);
 
 				peerConnection.createOffer(createOffer(function(desc) {
 					peerConnection.setLocalDescription(desc);
-					console.log(desc);
 					var offer = $msg({to: to, type: "offer", id: id})
 					.c("x", {xmlns: constants.xmpp.webrtc, type: "video"}).up()
 					.c("desc").t(JSON.stringify(desc));
-					console.log("sending offer");
 					xmpp.send(offer);
 				}));
 			}
@@ -132,7 +198,6 @@
 							var iceCandidate = $msg({to: to, type: "iceCandidate", id: id})
 							.c("x", {xmlns: constants.xmpp.webrtc}).up()
 							.c("desc").t(JSON.stringify(this.list[i]));
-							console.log("Sending iceCandidate");
 							xmpp.send(iceCandidate);
 						}
 						this.list.length = 0;
@@ -149,13 +214,12 @@
 			},
 			generateRandomId: function() {
 				var me = model.user.info.xmpp.jid;
-				var userid = me.substring(0,me.indexOf("@"));
+				var userid = utility.getIdFromJid(me);
 				var randomId = userid + " - " + Math.random().toString(32).substring(2) + "-" + this.counter++;
 				return randomId;
 			},
 			createAnswerHandler: function (peerConnection, callback) {
 				return function(data) {
-					console.log("Received answer");
 					var desc = JSON.parse(data.getChildrenByTagName("desc")[0].children[0].data);
 
 					var from = data.from;
@@ -166,7 +230,6 @@
 							console.log(err);
 						}
 					);
-					console.log("handled ansswer");
 					callback();
 				};
 			},
@@ -176,7 +239,6 @@
 						console.error("received unwanted iceCandidate");
 						return;
 					}
-					console.log("incoming ice candidate");
 					var candidate = data.getChildrenByTagName("desc")[0].children[0].data;
 					var ice = new RTCIceCandidate(JSON.parse(candidate));
 					peerConnection.addIceCandidate(ice, function() {
@@ -188,7 +250,6 @@
 			}
 		};
 
-
 		function handleOffer (data) {
 			var from = data.from;
 			var desc = JSON.parse(data.getChildrenByTagName("desc")[0].children[0].data);
@@ -198,14 +259,22 @@
 				return;
 			}
 
+			var type = data.getChildrenByTagName("x")[0].type;
+			if (type === "video" && model.video.active) {
+				return console.log("already video call");
+			}
+
 			var peerConnection = new webkitRTCPeerConnection(config);
 			peerConnections.add(peerConnection, from, id);
 
-
-			var type = data.getChildrenByTagName("x")[0].type;
 			if (type === "video") {
+
+				model.video.active = true;
+				video.setPeerConnection(peerConnection);
+
+				globalPeerConnection = peerConnection;
 				getUserMedia(continueOfferHandling);
-				model.video.remote.userId = from.substring(0, from.indexOf("@"));
+				model.video.remote.userId = utility.getIdFromJid(from);
 			}
 			else {
 				continueOfferHandling(null);
@@ -224,7 +293,6 @@
 					var answer = $msg({to: from, type: "answer", id: id})
 					.c("x", {xmlns: constants.xmpp.webrtc}).up()
 					.c("desc").t(JSON.stringify(desc));
-					console.log("sending answer");
 					xmpp.send(answer);
 				}, function() {console.error(arguments);}));
 
@@ -244,13 +312,9 @@
 			return function(desc) {
 				callback(desc);
 			};
-
 		}
 
 		function onAddStream (e){
-			console.log("adding stream");
-			console.log(e);
-
 			$rootScope.$apply(function() {
 				model.video.remote.src = $sce.trustAsResourceUrl(URL.createObjectURL(e.stream));
 			});
@@ -276,12 +340,9 @@
 							dataSenders.list[to].sendObject(object, type, statusCallback, priority);
 						},
 						finished: function() {
-							console.log("finished");
 							dataSenders.list[to].removeInstanceId(id);
 							if (dataSenders.list[to].instanceIds.length === 0) {
-								console.log("here");
 								dataSenders.list[to].clean(function() {
-								console.log("here inside");
 									if (dataSenders.list[to]) {
 										//delete dataSenders.list[to];
 									}
@@ -316,7 +377,6 @@
 							}
 						}, 10000);
 
-						console.log("creating peerconnection");
 						var peerConnection = new webkitRTCPeerConnection(config);
 						var id = peerConnections.add(peerConnection, to);
 
@@ -330,11 +390,9 @@
 
 						peerConnection.createOffer(createOffer(function(desc) {
 							peerConnection.setLocalDescription(desc);
-							console.log(desc);
 							var offer = $msg({to: to, type: "offer", id: id})
 							.c("x", {xmlns: constants.xmpp.webrtc, type: "data"}).up()
 							.c("desc").t(JSON.stringify(desc));
-							console.log("sending offer");
 							xmpp.send(offer);
 						}));
 
@@ -344,7 +402,6 @@
 						}
 					},
 					clean: function(callback) {
-						console.log("CLEANING!!!!!!!!!!");
 
 						while (this.listOfPeerConnections.length) {
 							this.listOfPeerConnections[0].close();
@@ -359,7 +416,6 @@
 						for (var i in this.instanceIds) {
 							if (this.instanceIds[i] === instanceId) {
 								this.instanceIds.splice(i,1);
-								console.log("deleting instanceId");
 								return;
 							}
 						}
@@ -376,23 +432,18 @@
 						dataChannel.onmessage = messageHandlers.mainHandler(to);
 						dataChannel.onopen = function () {
 							dataSenders.list[to].dataChannels.push(dataChannel);
-							console.log("adding datachannel, number of datachannels: " + dataSenders.list[to].dataChannels.length);
-							console.log("to: " + to);
 						};
 						dataChannel.onclose = function () {
 							if (dataSenders.list[to]) {
 								dataSenders.list[to].removeDataChannel(dataChannel);
 							}
-							console.log("The Data Channel is Closed");
 						};
 
 					},
 					removeDataChannel: function(dataChannel) {
-						console.log("trying to remove dataChannel");
 						for (var i in this.dataChannels) {
 							if (this.dataChannels[i] === dataChannel) {
 								this.dataChannels.splice(i,1);
-								console.log("removed dataChannel");
 								return;
 							}
 						}
@@ -431,7 +482,6 @@
 					},
 					addToQueue: function(data, priority) {
 						if (false) {
-							console.log("adding message to the front of the queue");
 							this.queue.unshift(data);
 						}
 						else {
@@ -447,7 +497,6 @@
 							while(this.queue.length) {
 								var success = this.sendOnAvailableChannel(this.queue[0]);
 								if (!success) {
-									console.log("No working channels, timing out. number of dataChannels: " + this.dataChannels.length + " number of peerConnections: " + this.listOfPeerConnections.length);
 									if (this.dataChannels.length < 5) {
 										this.newPeerConnection(this.restartDataSender);
 									}
@@ -466,11 +515,9 @@
 
 						}
 						else if(!this.listOfPeerConnections.length) {
-							console.log("No peerConnections, creating one");
 							this.newPeerConnection(this.restartDataSender);
 						}
 						else {
-							console.log("data channel not yet established, waiting");
 							$timeout(this.restartDataSender, 1000);
 						}
 					},
@@ -483,7 +530,6 @@
 		};
 
 		webrtc.getFileSender = function(to, type, statusCallback) {
-			console.log("initiating file sender");
 
 			return dataSenders.getSender(to, false, type, statusCallback);
 		};

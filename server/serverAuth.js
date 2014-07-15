@@ -75,7 +75,7 @@ passport.use('uwap', new OAuth2Strategy({
 	authorizationURL: secret.uwapAuthorizationURL,
 	tokenURL: secret.uwapTokenURL,
 	clientID: secret.uwapClientID,
-	clientSecret: secret.uwapClientSecret,
+	clientSecret: secret.uwapClientSecret
 },
 function(accessToken, refreshToken, profile, done) {
 	getUserInfo(accessToken, done);

@@ -15,16 +15,11 @@
 			storage[id] = {};
 		}
 		function fileHandler(data, from) {
-			if (data.number % 50 === 0) {
-				console.log("incoming data: " + data.status + ", number: " + data.number);
-			}
-			
 			if (data.status === "sof") {
 				$rootScope.$apply(function() {
 					model.file.add(data.id, data.filename, from, false);
 				});
 
-				console.log(data);
 				initiateFileSystem(data.id, data.filename, data.size, data.totalSlices, function() {
 					if (storage[data.id]) {
 						return console.error("data.id is not unique. aborting...");
@@ -46,12 +41,10 @@
 					};
 					storage[data.id].sender = webrtc.getFileSender(from, "fileReceiver");
 
-					console.log("starting file transfer. Total number of slices: " + data.totalSlices);
 					signalFile(from, data.id, "sof_ack", data.totalSlices, data.filename);
 				});
 			}
 			else if (data.status === "sos") {
-				console.log("starting slice " + data.slice + ". Total chunks: " + data.totalNumber);
 				storage[data.id].slices[data.slice] = {
 					totalChunks: data.totalNumber,
 					counter: 0,
@@ -110,7 +103,6 @@
 				storage[data.id].slices[data.slice].counter ===
 				storage[data.id].slices[data.slice].totalChunks) {
 
-				console.log("finished slice");
 
 				var byteArraysForCompleteSlice = storage[data.id].slices[data.slice].getByteArray();
 				var blob = new Blob(byteArraysForCompleteSlice, {type: "application/octet-stream"});
@@ -209,9 +201,8 @@
 				function deleteDirectory(directory) {
 					fs.root.getDirectory(directory, {}, function(dirEntry) {
 						dirEntry.removeRecursively(function() {
-							console.log("Removed directory");
 						}, errorHandler);
-					}, errorHandler); 
+					}, null); 
 				}
 
 				function readDirectory(directory) {
@@ -242,17 +233,14 @@
 		};
 		function onInitFs(id, filenameInput, totalSlices, callback) {
 			return function(fs) {
-				console.log('Opened file system: ' + fs.name);
 				var filename = "files/" + filenameInput + "-" + Math.random().toString(32).substring(2) + "-" + sandbox.counter++;
 
 				continueFileInit(1);
 
 				function continueFileInit(part) {
 					if (part === 1) {
-						console.log("Part 1");
 						fs.root.getFile(filename, {create: false}, function(fileEntryInput) {
 							fileEntryInput.remove(function() {
-								console.log("deleting file");
 							}, errorHandler);
 
 							continueFileInit(2);
@@ -261,28 +249,21 @@
 						});
 					}
 					if (part === 2) {
-						console.log("Part 2");
 						fs.root.getDirectory('files', {create: true}, function(dirEntry) {
-							console.log("directory created");
 							continueFileInit(3);
 						}, errorHandler);
 					}
 					if (part === 3) {
-						console.log("Part 3");
 						fs.root.getFile(filename, {create: true}, function(fileEntryInput) {
-							console.log("file opend");
-							console.log(fileEntryInput);
 							continueFileInit(4);
 						}, errorHandler);
 					}
 					if (part === 4) {
-						console.log("Part 4");
 						sandbox[id] = {
 							appendBlob: function(blob, lastBlob) {
 								fs.root.getFile(filename, {create: false}, function(fileEntry) {
 									fileEntry.createWriter(function(fileWriter) {
 										fileWriter.onwriteend = function(e) {
-											console.log('Write completed.');
 											if (lastBlob) {
 												sandbox[id].downloadFile();
 											}
@@ -300,28 +281,14 @@
 							downloadFile: function() {
 								fs.root.getFile(filename, {create: false}, function(fileEntry) {
 									fileEntry.file(function(file) {
-										console.log("saving file");
 										var link = document.createElement('a');
 										link.href = window.URL.createObjectURL(file);
 										link.download = filenameInput;
 										link.click();
-										console.log("finished saving file");
 
 									}, errorHandler);
 								});
 							},
-							readFile: function() {
-								fs.root.getFile(filename, {create: false}, function(fileEntry) {
-									fileEntry.file(function(file) {
-										var reader = new FileReader();
-										reader.onloadend = function(e) {
-											console.log(this.result);
-										};
-										reader.readAsText(file);
-									}, errorHandler);
-								});
-							},
-
 						};
 						callback();
 					}

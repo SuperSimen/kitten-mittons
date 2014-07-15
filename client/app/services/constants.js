@@ -31,12 +31,45 @@
 				vcard: "vcard-temp",
 				webrtc: "webrtc",
 				data: "jabber:x:data",
-				whois: "muc#roomconfig_whois"
+				whois: "muc#roomconfig_whois",
+				client: "jabber:client",
+				roster: "jabber:iq:roster"
 			}
 		};
 
 		return constants;
 			
 	});	
+
+	app.factory('utility', function(constants) {
+		var utility = {};
+
+		utility.getJidFromId = function(id) {
+			if (true) {
+				return id;
+			}
+			else {
+				return id + "@" + constants.xmpp.serverUrl;
+			}
+		};
+
+		utility.getIdFromJid = function(jid) {
+			return utility.getBareJid(jid);
+		};
+		utility.getGroupIdFromJid = function(jid) {
+			return jid.substring(0, jid.indexOf("@"));
+		};
+
+		utility.getBareJid = function(jid) {
+			if (jid.indexOf("/") !== -1) {
+				return jid.substring(0, jid.indexOf("/"));
+			}
+			else {
+				return jid;
+			}
+		};
+
+		return utility;
+	});
 
 })();

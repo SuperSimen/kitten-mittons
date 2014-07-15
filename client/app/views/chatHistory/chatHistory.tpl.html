@@ -3,14 +3,20 @@
 		<div class="fill-top">
 			<h2 class="uninett-fontColor-white align-center"> History </h2>
 			<div ng-repeat="entry in history" ng-init="active = 0" >
-					<div ng-click="clickEntry(entry.id)" ng-class="{'active': isActive(entry.id)}" class="row hover-white chat-entry">
-						<div class="col-md-12">
+				<div ng-click="clickEntry(entry.id)" ng-class="{'active': isActive(entry.id)}" class="row hover-white chat-entry">
+					<div class="col-md-12 visible-on-hover">
+						<div class="width-95">
 							{{getFriendFromId(entry.id).FN}}
 							<span class="badge" ng-bind="getUnread(entry.id)"></span>
 						</div>
+						<div class="width-3">
+							<div class="visible-span width-3 pointer" ng-click="closeConversation(entry)"><i class="fa fa-times"></i></div>
+						</div>
 					</div>
+				</div>
 
 			</div>
+
 
 		</div>
 		<div class="fill-bottom align-center fill-width"> 

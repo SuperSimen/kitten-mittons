@@ -35,7 +35,12 @@
 			log: []
 		};
 		model.video = {
-			local: "",
+			active: false,
+			local: {
+				videoEnabled: false,
+				audioEnabled: false,
+				src: ""
+			},
 			remote: {
 				src: "",
 				userId: ""
@@ -64,7 +69,6 @@
 				if (id) {
 					this.create(id);
 				}
-				console.log("current chat is now " + this.currentId);
 			},
 			create: function(id) {
 				if (this.listOfIndices[id]) {
@@ -113,13 +117,13 @@
 				for (var i in this.sortableArray) {
 					this.listOfIndices[this.sortableArray[i].id] = i;
 				}
-				console.log(this.listOfIndices);
-				console.log(this.sortableArray);
 			}
 		};
 
+
 		model.friends = {
 			list: {},
+			bestFriends: [],
 			create: function(id) {
 				if (!this.list[id]) {
 					this.list[id] = {
@@ -127,8 +131,37 @@
 					};
 				}
 				return this.list[id];
+			},
+			removeBestFriend: function(id) {
+				for (var i in this.bestFriends) {
+					if (this.bestFriends[i] === id) {
+						this.bestFriends.splice(i,1);
+						return;
+					}
+				}
+			},
+			addBestFriend: function(id) {
+				for (var i in this.bestFriends) {
+					if (this.bestFriends[i] === id) {
+						return;
+					}
+				}
+				this.bestFriends.push(id); 
+			},
+			isBestFriend: function(id) {
+				for (var i in this.bestFriends) {
+					if (this.bestFriends[i] === id) {
+						return true;
+					}
+				}
+				return false;
+			},
+			get: function(id) {
+				return this.list[id];
 			}
 		};
+		bestFriends = model.friends.bestFriends;
+		friends = model.friends.list;
 
 		model.groups = {
 			list: {},

@@ -1,4 +1,4 @@
-app.controller( 'mainController', function($scope, model, $state) {
+app.controller( 'mainController', function($scope, model, $state, utility) {
 
 	var stateViewCols = {
 		file: [
@@ -30,10 +30,8 @@ app.controller( 'mainController', function($scope, model, $state) {
 		if (!id) {
 			return;
 		}
-		if (id.indexOf("@") != -1) {
-			id = id.substring(0, id.indexOf("@"));
-		}
-		return model.friends.list[id];
+		id = utility.getBareJid(id);
+		return model.friends.get(id);
 	};
 	
 

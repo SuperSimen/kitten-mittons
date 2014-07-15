@@ -1,15 +1,18 @@
 (function () {
 
-	app.factory('main', function(UWAP, xmpp, model, $state, $rootScope, $http, constants, webrtc, fileSender, fileReceiver, $timeout) {
+	app.factory('main', function(UWAP, xmpp, model, $state, $rootScope, $http, constants, webrtc, fileSender, fileReceiver, $timeout, utility) {
 		var main = {
 			init: function() {
-				$state.go("file");
+				$state.go("video");
 				gatherInfoPart1();
 				fileSender.init();
 				fileReceiver.init();
-				$rootScope.$watch(function () {return model.video.remote.src;}, function(newValue) {
+				$rootScope.$watch(function () {return model.video.active;}, function(newValue) {
 					if (newValue) {
 						$state.go("video.active");
+					}
+					else {
+						$state.go("video");
 					}
 				});
 			}
@@ -33,66 +36,166 @@
 		}
 
 
-		var call = {};
 		main.call = function(to) {
-			if (call.ongoing) {
-				console.log("call ongoing");
+			webrtc.call(utility.getJidFromId(to));
+		};
 
-			}
-			else {
-				var jid = to + "@" + constants.xmpp.serverUrl;
-				webrtc.call(jid);
-				call.ongoing = true;
-				call.to = to;
-			}
+		main.hangup = function() {
+			webrtc.hangup();
+		};
+
+		main.toggleVideo = function() {
+			var video = !model.video.local.videoEnabled;
+			model.video.local.videoEnabled = video;
+			webrtc.enableVideo(video);
+		};
+
+		main.toggleAudio = function() {
+			var audio = !model.video.local.audioEnabled;
+			model.video.local.audioEnabled = audio;
+			webrtc.enableAudio(audio);
 		};
 
 		function connectedCallback() {
 			main.setVCard();
 			webrtc.init();
 			xmpp.addHandler(xmppHandlers.mucMessage, null, "message", "groupchat" );
-			xmpp.addHandler(xmppHandlers.mucPresence, constants.xmpp.mucUser, "presence" );
+			xmpp.addHandler(xmppHandlers.mucPresence, constants.xmpp.mucUser, "presence", null);
 			xmpp.addHandler(xmppHandlers.basicHandler);
 			xmpp.addHandler(xmppHandlers.message, null, "message", "chat");
+			xmpp.addHandler(xmppHandlers.presence, constants.xmpp.client, "presence");
+			xmpp.addHandler(xmppHandlers.roster, constants.xmpp.roster, "iq", null);
 			
 			gatherInfoPart2();
 		}
 
 		main.sendMessage = function(to, message) {
-			var jid = to + "@" + constants.xmpp.serverUrl;
+			var jid = utility.getJidFromId(to);
 			xmpp.sendPrivateMessage(jid, message);
 			model.chat.get(to).addMessage("Me", message);
 		};
 
+		main.addBestFriendJid = function(jid) {
+			if (!model.friends.isBestFriend(jid)) {
+				xmpp.addToRoster(jid, callback);
+			}
+			else {
+				console.log("already best friend");
+			}
+			function callback() {
+				xmpp.sendPresenceType(jid, "subscribe");
+			}
+		};
+
+		main.addBestFriend = function(friend) {
+			var jid = utility.getJidFromId(friend.id);
+			if (!model.friends.isBestFriend(friend.id)) {
+				xmpp.addToRoster(jid, callback);
+			}
+			else {
+				console.log("already best friend");
+			}
+			function callback() {
+				xmpp.sendPresenceType(jid, "subscribe");
+			}
+		};
+
+		//TODO: uninett.jabber does not work
+		main.removeBestFriend = function(friend) {
+			var jid = utility.getJidFromId(friend.id);
+			if (model.friends.isBestFriend(friend.id)) {
+				//xmpp.removeFromRoster(jid, callback);
+				
+				callback();
+			}
+			else {
+				console.log("not best friend");
+			}
+			function callback() {
+				xmpp.sendPresenceType(jid, "unsubscribe");
+			}
+		};
 
 		var xmppHandlers = {
 			basicHandler: function(data) {
 				//console.log(data);
 			},
+			roster: function(data) {
+				var query = data.getChildrenByTagName("query")[0];
+				var items = query.getChildrenByTagName("item");
+
+				var bestFriends = [];
+				for (var i in items) {
+					var id = utility.getIdFromJid(items[i].jid);
+					if (!model.friends.get(items[i])) {
+						addFriend(id);
+					}
+					switch (items[i].subscription) {
+						case "to":
+						case "both":
+							$rootScope.$apply(add(id));
+							break;
+						case "remove":
+						case "none":
+						case "from":
+							$rootScope.$apply(remove(id));
+							break;
+					}
+				}
+				function add(id) {
+					return function() {
+						model.friends.addBestFriend(id);
+					};
+				}
+				function remove(id) {
+					return function() {
+						model.friends.removeBestFriend(id);
+					};
+				}
+			},
+			presence: function(data) {
+				if (data.type === "subscribe") {
+					xmpp.sendPresenceType(data.from, "subscribed");
+				}
+				else if (data.type === "subscribed") {
+				}
+				else if (data.type === "unsubscribe") {
+					xmpp.sendPresenceType(data.from, "unsubscribed");
+					//xmpp.sendPresenceType(data.from, "unsubscribe");
+				}
+				else if (data.type === "unsubscribed") {
+				}
+				else {
+					var from = utility.getIdFromJid(data.from);
+					var friend = model.friends.get(from);
+					if (friend) {
+						$rootScope.$apply(function() {
+							if (data.type === "unavailable") {
+								friend.online = false;
+							}
+							else {
+								friend.online = true;
+							}
+						});
+					}
+				}
+			},
 			message: function(data) {
+				console.log("got message");
+				console.log(data);
 				var message = data.getChildrenByTagName("body")[0].children[0].data;
-				var id = data.from.substring(0, data.from.indexOf("@"));
+				var id = utility.getIdFromJid(data.from);
 
 				$rootScope.$apply(function() {
+					console.log(model.chat);
 					model.chat.get(id).addMessage(id, message);
+					console.log(model.chat);
 				});
-			},
-			mucMessage: function(data) {
-				console.log("received message");
-				console.log(data);
-			},
-			mucMessage2: function(stanza) {
-				if (stanza.getElementsByTagName("body")) {
-					var message = stanza.getElementsByTagName("body")[0].innerHTML;
-					var from = stanza.getAttribute("from");
-					$rootScope.$apply(function () {
-						model.chat.addMessage(from, message);
-					});
-				}
+				console.log("got message");
 			},
 			mucPresence: function(data) {
 				var from = data.from;
-				var groupId = from.substring(0, from.indexOf("@"));
+				groupId = utility.getGroupIdFromJid(from);
 
 				var x = data.getChildrenByTagName("x");
 				if (x.length && x[0].xmlns === constants.xmpp.mucUser) {
@@ -115,21 +218,20 @@
 						if (jid) {
 							$rootScope.$apply(function() {
 								if (model.groups.list[groupId]) {
-									var userName = jid.substring(0, jid.indexOf("@"));
-									var friend = model.friends.list[userName];
+									var userName = utility.getIdFromJid(jid);
+									var friend = model.friends.get(userName);
 									if (!friend) {
-										friend = model.friends.create(userName);
+										friend = addFriend(userName);
 										if (codes["110"]) {
 											friend.me = true;
 										}
-										main.getVCard(jid.substring(0, jid.indexOf("/")));
 									}
 									model.groups.list[groupId].addFriend(friend);
 									if (data.type === "unavailable") {
-										friend.online = false;
+										friend.mucOnline = false;
 									}
 									else {
-										friend.online = true;
+										friend.mucOnline = true;
 									}
 								}
 							});
@@ -137,7 +239,7 @@
 
 						if (item[0].role === "moderator") {
 							if (codes["110"] && !codes["100"]) {
-								xmpp.sendRoomConfig(from.substring(0, from.indexOf("/")));
+								xmpp.sendRoomConfig(utility.getBareJid(from));
 							}
 						}
 
@@ -157,13 +259,14 @@
 						var userid = model.user.info.userid;
 						var groupId = encodeURIComponent(group.id).toLowerCase();
 						model.groups.create(groupId, group.displayName);
-						xmpp.joinRoom(groupId, userid.substring(0,userid.indexOf("@")));
+						xmpp.joinRoom(groupId, utility.getIdFromJid(userid));
 					}
 				}
 			}); 
 			UWAP.getRealms(model.user.token, function (data) {
 				model.user.realms = data;
 			}); 
+			xmpp.getRoster();
 		}
 
 		main.setVCard = function () {
@@ -176,13 +279,25 @@
 		main.getVCard = function (jid) {
 			xmpp.getVCard(jid, function(stanza) {
 				if (stanza.getElementsByTagName("FN")) {
-					var userId = jid.substring(0, jid.indexOf("@"));
+					var userId = utility.getIdFromJid(jid);
 					$rootScope.$apply(function () {
-						model.friends.list[userId].FN = stanza.getElementsByTagName("FN")[0].innerHTML;
+						model.friends.get(userId).FN = stanza.getElementsByTagName("FN")[0].innerHTML;
 					});
 				}
 			});
 		};
+
+		function addFriend(id) {
+			var friend;
+			if (!model.friends.get(id)) {
+				friend = model.friends.create(id);
+				main.getVCard(utility.getJidFromId(id));
+			}
+			else {
+				friend = model.friends.get(id);
+			}
+			return friend;
+		}
 
 		main.search = function() {
 			if (!model.search.query) {return;}
@@ -199,7 +314,7 @@
 		};
 
 		main.sendFile = function(to) {
-			var jid = to + "@" + constants.xmpp.serverUrl;
+			var jid = utility.getJidFromId(to);
 			fileSender.sendFile(jid);
 		};
 

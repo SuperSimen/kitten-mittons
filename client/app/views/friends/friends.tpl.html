@@ -1,25 +1,46 @@
 <div class="row color-grey fill-height border-left default-cursor hide-overflow">
 	<div class="col-md-12 gutter fill-height-minus-gutter">
 		<div class="fill-top">
-			<h2 class="uninett-fontColor-white align-center"> Friends </h2>
-			<div ng-repeat="group in groups.list">
-				<div class="row hover-white" ng-click="showMembers = !showMembers" ng-init="showMembers = 1">
-					<div class="col-md-12">
-						{{group.displayName}}
+			<h2 class="uninett-fontColor-white align-center">Friends</h2>
+			<div class="fill-under-header">
+				<div class="fill-half">
+					<div ng-repeat="bestFriendId in friends.bestFriends">
+						<div class="row hover-white">
+							<div class="col-md-12 visible-on-hover" ng-hide="friend.me" ng-init="friend = getFriendFromId(bestFriendId)">
+								<div class="width-95" ng-click="clickOnFriend(friend)">
+									<i class="fa fa-circle icon presence-icon" ng-class="{'online': friend.online || friend.mucOnline, 'offline': !(friend.online || friend.mucOnline)}"></i>
+									<span class="tab">{{friend.FN}}</span>
+								</div>
+								<div class="visible-span width-3 pointer" ng-click="removeBestFriend(friend)"><i class="fa fa-times"></i></div>
+							</div>
+						</div>
 					</div>
 				</div>
-				<div ng-show="showMembers" ng-repeat="friend in group.friends" class="row hover-white" ng-click="clickOnFriend(friend)">
-					<div ng-hide="friend.me">
-						<div class="col-md-12">
-							<i class="fa fa-circle icon presence-icon" ng-class="{'online': friend.online, 'offline': !friend.online}"></i>
-							&nbsp&nbsp{{friend.FN}}
+				<div class="fill-half row border-top">
+					<div class="col-md-12">
+						<div ng-repeat="group in groups.list">
+							<div class="row hover-white" ng-click="showMembers = !showMembers" ng-init="showMembers = 1">
+								<div class="col-md-12">
+									{{group.displayName}}
+								</div>
+							</div>
+							<div ng-show="showMembers" ng-repeat="friend in group.friends" class="row hover-white">
+								<div class="col-md-12 visible-on-hover" ng-hide="friend.me">
+									<div ng-click="clickOnFriend(friend)" class="width-95">
+										<i class="fa fa-circle icon presence-icon" ng-class="{'online': friend.online || friend.mucOnline, 'offline': !(friend.online || friend.mucOnline)}"></i>
+										<span class="tab">{{friend.FN}}</span>
+									</div>
+									<div class="width-3 align-center pointer visible-span" ng-click="addBestFriend(friend)"><i class="fa fa-plus"></i></div>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 		<div class="fill-bottom align-center fill-width">
-			<a href><i class="fa fa-plus-circle uninett-fontColor-white icon large"></i></a>
+			<i ng-hide="showFriendField" ng-click="showFriendField = true" class="fa fa-plus-circle fa-inverse fa-2x"></i>
+			<input ng-show="showFriendField" type="text" class="fill-width" ng-model="friendFieldValue" ng-keydown="friendFieldKeyDown($event)">
 		</div>
 	</div>
 </div>

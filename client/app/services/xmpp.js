@@ -9,6 +9,10 @@
 
 			connection = new Strophe.Connection(bosh);
 			connection.connect(jid, password, statusCallback(connectedCallback));
+			factory.addHandler(iqHandler, null, "iq", "set");
+			connection.addHandler(function(stanza) {
+				return true;
+			});
 		};
 
 		factory.addHandler = function(callback, namespace, name, type, id, from) {
@@ -18,6 +22,11 @@
 			}
 			connection.addHandler(handler, namespace, name, type, id, from);
 		};
+
+		function iqHandler (data) {
+			var iq = $iq({type: 'result', id: data.id});
+			send(iq);
+		}
 
 		factory.getVCard = function(jid, callback) {
 			var iq;
@@ -45,7 +54,7 @@
 					console.error("could not send IQ");
 				}
 				else {
-					console.log(stanza);
+					//console.log(stanza);
 				}
 			};
 			connection.sendIQ(iq,
@@ -67,10 +76,16 @@
 			connection.send(obj);
 		}
 		factory.send = function(obj) {
-			connection.send(obj);
+			send(obj);
 		};
+
 		
 		factory.sendPrivateMessage = function(to, text) {
+			var msg = $msg({to: to, type: "chat"}).c("body").t(text);
+			send(msg);
+		};
+
+		sendPrivateMessage = function(to, text) {
 			var msg = $msg({to: to, type: "chat"}).c("body").t(text);
 			send(msg);
 		};
@@ -80,19 +95,47 @@
 			send(msg);
 		};
 
-		function sendPresenceType(to, type) {
+		factory.getRoster = function() {
+			var iq = $iq({type: 'get'}).c('query', {xmlns: constants.xmpp.roster});
+			sendIQ(iq);
+		};
+
+		factory.addToRoster = function(jid, callback) {
+			var iq = $iq({type: 'set'}).c('query', {xmlns: constants.xmpp.roster})
+			.c('item', {jid: jid});
+			sendIQ(iq, callback);
+		};
+
+		factory.removeFromRoster = function(jid, callback) {
+			var iq = $iq({type: 'set'}).c('query', {xmlns: constants.xmpp.roster})
+			.c('item', {jid: jid, subscription: "remove"});
+			sendIQ(iq, callback);
+		};
+
+		removeFromRoster = function(jid, callback) {
+			var iq = $iq({type: 'set'}).c('query', {xmlns: constants.xmpp.roster})
+			.c('item', {jid: jid, subscription: "remove"});
+			sendIQ(iq, callback);
+		};
+
+		factory.sendPresenceType = function (to, type) {
 			var msg = $pres({to: to, "type": type});
 			send(msg);
-		}
+		};
+
+		sendPresenceType = function (to, type) {
+			var msg = $pres({to: to, "type": type});
+			send(msg);
+		};
 
 		logOff = function logOff() {
 			send($pres({type: "unavailable"}));
 		};
 
 
-		function logOn() {
+		logOn = function logOn() {
 			send($pres());
-		}
+		};
 
 		function setStatus(show) {
 			send($pres().c("show", show));
@@ -105,13 +148,6 @@
 			var pres = $pres({to: to}).c("x", {xmlns: constants.xmpp.muc});
 			send(pres);
 
-		};
-
-		factory.leaveRoom = function(roomId) {
-			roomId = "temp"; //TODO: don't do this
-			var to = roomId + "@" + constants.xmpp.mucServerUrl;
-			var pres = $pres({to: to, type: "unavailable"}).c("x", {xmlns: constants.xmpp.muc});
-			send(pres);
 		};
 
 		factory.sendRoomConfig = function(to) {
@@ -189,6 +225,9 @@
 						}
 						return temp;
 					};
+				}
+				else {
+					currentObject.getChildrenByTagName = function() {};
 				}
 				return currentObject;
 			}

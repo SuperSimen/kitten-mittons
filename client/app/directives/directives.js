@@ -46,6 +46,16 @@
 			scope.$watch(calculatePosition, function(newValue) {
 				positionElement(newValue);
 			});
+			scope.$watch(function() {
+				return scope.inverse;
+			}, function(newValue) {
+				waitForVideo();
+			});
+			scope.$watch(function() {
+				return scope.video.active;
+			}, function(newValue) {
+				waitForVideo();
+			});
 
 			function waitForVideo() {
 				if (element[0].readyState === 4) {
