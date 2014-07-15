@@ -14,7 +14,10 @@ module.exports = function(grunt) {
 			files: ['<%= jshint.files %>', 'app/**/*.html', 'index.tpl.html', 'bower.json', 'css/*.css'],
 			tasks: ['jshint', 'includeSource' ,'wiredep'],
 			options: {
-				livereload: true,
+				livereload: {
+					key: grunt.file.read('../server/auth/server.key'),
+					cert: grunt.file.read('../server/auth/server.crt')
+				},
 			},
 		},
 		wiredep: {

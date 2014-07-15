@@ -71,6 +71,7 @@
 		var video = {
 			stream: null,
 			setPeerConnection: function(peerConnection) {
+				console.log("setting peer connection");
 				peerConnection.oniceconnectionstatechange = this.onIceChange;
 				this.stream = peerConnection.getLocalStreams()[0];
 				this.peerConnection = peerConnection;
@@ -270,7 +271,6 @@
 			if (type === "video") {
 
 				model.video.active = true;
-				video.setPeerConnection(peerConnection);
 
 				globalPeerConnection = peerConnection;
 				getUserMedia(continueOfferHandling);
@@ -281,9 +281,11 @@
 			}
 
 			function continueOfferHandling(stream) {
-				if (stream) peerConnection.addStream(stream);
-				peerConnection.setRemoteDescription(new RTCSessionDescription(desc), function() {
-				},
+				if (stream) {
+					peerConnection.addStream(stream);
+					video.setPeerConnection(peerConnection);
+				}
+				peerConnection.setRemoteDescription(new RTCSessionDescription(desc), function() {},
 				function(err) {
 					console.log(err);
 				});

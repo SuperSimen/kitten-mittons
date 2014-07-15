@@ -181,17 +181,12 @@
 				}
 			},
 			message: function(data) {
-				console.log("got message");
-				console.log(data);
 				var message = data.getChildrenByTagName("body")[0].children[0].data;
 				var id = utility.getIdFromJid(data.from);
 
 				$rootScope.$apply(function() {
-					console.log(model.chat);
 					model.chat.get(id).addMessage(id, message);
-					console.log(model.chat);
 				});
-				console.log("got message");
 			},
 			mucPresence: function(data) {
 				var from = data.from;

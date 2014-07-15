@@ -6,6 +6,8 @@ var OAuth2Strategy = require('passport-oauth').OAuth2Strategy;
 var Client = require('node-xmpp-client');
 var cookieSession = require('cookie-session');
 var fileSystem = require('fs');
+var https = require('https');
+var http = require('http');
 
 var app = express();
 app.use(cookieSession({
@@ -14,8 +16,13 @@ app.use(cookieSession({
 
 app.use(passport.initialize());
 app.use(passport.session());
-app.listen(3000);
 
+var options = {
+	key: fileSystem.readFileSync('auth/server.key'),
+	cert: fileSystem.readFileSync('auth/server.crt')
+};
+
+https.createServer(options, app).listen(443);
 
 app.get('/', function(req, res, next){
 	if (req.user) {
