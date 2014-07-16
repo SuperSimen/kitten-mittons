@@ -107,9 +107,13 @@ body {
 	overflow: auto;
 }
 
-.fill-under-header {
-	height: calc(100% - 49px);
+.fill-under-name-tag {
+	height: calc(100% - 60px);
+}
 
+.name-tag {
+	height: 60px;
+	line-height: 60px;
 }
 
 .red {
@@ -185,6 +189,10 @@ body {
 }
 
 .icon:hover {
+}
+
+.vertical-align {
+	vertical-align: middle;
 }
 
 .presence-icon {

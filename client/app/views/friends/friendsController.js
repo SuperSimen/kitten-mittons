@@ -1,6 +1,7 @@
 app.controller( 'friendsController', function(main, $state, $scope, model) {
 	$scope.groups = model.groups;
 	$scope.friends = model.friends;
+	$scope.user = model.user;
 
 	$scope.clickOnFriend = function(friend) {
 		var currentState = $state.current.name;

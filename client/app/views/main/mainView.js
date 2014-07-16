@@ -12,10 +12,6 @@ app.config( function ($stateProvider) {
 	}).state('video', {
 		parent: 'friendsVisible',
 		views: {
-			"view2@base": {
-				controller: "videoController",
-				templateUrl: "app/views/video/video.tpl.html"
-			}
 		}
 	}).state('video.active', {
 		views: {
@@ -23,6 +19,10 @@ app.config( function ($stateProvider) {
 				controller: "chatController",
 				templateUrl: "app/views/chat/chat.tpl.html"
 			},
+			"view2@base": {
+				controller: "videoActiveController",
+				templateUrl: "app/views/video/videoActive.tpl.html"
+			}
 		}
 	}).state('chat', {
 		parent: 'friendsVisible',

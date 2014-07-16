@@ -3,7 +3,8 @@
 	app.factory('main', function(UWAP, xmpp, model, $state, $rootScope, $http, constants, webrtc, fileSender, fileReceiver, $timeout, utility) {
 		var main = {
 			init: function() {
-				$state.go("video");
+				globalModel = model;
+				$state.go("chat");
 				gatherInfoPart1();
 				fileSender.init();
 				fileReceiver.init();
@@ -11,15 +12,13 @@
 					if (newValue) {
 						$state.go("video.active");
 					}
-					else {
-						$state.go("video");
-					}
 				});
 			}
 		};
 
 		function gatherInfoPart1 () { 
 			$http.get('/api/info').success(function(data, status) {
+				console.log("now");
 				model.user.info = data;
 				model.user.token = data.token;
 

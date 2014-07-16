@@ -29,7 +29,7 @@ app.get('/', function(req, res, next){
 		//testAuthorization(req.user);
 		next();
 	}
-	else res.redirect("/auth");
+	else res.redirect("/auth/uwap/login");
 });
 app.use('/', express.static(__dirname + "/../client"));
 
