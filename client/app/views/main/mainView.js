@@ -44,5 +44,13 @@ app.config( function ($stateProvider) {
 				templateUrl: "app/views/file/file.tpl.html"
 			}
 		}
+	}).state('conference', {
+		parent: 'friendsVisible',
+		views: {
+			"view2-animated@base": {
+				controller: "conferenceController",
+				templateUrl: "app/views/conference/conference.tpl.html"
+			}
+		}
 	});
 });

@@ -10,9 +10,7 @@
 			connection = new Strophe.Connection(bosh);
 			connection.connect(jid, password, statusCallback(connectedCallback));
 			factory.addHandler(iqHandler, null, "iq", "set");
-			connection.addHandler(function(stanza) {
-				return true;
-			});
+			factory.addHandler(messageHandler, null, "message");
 		};
 
 		factory.addHandler = function(callback, namespace, name, type, id, from) {
@@ -23,9 +21,24 @@
 			connection.addHandler(handler, namespace, name, type, id, from);
 		};
 
+		function addTemporaryHandler(callback, namespace, name, type, id, from) {
+			function handler(stanza) {
+				callback(parseStanza(stanza));
+				return false;
+			}
+			connection.addHandler(handler, namespace, name, type, id, from);
+		}
+
 		function iqHandler (data) {
 			var iq = $iq({type: 'result', id: data.id});
 			send(iq);
+		}
+
+		function messageHandler (data) {
+			if (data.type === "chat") {
+				var msg = $msg({to: data.from, type: 'ack', id: data.id});
+				send(msg);
+			}
 		}
 
 		factory.getVCard = function(jid, callback) {
@@ -79,16 +92,26 @@
 			send(obj);
 		};
 
-		
-		factory.sendPrivateMessage = function(to, text) {
-			var msg = $msg({to: to, type: "chat"}).c("body").t(text);
-			send(msg);
+		factory.sendPrivateMessage = function(to, text, callback) {
+			sendMessage(to, text, "chat", callback);
 		};
 
-		sendPrivateMessage = function(to, text) {
-			var msg = $msg({to: to, type: "chat"}).c("body").t(text);
+		var messageCounter = 0;
+		function sendMessage (to, text, type, callback) {
+			var id = Math.random().toString(32).substring(2) + messageCounter++;
+			var msg = $msg({to: to, type: type, id: id}).c("body").t(text);
+
+			addTemporaryHandler(handler, null, "message", "ack", id);
+
 			send(msg);
-		};
+
+			function handler(data) {
+				console.log("got reply");
+				callback();
+			}
+
+		}
+
 
 		factory.sendGroupMessage = function(to, text) {
 			var msg = $msg({to: to, type: "groupchat"}).c("body").t(text);

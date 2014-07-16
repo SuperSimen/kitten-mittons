@@ -7,15 +7,11 @@
 				</div>
 			</div>
 			<div class="fill-under-name-tag">
-				<div ng-repeat="bestFriendId in friends.bestFriends">
-					<div class="row hover-white">
-						<div class="col-md-12 visible-on-hover" ng-hide="friend.me" ng-init="friend = getFriendFromId(bestFriendId)">
-							<div class="width-95" ng-click="clickOnFriend(friend)">
-								<i class="fa fa-circle icon presence-icon" ng-class="{'online': friend.online || friend.mucOnline, 'offline': !(friend.online || friend.mucOnline)}"></i>
-								<span class="tab">{{friend.FN}}</span>
-							</div>
-							<div class="visible-span width-3 pointer" ng-click="removeBestFriend(friend)"><i class="fa fa-times"></i></div>
-						</div>
+				<div ng-repeat="bestFriendId in friends.bestFriends" class="row hover-white">
+					<div ng-click="clickOnFriend(friend)" class="col-md-12 visible-on-hover" ng-init="friend = getFriendFromId(bestFriendId)">
+						<i class="fa fa-circle icon presence-icon" ng-class="{'online': friend.online || friend.mucOnline, 'offline': !(friend.online || friend.mucOnline)}"></i>
+						<span class="tab">{{friend.FN}}</span>
+						<span class="right visible-span pointer" ><i class="fa fa-times" ba-click ng-click="removeBestFriend(friend)"></i></span>
 					</div>
 				</div>
 				<div class="row" ng-class="{'border-top': friends.bestFriends.length}">
@@ -27,12 +23,10 @@
 								</div>
 							</div>
 							<div ng-show="showMembers" ng-repeat="friend in group.friends" class="row hover-white">
-								<div class="col-md-12 visible-on-hover" ng-hide="friend.me">
-									<div ng-click="clickOnFriend(friend)" class="width-95">
-										<i class="fa fa-circle icon presence-icon" ng-class="{'online': friend.online || friend.mucOnline, 'offline': !(friend.online || friend.mucOnline)}"></i>
-										<span class="tab">{{friend.FN}}</span>
-									</div>
-									<div class="width-3 align-center pointer visible-span" ng-click="addBestFriend(friend)"><i class="fa fa-plus"></i></div>
+								<div ng-hide="friend.me" ng-click="clickOnFriend(friend)" class="col-md-12 visible-on-hover">
+									<i class="fa fa-circle icon presence-icon" ng-class="{'online': friend.online || friend.mucOnline, 'offline': !(friend.online || friend.mucOnline)}"></i>
+									<span class="tab">{{friend.FN}}</span>
+									<span class="right visible-span pointer" ><i class="fa fa-plus" ba-click ng-click="addBestFriend(friend)"></i></span>
 								</div>
 							</div>
 						</div>
@@ -45,5 +39,4 @@
 		<i ng-hide="showFriendField" ng-click="showFriendField = true" class="fa fa-plus-circle fa-inverse fa-2x"></i>
 		<input ng-show="showFriendField" type="text" class="fill-width" ng-model="friendFieldValue" ng-keydown="friendFieldKeyDown($event)">
 	</div>
-</div>
 </div>

@@ -15,6 +15,7 @@
 					"credential":"1234"
 				}
 			],
+			conferenceUrl: "https://meet.akademia.no",
 			uwap: {
 				orgUnit: "uwap:group:type:orgUnit",
 				adHoc: "uwap:group:type:ad-hoc"

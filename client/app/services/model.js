@@ -3,6 +3,44 @@
 	app.factory('model', function($state) {
 		
 		var model = {};
+		
+		model.conference = {
+			list: {},
+			idCounter: 0,
+			create: function(name) {
+				var id = Math.random().toString(32).substring(2) + name.toLowerCase().replace(/[^a-z]+/g, '') + this.idCounter++;
+				this.list[id] = {
+					name: name,
+					id: id,
+					invites: [] 
+				};
+				return id;
+			},
+			invitingid: "",
+			addInvite: function(friend) {
+				var conference = this.list[this.invitingid];
+				if (this.invitingid && conference) {
+					for (var i in conference.invites) {
+						if (conference.invites[i] === friend) {
+							return console.log("already invited");
+						}
+					}
+					conference.invites.push(friend);
+				}
+			},
+			removeInvite: function(friend) {
+				var conference = this.list[this.invitingid];
+				if (invitingid && conference) {
+					for (var i in conference.invites) {
+						if (conference.invites[i] === friend) {
+							conference.invites.splice(i,1);
+							return;
+						}
+					}
+				}
+				console.log("could not find invite");
+			}
+		};
 
 		model.file = {
 			list: {},

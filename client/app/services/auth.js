@@ -50,7 +50,7 @@
 		};
 
 		function failedHTTP(something, errorCode) {
-			if (errorCode === 401) { $window.location.href = "/auth";}
+			if (errorCode === 401) { $window.location.href = "/auth/uwap/login";}
 			else {console.err("Failed to fetch http. Error: " + errorCode);}
 			console.log(errorCode);
 		}

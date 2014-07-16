@@ -6,6 +6,11 @@ app.controller( 'mainController', function($scope, model, $state, utility) {
 			"col-xs-10",
 			"col-xs-2",
 		],
+		conference: [
+			"hidden",
+			"col-xs-10",
+			"col-xs-2",
+		],
 		chat: [
 			"col-xs-2",
 			"col-xs-8",

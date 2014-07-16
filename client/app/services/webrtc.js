@@ -272,7 +272,6 @@
 
 				model.video.active = true;
 
-				globalPeerConnection = peerConnection;
 				getUserMedia(continueOfferHandling);
 				model.video.remote.userId = utility.getIdFromJid(from);
 			}

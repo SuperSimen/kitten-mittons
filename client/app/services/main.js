@@ -4,7 +4,7 @@
 		var main = {
 			init: function() {
 				globalModel = model;
-				$state.go("chat");
+				$state.go("conference");
 				gatherInfoPart1();
 				fileSender.init();
 				fileReceiver.init();
@@ -18,7 +18,6 @@
 
 		function gatherInfoPart1 () { 
 			$http.get('/api/info').success(function(data, status) {
-				console.log("now");
 				model.user.info = data;
 				model.user.token = data.token;
 
@@ -28,7 +27,7 @@
 
 			}).error(failedHTTP);
 			function failedHTTP(something, errorCode) {
-				if (errorCode === 401) { $window.location.href = "/auth";}
+				if (errorCode === 401) { $window.location.href = "/auth/uwap/login";}
 				else {console.err("Failed to fetch http. Error: " + errorCode);}
 				console.log(errorCode);
 			}
@@ -59,19 +58,22 @@
 			main.setVCard();
 			webrtc.init();
 			xmpp.addHandler(xmppHandlers.mucMessage, null, "message", "groupchat" );
-			xmpp.addHandler(xmppHandlers.mucPresence, constants.xmpp.mucUser, "presence", null);
+			xmpp.addHandler(xmppHandlers.mucPresence, constants.xmpp.mucUser, "presence");
 			xmpp.addHandler(xmppHandlers.basicHandler);
 			xmpp.addHandler(xmppHandlers.message, null, "message", "chat");
 			xmpp.addHandler(xmppHandlers.presence, constants.xmpp.client, "presence");
-			xmpp.addHandler(xmppHandlers.roster, constants.xmpp.roster, "iq", null);
+			xmpp.addHandler(xmppHandlers.roster, constants.xmpp.roster, "iq");
 			
 			gatherInfoPart2();
 		}
 
 		main.sendMessage = function(to, message) {
 			var jid = utility.getJidFromId(to);
-			xmpp.sendPrivateMessage(jid, message);
-			model.chat.get(to).addMessage("Me", message);
+			xmpp.sendPrivateMessage(jid, message, function() {
+				$rootScope.$apply(function() {
+					model.chat.get(to).addMessage("Me", message);
+				});
+			});
 		};
 
 		main.addBestFriendJid = function(jid) {

@@ -1,0 +1,42 @@
+<div class="gutter fill-height-minus-gutter">
+	<div class="row fill-height">
+		<div class="col-md-2">
+
+		</div>
+
+		<div class="col-md-8 fill-height">
+			<div class="row">
+				<div class="col-md-10">
+					<input type="text" ng-model="conferenceName" placeholder="Name your conference" class="fill-width">
+				</div>
+				<div class="col-md-2 align-right">
+					<button class="btn btn-info width-70" ng-click="create()">Create</button>
+				</div>
+			</div>
+			<br>
+
+			<div ng-repeat="conference in conference.list" >
+				<div class="row">
+					<div class="col-md-10 height-50">
+						{{conference.name}} 
+					</div>
+					<div class="col-md-2 align-right height-50">
+						<button ng-click="gotoConference(conference.id)" class="btn btn-info width-70">Open</button>
+						<button class="btn btn-info width-70" ng-click="toggleInvite(conference.id)" ng-bind="isInviting(conference.id) && 'Close' || 'Invite'"></button>
+					</div>
+				</div>
+				<div ng-show="isInviting(conference.id)" class="border-bottom border-top">
+					<div ng-hide="conference.invites.length">
+						Click on contacts to invite them
+					</div>
+					<div ng-show="conference.invites.length">
+						Invites sent to:
+					</div>
+					<div ng-repeat="invitee in conference.invites">
+						{{invitee.FN}}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

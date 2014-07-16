@@ -32,6 +32,20 @@
 		};
 	});
 
+	app.directive('baClick', function() {
+		function link(scope, element, attr) {
+			element.bind('click', function(event) {
+				event.stopPropagation();
+			});
+		}
+
+		return {
+			link: link
+		};
+
+	});
+
+
 	app.directive('baCenterVideo', function ($window, $timeout) {
 
 		function link(scope, element, attr) {
