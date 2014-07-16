@@ -61,6 +61,7 @@
 			xmpp.addHandler(xmppHandlers.mucPresence, constants.xmpp.mucUser, "presence");
 			xmpp.addHandler(xmppHandlers.basicHandler);
 			xmpp.addHandler(xmppHandlers.message, null, "message", "chat");
+			xmpp.addHandler(xmppHandlers.conferenceInvite, null, "message", "conferenceInvite");
 			xmpp.addHandler(xmppHandlers.presence, constants.xmpp.client, "presence");
 			xmpp.addHandler(xmppHandlers.roster, constants.xmpp.roster, "iq");
 			
@@ -69,9 +70,11 @@
 
 		main.sendMessage = function(to, message) {
 			var jid = utility.getJidFromId(to);
+			var messageObject = model.chat.get(to).addMessage("Me", message, true);
+
 			xmpp.sendPrivateMessage(jid, message, function() {
 				$rootScope.$apply(function() {
-					model.chat.get(to).addMessage("Me", message);
+					messageObject.arrived = true;
 				});
 			});
 		};
@@ -120,6 +123,17 @@
 		var xmppHandlers = {
 			basicHandler: function(data) {
 				//console.log(data);
+			},
+			conferenceInvite: function(data) {
+				var body = data.getChildrenByTagName("body");
+				if (body) {
+					var conference = JSON.parse(body[0].children[0].data);
+					$rootScope.$apply(function() {
+						model.conference.addInvitedTo(conference);
+					});
+				} 
+				console.log("recieved invite");
+				console.log(data);
 			},
 			roster: function(data) {
 				var query = data.getChildrenByTagName("query")[0];
@@ -294,6 +308,26 @@
 			}
 			return friend;
 		}
+
+		main.sendInvite = function(friend) {
+			var conference = model.conference.getCurrent();
+			console.log(conference);
+			if (conference.isInvited(friend)) {
+				return console.log("already invited");
+			}
+			var temp = {
+				id: conference.id,
+				name: conference.name,
+				owner: conference.owner,
+				invitedBy: model.user.info.xmpp.jid
+			};
+			xmpp.sendConferenceInvite(friend.id, temp, function() {
+				$rootScope.$apply(function() {
+					model.conference.addInvite(friend);
+				});
+			});
+			console.log("finished sending invite");
+		};
 
 		main.search = function() {
 			if (!model.search.query) {return;}

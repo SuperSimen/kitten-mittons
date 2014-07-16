@@ -31,9 +31,10 @@ body {
 	text-align: right;
 }
 .tab {
+	padding-left: 15px;
 }
 .right {
-	position: absolute;
+	float: right;
 	right: 15px;
 }
 
@@ -221,4 +222,12 @@ body {
 
 .width-70 {
 	width: 70px;
+}
+
+.visible {
+	visibility: visible;
+}
+
+.invisible {
+	visibility: hidden;
 }

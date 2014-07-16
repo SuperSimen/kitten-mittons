@@ -11,7 +11,7 @@
 				<li ng-class="{'active': isActive('chat')}" ><a href ng-click="gotoState('chat')">Chat<span class="badge" ng-show="chat.unread != 0" ng-bind="chat.unread"></span></a></li>
 				<li ng-class="{'active': isActive('video')}"><a href ng-click="gotoState('video')">Video</a></li>
 				<li ng-class="{'active': isActive('file')}"><a href ng-click="gotoState('file')">File<span class="badge" ng-show="file.unseen != 0" ng-bind="file.unseen"></span></a></li>
-				<li ng-class="{'active': isActive('conference')}"><a href ng-click="gotoState('conference')">Conference</a></li>
+				<li ng-class="{'active': isActive('conference')}"><a href ng-click="gotoState('conference')">Conference<span class="badge" ng-show="conference.unseen != 0" ng-bind="conference.unseen"></a></li>
 			</ul>
 		</div>
 	</div>

@@ -35,7 +35,9 @@
 		}
 
 		function messageHandler (data) {
-			if (data.type === "chat") {
+			if (data.type === "chat" ||
+				data.type === "conferenceInvite"
+			   ) {
 				var msg = $msg({to: data.from, type: 'ack', id: data.id});
 				send(msg);
 			}
@@ -96,6 +98,10 @@
 			sendMessage(to, text, "chat", callback);
 		};
 
+		factory.sendConferenceInvite = function(to, conference, callback) {
+			sendMessage(to, JSON.stringify(conference), "conferenceInvite", callback);
+		};
+
 		var messageCounter = 0;
 		function sendMessage (to, text, type, callback) {
 			var id = Math.random().toString(32).substring(2) + messageCounter++;
@@ -106,12 +112,9 @@
 			send(msg);
 
 			function handler(data) {
-				console.log("got reply");
 				callback();
 			}
-
 		}
-
 
 		factory.sendGroupMessage = function(to, text) {
 			var msg = $msg({to: to, type: "groupchat"}).c("body").t(text);

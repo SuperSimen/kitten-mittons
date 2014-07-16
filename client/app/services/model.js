@@ -7,16 +7,52 @@
 		model.conference = {
 			list: {},
 			idCounter: 0,
-			create: function(name) {
-				var id = Math.random().toString(32).substring(2) + name.toLowerCase().replace(/[^a-z]+/g, '') + this.idCounter++;
-				this.list[id] = {
+			unseen: 0,
+			addInvitedTo: function(conference) {
+				var id = conference.id;
+				if (this.list[id]) {
+					return console.error("id not unique");
+				}
+
+				this.list[id] = this.createNew(conference.name, id, conference.owner, conference.invitedBy);
+
+				if ($state.current.name !== "conference") {
+					this.unseen ++;
+				}
+			},
+			createNew: function(name, id, owner, invitedBy) {
+				return {
 					name: name,
 					id: id,
-					invites: [] 
+					invites: [],
+					owner: owner,
+					invitedBy: invitedBy,
+					isInvited: function(friend) {
+						if (friend) {
+							for (var i in this.invites) {
+								if (this.invites[i] === friend) {
+									return true;
+								}
+							}
+						}
+						return false;
+
+					}
 				};
+			},
+			create: function(name) {
+				var id = Math.random().toString(32).substring(2) + name.toLowerCase().replace(/[^a-z]+/g, '') + this.idCounter++;
+				if (this.list[id]) {
+					return console.error("id not unique");
+				}
+
+				this.list[id] = this.createNew(name, id, model.user.info.xmpp.jid);
 				return id;
 			},
 			invitingid: "",
+			getCurrent: function() {
+				return this.list[this.invitingid]; 
+			},
 			addInvite: function(friend) {
 				var conference = this.list[this.invitingid];
 				if (this.invitingid && conference) {
@@ -118,11 +154,13 @@
 					mostRecentTime: 0,
 					messages: [],
 					unread: 0,
-					addMessage: function(from, message) {
-						this.messages.push({
+					addMessage: function(from, message, sending) {
+						this.mostRecentTime = Date.now();
+						var temp = {
 							from: from, 
-							message: message
-						});
+							message: message,
+							arrived: !sending
+						};
 
 						if ($state.current.name !== "chat") {
 							if ($state.current.name === "video.active" && model.video.remote.userId === id) {
@@ -139,6 +177,11 @@
 						else if (model.chat.currentId !== id) {
 							this.unread ++;
 						}
+
+						this.messages.push(temp);
+
+						model.chat.sort();
+						return temp; 
 					},
 				});
 				this.sort();
@@ -154,6 +197,15 @@
 				this.sortableArray.sort(function(a,b) {return b.mostRecentTime - a.mostRecentTime;});
 				for (var i in this.sortableArray) {
 					this.listOfIndices[this.sortableArray[i].id] = i;
+				}
+			},
+			close: function(id) {
+				if (id) {
+					this.sortableArray.splice(this.listOfIndices[id], 1);
+					delete this.listOfIndices[id];
+					if (id === this.currentId) {
+						this.setCurrent("");
+					}
 				}
 			}
 		};

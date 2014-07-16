@@ -28,4 +28,8 @@ app.controller( 'chatHistoryController', function($scope, model) {
 			return "";
 		}
 	};
+
+	$scope.close = function(id) {
+		model.chat.close(id);
+	};
 });

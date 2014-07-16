@@ -7,7 +7,7 @@
 		<div class="col-md-8 fill-height">
 			<div class="row">
 				<div class="col-md-10">
-					<input type="text" ng-model="conferenceName" placeholder="Name your conference" class="fill-width">
+					<input type="text" ng-model="conferenceName" placeholder="Name your conference"  style="width: 112%">
 				</div>
 				<div class="col-md-2 align-right">
 					<button class="btn btn-info width-70" ng-click="create()">Create</button>
@@ -17,8 +17,11 @@
 
 			<div ng-repeat="conference in conference.list" >
 				<div class="row">
-					<div class="col-md-10 height-50">
+					<div ng-class="{'col-md-7': conference.invitedBy, 'col-md-10': !conference.invitedBy}" class="height-50 hide-overflow">
 						{{conference.name}} 
+					</div>
+					<div ng-show="conference.invitedBy"class="col-md-3 height-50 hide-overflow">
+						<div >Invited by: {{getFriendFromId(conference.invitedBy).FN}}</div>
 					</div>
 					<div class="col-md-2 align-right height-50">
 						<button ng-click="gotoConference(conference.id)" class="btn btn-info width-70">Open</button>
