@@ -2,17 +2,26 @@
 	<div class="navbar navbar-default  no-margin" role="navigation">
 		<div class="container default-cursor">
 			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
 				<div class="navbar-brand"><img src="bower_components/uninett-bootstrap-theme/uninett-theme/images/UNINETT_logo.svg" alt="Uninett logo" type="image/svg+xml"></div>
 			</div>
 
-			<div class="department">Kitten Mittons</div>
+			<div class="navbar-department">
+				<div class="department">Kitten Mittons</div>
+			</div>
 
-			<ul class="nav navbar-nav">
-				<li ng-class="{'active': isActive('chat')}" ><a href ng-click="gotoState('chat')">Chat<span class="badge" ng-show="chat.unread != 0" ng-bind="chat.unread"></span></a></li>
-				<li ng-class="{'active': isActive('video')}"><a href ng-click="gotoState('video')">Video</a></li>
-				<li ng-class="{'active': isActive('file')}"><a href ng-click="gotoState('file')">File<span class="badge" ng-show="file.unseen != 0" ng-bind="file.unseen"></span></a></li>
-				<li ng-class="{'active': isActive('conference')}"><a href ng-click="gotoState('conference')">Conference<span class="badge" ng-show="conference.unseen != 0" ng-bind="conference.unseen"></a></li>
-			</ul>
+			<div class="navbar-collapse collapse">
+				<ul class="nav navbar-nav">
+					<li ng-class="{'active': isActive('chat')}" ><a href ng-click="gotoState('chat')">Chat<span class="badge" ng-show="chat.unread != 0" ng-bind="chat.unread"></span></a></li>
+					<li ng-class="{'active': isActive('video')}"><a href ng-click="gotoState('video')">Video</a></li>
+					<li ng-class="{'active': isActive('file')}"><a href ng-click="gotoState('file')">File<span class="badge" ng-show="file.unseen != 0" ng-bind="file.unseen"></span></a></li>
+					<li ng-class="{'active': isActive('conference')}"><a href ng-click="gotoState('conference')">Conference<span class="badge" ng-show="conference.unseen != 0" ng-bind="conference.unseen"></a></li>
+				</ul>
+			</div>
 		</div>
 	</div>
 </div>

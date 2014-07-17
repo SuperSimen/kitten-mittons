@@ -4,13 +4,16 @@
 		var main = {
 			init: function() {
 				globalModel = model;
-				$state.go("conference");
+				$state.go("file");
 				gatherInfoPart1();
 				fileSender.init();
 				fileReceiver.init();
 				$rootScope.$watch(function () {return model.video.active;}, function(newValue) {
 					if (newValue) {
 						$state.go("video.active");
+					}
+					if (newValue === false) {
+						$state.go("video");
 					}
 				});
 
@@ -97,7 +100,7 @@
 			});
 		};
 
-		main.addBestFriendJid = function(jid) {
+		addBestFriendJid = function(jid) {
 			if (!model.friends.isBestFriend(jid)) {
 				xmpp.addToRoster(jid, callback);
 			}
@@ -150,8 +153,6 @@
 						model.conference.addInvitedTo(conference);
 					});
 				} 
-				console.log("recieved invite");
-				console.log(data);
 			},
 			roster: function(data) {
 				var query = data.getChildrenByTagName("query")[0];
@@ -344,19 +345,16 @@
 					model.conference.addInvite(friend);
 				});
 			});
-			console.log("finished sending invite");
 		};
 
 
 		main.search = function() {
 			if (!model.search.query) {return;}
 
-			console.log("searching for " + model.search.query);
 
 			UWAP.getPeople(model.user.token, (function(searchId) {
 				return function (data) {
 					if (data.people.length) {
-						console.log(data);
 						model.search.addPeopleToResults(data.people, searchId);
 					}
 				};
@@ -364,8 +362,9 @@
 		};
 
 		main.sendFile = function(to) {
+			console.log("sending file");
 			var jid = utility.getJidFromId(to);
-			fileSender.sendFile(jid);
+			fileSender.sendFiles(jid);
 		};
 
 		return main;

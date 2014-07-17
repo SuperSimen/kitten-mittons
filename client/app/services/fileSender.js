@@ -28,8 +28,17 @@
 		};
 
 
-		fileSender.sendFile = function(to) {
-			if (!model.file.selectedFile) {return console.error("no file!!");}
+		fileSender.sendFiles = function(to) {
+			if (!model.file.selectedFiles.length) {return console.error("no files!!");}
+			for (var i = 0; i < model.file.selectedFiles.length; i++) {
+				sendFile(model.file.selectedFiles[i], to);
+			}
+		};
+
+		function sendFile (file, to) {
+			if (!file || !to) {
+				return console.log("wrong input to sendFile");
+			}
 			var progress = {
 				counter: 0,
 				calculate: function() {
@@ -54,14 +63,13 @@
 				}
 			});
 
-			var file = model.file.selectedFile;
 			var size = file.size;
 			var maxSize = 100*1024*1024;
 			var totalSlices = Math.ceil(size / maxSize);
 			var id = generateRandomFileId();
 			
 			progress.totalSlices = totalSlices;
-			model.file.add(id, file.name, to, true);
+			model.file.add(id, file.name, to, true, size);
 
 			dataHandlers.add(fileHandler, id);
 			var listOfCallbacks = [];
@@ -94,7 +102,7 @@
 				}
 			}
 
-			signalFile(id, "sof", totalSlices, file.name);
+			signalFile(id, "sof", totalSlices, file.name, size);
 
 			function continueFileSending () {
 				if (size < maxSize) {
@@ -170,12 +178,13 @@
 				sender.send(tempFile);
 			}
 
-			function signalFile(id, status, totalSlices, filename) {
+			function signalFile(id, status, totalSlices, filename, size) {
 				var tempFile = {
 					id: id,
 					status: status,
 					filename: filename,
-					totalSlices: totalSlices
+					totalSlices: totalSlices,
+					size: size
 				};
 				sender.send(tempFile);
 			}
@@ -191,7 +200,7 @@
 				};
 				sender.send(tempFile);
 			}
-		};
+		}
 
 		var fileCounter = 0;
 

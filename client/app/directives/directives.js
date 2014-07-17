@@ -5,7 +5,8 @@
 		function link(scope, element, attr) {
 			element[0].onchange = function(event) {
 				scope.$apply(function() {
-					scope.file = event.target.files[0];
+					console.log(scope);
+					scope.files = event.target.files;
 				});
 			};
 		}
@@ -13,7 +14,7 @@
 		return {
 			link: link,
 			scope: {
-				file: '='
+				files: '='
 			}
 		};
 	});

@@ -12,7 +12,7 @@ app.controller( 'navBarController', function($scope, model, $state) {
 		}
 
 		if (state === "video") {
-			if (model.video.remote.src) {
+			if (model.video.active) {
 				$state.go("video.active");
 			}
 			else {

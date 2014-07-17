@@ -9,7 +9,7 @@
 				<div class="col-md-10">
 					<input type="text" ng-model="conferenceName" placeholder="Name your conference"  class="fill-width">
 				</div>
-				<div class="col-md-2 align-right">
+				<div class="col-md-2 align-left">
 					<button class="btn btn-info width-70" ng-click="create()">Create</button>
 				</div>
 			</div>
@@ -23,7 +23,7 @@
 					<div ng-show="conference.invitedBy"class="col-md-3 height-50 hide-overflow">
 						<div >Invited by: {{getFriendFromId(conference.invitedBy).FN}}</div>
 					</div>
-					<div class="col-md-2 align-right height-50">
+					<div class="col-md-2 align-left height-50">
 						<button ng-click="gotoConference(conference.id)" class="btn btn-info width-70">Open</button>
 						<button class="btn btn-info width-70" ng-click="toggleInvite(conference.id)" ng-bind="isInviting(conference.id) && 'Close' || 'Invite'"></button>
 					</div>

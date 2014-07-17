@@ -1,4 +1,4 @@
-<div class="row color-grey fill-height border-right default-cursor hide-overflow">
+<div class="row color-grey fill-height border-right default-cursor auto-overflow">
 	<div class="col-md-12 fill-height">
 		<div class="fill-top">
 			<div class="row border-bottom name-tag">
@@ -7,15 +7,13 @@
 				</div>
 			</div>
 			<div ng-repeat="entry in history" ng-init="active = 0" >
-				<div ng-click="clickEntry(entry.id)" ng-class="{'active': isActive(entry.id)}" class="row hover-white chat-entry">
+				<div ng-click="clickEntry(entry.id)" ng-class="{'active': isActive(entry.id)}" class="row hide-overflow hover-white chat-entry">
 					<div class="col-md-12 visible-on-hover">
 						<div class="width-95">
 							{{getFriendFromId(entry.id).FN}}
 							<span class="badge" ng-bind="getUnread(entry.id)"></span>
 						</div>
-						<div class="width-3">
-							<div class="visible-span width-3"><i ng-click="close(entry.id)" class="fa pointer fa-times"></i></div>
-						</div>
+						<div class="visible-span width-3 right"><i ng-click="close(entry.id)" class="fa pointer fa-times"></i></div>
 					</div>
 				</div>
 

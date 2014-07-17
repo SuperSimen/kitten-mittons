@@ -1,10 +1,10 @@
 <div class="row color-grey fill-height border-left scroll-y default-cursor">
 	<div class="col-md-12 fill-height">
-		<div ng-hide="showSearch" class="fill-height" ng-init="showSearch = true">
+		<div ng-hide="showSearch" class="fill-height" ng-init="showSearch = false">
 
 			<div class="fill-top">
 				<div class="row border-bottom name-tag"> 
-					<div class="col-md-12 fill-height">
+					<div class="col-md-12 fill-height hide-overflow">
 						<h3 class="uninett-fontColor-white name-tag align-center">{{user.info.name}}</h3>
 					</div>
 				</div>
@@ -40,7 +40,7 @@
 				</div>
 			</div>
 			<div class="fill-bottom align-center fill-width">
-				<i ng-click="showSearch = true" class="fa fa-plus-circle fa-inverse fa-2x"></i>
+				<i ng-click="showSearch = true" class="pointer fa fa-search fa-inverse fa-2x"></i>
 			</div>
 
 		</div>
@@ -58,6 +58,10 @@
 								{{person.userid}}
 								<br>
 								{{person.mail}}
+								<br>
+								<div class="align-center">
+									<i class="pointer fa fa-plus fa-inverse fa-2x"></i>
+								</div>
 							</span>
 						</div>
 
@@ -65,7 +69,12 @@
 				</div>
 			</div>
 			<div class="fill-bottom">
-				<input type="text" class="fill-width" ng-model="search.query">
+				<div style="width:calc(100% - 34px);" class="inline-block">
+					<input type="text" class="fill-width" ng-model="search.query">
+				</div>
+				<div class="right">
+					<i ng-click="showSearch = false" class="pointer fa fa-times-circle fa-inverse fa-2x"></i>
+				</div>
 			</div>
 		</div>
 

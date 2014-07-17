@@ -80,7 +80,8 @@
 
 		model.file = {
 			list: {},
-			add: function(id, filename, user, sending) {
+			selectedFiles: [],
+			add: function(id, filename, user, sending, size) {
 
 				if (this.list[id]) {
 					return console.error("not unique file id");
@@ -89,7 +90,8 @@
 					filename: filename,
 					user: user,
 					sending: sending,
-					progress: 0
+					progress: 0,
+					size: size
 				};
 
 				if ($state.current.name !== "file") {
@@ -101,6 +103,7 @@
 					filename: this.list[id].filename,
 					user: this.list[id].user,
 					sent: this.list[id].sending,
+					size: this.list[id].size,
 					failed: failed
 				});
 				delete this.list[id];
@@ -109,7 +112,7 @@
 			log: []
 		};
 		model.video = {
-			active: false,
+			active: null,
 			local: {
 				videoEnabled: false,
 				audioEnabled: false,

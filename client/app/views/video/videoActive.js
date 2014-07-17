@@ -1,4 +1,4 @@
-app.controller( 'videoController', function(model, main, $scope) {
+app.controller( 'videoActiveController', function(model, main, $scope) {
 	$scope.smallVideo = model.video.local;
 	$scope.largeVideo = model.video.remote;
 	$scope.video = model.video;

@@ -17,7 +17,7 @@
 		function fileHandler(data, from) {
 			if (data.status === "sof") {
 				$rootScope.$apply(function() {
-					model.file.add(data.id, data.filename, from, false);
+					model.file.add(data.id, data.filename, from, false, data.size);
 				});
 
 				initiateFileSystem(data.id, data.filename, data.size, data.totalSlices, function() {
@@ -218,8 +218,9 @@
 		}
 
 		function initiateFileSystem(id, filename, fileSize, totalSlices, callback) {
-			if (fileSize > 1024*1024) {
+			if (false) {
 				navigator.webkitPersistentStorage.requestQuota(fileSize, function(grantedBytes) {
+					console.log("granted bytes " + grantedBytes);
 					window.webkitRequestFileSystem(window.PERSISTENT, grantedBytes, onInitFs(id, filename, totalSlices, callback), errorHandler);
 				}, errorHandler);
 			}
