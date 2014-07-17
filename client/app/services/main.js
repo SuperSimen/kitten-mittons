@@ -13,6 +13,24 @@
 						$state.go("video.active");
 					}
 				});
+
+				var timeoutPromise;
+				$rootScope.$watch(function() {return model.search.query;}, function(newValue) {
+					console.log("changed " + model.search.query);
+					if (newValue) {
+						if (timeoutPromise) {
+							$timeout.cancel(timeoutPromise);
+						}
+						timeoutPromise = $timeout(function() {
+							model.search.unsettable = false;
+							main.search();
+						}, 200);
+					}
+					else {
+						model.search.unsettable = true;
+						model.search.clearResults();
+					}
+				});
 			}
 		};
 
@@ -64,7 +82,7 @@
 			xmpp.addHandler(xmppHandlers.conferenceInvite, null, "message", "conferenceInvite");
 			xmpp.addHandler(xmppHandlers.presence, constants.xmpp.client, "presence");
 			xmpp.addHandler(xmppHandlers.roster, constants.xmpp.roster, "iq");
-			
+
 			gatherInfoPart2();
 		}
 
@@ -109,7 +127,7 @@
 			var jid = utility.getJidFromId(friend.id);
 			if (model.friends.isBestFriend(friend.id)) {
 				//xmpp.removeFromRoster(jid, callback);
-				
+
 				callback();
 			}
 			else {
@@ -147,14 +165,14 @@
 					}
 					switch (items[i].subscription) {
 						case "to":
-						case "both":
+							case "both":
 							$rootScope.$apply(add(id));
-							break;
+						break;
 						case "remove":
-						case "none":
-						case "from":
+							case "none":
+							case "from":
 							$rootScope.$apply(remove(id));
-							break;
+						break;
 					}
 				}
 				function add(id) {
@@ -329,6 +347,7 @@
 			console.log("finished sending invite");
 		};
 
+
 		main.search = function() {
 			if (!model.search.query) {return;}
 
@@ -337,6 +356,7 @@
 			UWAP.getPeople(model.user.token, (function(searchId) {
 				return function (data) {
 					if (data.people.length) {
+						console.log(data);
 						model.search.addPeopleToResults(data.people, searchId);
 					}
 				};

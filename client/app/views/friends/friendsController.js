@@ -2,6 +2,7 @@ app.controller( 'friendsController', function(main, $state, $scope, model) {
 	$scope.groups = model.groups;
 	$scope.friends = model.friends;
 	$scope.user = model.user;
+	$scope.search = model.search;
 
 	$scope.clickOnFriend = function(friend) {
 		var currentState = $state.current.name;
@@ -29,11 +30,6 @@ app.controller( 'friendsController', function(main, $state, $scope, model) {
 		main.removeBestFriend(friend);
 	};
 
-	$scope.friendFieldValue = "owesenle@jabber.uninett.no";
 	$scope.friendFieldKeyDown = function(event) {
-		if (event.keyCode === 13 && $scope.friendFieldValue) {
-			//main.addBestFriendJid($scope.friendFieldValue);
-			$scope.showFriendField = false;
-		}
 	};
 });

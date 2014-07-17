@@ -1,42 +1,73 @@
-<div class="row color-grey fill-height border-left default-cursor hide-overflow">
+<div class="row color-grey fill-height border-left scroll-y default-cursor">
 	<div class="col-md-12 fill-height">
-		<div class="fill-top">
-			<div class="row border-bottom name-tag"> 
-				<div class="col-md-12 fill-height">
-					<h3 class="uninett-fontColor-white name-tag align-center">{{user.info.name}}</h3>
-				</div>
-			</div>
-			<div class="fill-under-name-tag">
-				<div ng-repeat="bestFriendId in friends.bestFriends" class="row hover-white">
-					<div ng-click="clickOnFriend(friend)" class="col-md-12 visible-on-hover" ng-init="friend = getFriendFromId(bestFriendId)">
-						<i class="fa fa-circle icon presence-icon" ng-class="{'online': friend.online || friend.mucOnline, 'offline': !(friend.online || friend.mucOnline)}"></i>
-						<span class="tab">{{friend.FN}}</span>
-						<span class="right visible-span pointer" ><i class="fa fa-times" ba-click ng-click="removeBestFriend(friend)"></i></span>
+		<div ng-hide="showSearch" class="fill-height" ng-init="showSearch = true">
+
+			<div class="fill-top">
+				<div class="row border-bottom name-tag"> 
+					<div class="col-md-12 fill-height">
+						<h3 class="uninett-fontColor-white name-tag align-center">{{user.info.name}}</h3>
 					</div>
 				</div>
-				<div class="row" ng-class="{'border-top': friends.bestFriends.length}">
-					<div class="col-md-12">
-						<div ng-repeat="group in groups.list">
-							<div class="row hover-white" ng-click="showMembers = !showMembers" ng-init="showMembers = 1">
-								<div class="col-md-12">
-									{{group.displayName}}
+				<div class="fill-under-name-tag">
+					<div ng-repeat="bestFriendId in friends.bestFriends" class="row hover-white">
+						<div ng-click="clickOnFriend(friend)" class="col-md-12 visible-on-hover" ng-init="friend = getFriendFromId(bestFriendId)">
+							<i class="fa fa-circle icon presence-icon" ng-class="{'online': friend.online || friend.mucOnline, 'offline': !(friend.online || friend.mucOnline)}"></i>
+							<span class="tab">{{friend.FN}}</span>
+							<span class="right visible-span pointer" ><i class="fa fa-times" ba-click ng-click="removeBestFriend(friend)"></i></span>
+						</div>
+					</div>
+					<div class="row" ng-class="{'border-top': friends.bestFriends.length}">
+						<div class="col-md-12">
+							<div ng-repeat="group in groups.list">
+								<div class="row hover-white" ng-click="showMembers = !showMembers" ng-init="showMembers = 1">
+									<div class="col-md-12">
+										{{group.displayName}}
+									</div>
 								</div>
-							</div>
-							<div ng-show="showMembers" ng-repeat="friend in group.friends" class="row hover-white">
-								<div ng-hide="friend.me" ng-click="clickOnFriend(friend)" class="col-md-12 visible-on-hover">
-									<i class="fa fa-circle icon presence-icon" ng-class="{'online': friend.online || friend.mucOnline, 'offline': !(friend.online || friend.mucOnline)}"></i>
-									<span class="tab">{{friend.FN}}</span>
-									<span class="right visible-span pointer" ><i class="fa fa-plus" ba-click ng-click="addBestFriend(friend)"></i></span>
+								<div ng-show="showMembers" ng-repeat="friend in group.friends" class="row hover-white">
+									<div ng-hide="friend.me" ng-click="clickOnFriend(friend)" class="col-md-12 visible-on-hover">
+
+										<div class="width-95">
+											<i class="fa fa-circle icon presence-icon" ng-class="{'online': friend.online || friend.mucOnline, 'offline': !(friend.online || friend.mucOnline)}"></i>
+											<span class="tab">{{friend.FN}}</span>
+										</div>
+										<span class="right visible-span pointer" ><i class="fa fa-plus" ba-click ng-click="addBestFriend(friend)"></i></span>
+									</div>
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
+			<div class="fill-bottom align-center fill-width">
+				<i ng-click="showSearch = true" class="fa fa-plus-circle fa-inverse fa-2x"></i>
+			</div>
+
 		</div>
-	</div>
-	<div class="fill-bottom align-center fill-width">
-		<i ng-hide="showFriendField" ng-click="showFriendField = true" class="fa fa-plus-circle fa-inverse fa-2x"></i>
-		<input ng-show="showFriendField" type="text" class="fill-width" ng-model="friendFieldValue" ng-keydown="friendFieldKeyDown($event)">
+
+		<div ng-show="showSearch" class="fill-height-minus-gutter gutter">
+			<div class="row scroll-y fill-top">
+				<div class="col-md-12 small-font">
+					<div ng-repeat="person in search.list" ng-mouseenter="showHidden = true" ng-mouseleave="showHidden = false" ng-init="showHidden = false" class="row hover-white">
+						<div ng-show="showHidden && person.hasImage()" class="col-md-4 inline-block">
+							<img class="small-image" ng-src="{{person.getImage()}}">
+						</div>
+						<div ng-class="{'col-md-8': showHidden && person.hasImage(), 'col-md-12': !(showHidden && person.hasImage()), 'small-image': showHidden}" class="vertical-align inline-block no-wrap">
+							<div class="">{{person.name}}</div>
+							<span ng-show="showHidden">
+								{{person.userid}}
+								<br>
+								{{person.mail}}
+							</span>
+						</div>
+
+					</div>
+				</div>
+			</div>
+			<div class="fill-bottom">
+				<input type="text" class="fill-width" ng-model="search.query">
+			</div>
+		</div>
+
 	</div>
 </div>

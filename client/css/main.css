@@ -103,6 +103,11 @@ body {
 	overflow: hidden;
 }
 
+.scroll-y {
+	overflow-y: auto;
+	overflow-x: hidden;
+}
+
 .auto-overflow {
 	overflow: auto;
 }
@@ -129,7 +134,7 @@ body {
 }
 
 .fill-bottom {
-	height: 30px;
+	height: 40px;
 }
 
 .fill-height-gutter {
@@ -188,7 +193,19 @@ body {
 	visibility: visible;
 }
 
+.display-on-hover .display-span {
+	display: none;
+}
+
+.display-on-hover:hover .display-span {
+	display: inline-block;
+}
+
 .icon:hover {
+}
+
+.inline-block {
+	display: inline-block;
 }
 
 .vertical-align {
@@ -230,4 +247,22 @@ body {
 
 .invisible {
 	visibility: hidden;
+}
+
+.small-image {
+	height: 100px;
+}
+
+.no-wrap {
+	white-space: nowrap;
+	
+
+}
+
+.small-font {
+	font-size: 0.8em;
+}
+
+.width-0 {
+	width: 0px;
 }

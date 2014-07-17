@@ -276,7 +276,7 @@
 		};
 
 		model.search = {
-			query: "",
+			query: "simen",
 			searchId: 0,
 			unsettable: false,
 			currentRealm: "uninett.no",
@@ -298,6 +298,10 @@
 
 				this.list.push({
 					name: person.name,
+					mail: person.mail,
+					userid: person.userid,
+					o: person.o,
+					source: person.source,
 					image: {
 						preface: "data:image/jpeg;base64,",
 						data: person.jpegphoto
