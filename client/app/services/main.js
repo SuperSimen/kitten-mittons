@@ -151,8 +151,7 @@
 				userid: person.userid
 			};
 			$http.post('/api/addFriend', JSON.stringify(temp)).success(function(data, status) {
-				console.log(arguments);
-
+				model.user.info = data;
 			}).error(utility.handleHttpError);
 		};
 
@@ -186,6 +185,7 @@
 				} 
 			},
 			roster: function(data) {
+				console.log(data);
 				var query = data.getChildrenByTagName("query")[0];
 				var items = query.getChildrenByTagName("item");
 
@@ -316,7 +316,10 @@
 				for (var i in groups) {
 					var group = groups[i];
 					//Only for testing
-					if (group.groupType === constants.uwap.orgUnit || group.groupType === constants.uwap.adHoc ) {
+					if (group.groupType === constants.uwap.orgUnit || group.groupType === constants.uwap.adHoc) {
+						if (true) {
+							return;
+						}
 						var userid = model.user.info.userid;
 						var groupId = encodeURIComponent(group.id).toLowerCase();
 						model.groups.create(groupId, group.displayName);

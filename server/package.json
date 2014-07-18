@@ -13,6 +13,7 @@
     "body-parser": "^1.4.3",
     "cookie-session": "^1.0.2",
     "express": "^4.4.5",
+    "ltx": "^0.5.2",
     "node-xmpp-client": "^1.0.0-alpha3",
     "passport": "^0.2.0",
     "passport-oauth": "^1.0.0",
