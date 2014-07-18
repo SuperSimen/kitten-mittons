@@ -26,7 +26,8 @@ app.config( function ($stateProvider) {
 			"view2@base": {
 				controller: "videoActiveController",
 				templateUrl: "app/views/video/videoActive.tpl.html"
-			}
+			},
+			"view2-animated@base": {}
 		}
 	}).state('chat', {
 		parent: 'friendsVisible',

@@ -6,10 +6,6 @@
 			iceServers: constants.iceServers
 		};
 
-		var userMediaOptions = {
-			audio: model.video.local.audioEnabled,
-			video: model.video.local.videoEnabled
-		};
 
 		webrtc.init = function() {
 			xmpp.addHandler(handleOffer, constants.xmpp.webrtc, "message", "offer");
@@ -26,17 +22,27 @@
 				return;
 			}
 
-			navigator.webkitGetUserMedia(userMediaOptions,
+			try {
+				console.log("getting user media");
+				console.log(model.video.local);
+				navigator.webkitGetUserMedia({
+					video: model.video.local.videoEnabled,
+					audio: model.video.local.audioEnabled,
+				},
 				function(stream) {
 					model.video.local.src = $sce.trustAsResourceUrl(URL.createObjectURL(stream));
 					model.video.local.stream = stream;
 					callback(stream);
 				}, function() {
+					console.log("hilhlkh");
 					console.log(arguments);
 				}
-			);
-			model.video.local.videoEnabled = userMediaOptions.video;
-			model.video.local.audioEnabled = userMediaOptions.audio;
+											);
+			}
+			catch (err) {
+				reset();
+			}
+
 		}
 
 
@@ -51,14 +57,22 @@
 			}
 		};
 
-		webrtc.hangup = function() { 
-			model.video.busy = false;
+		function reset() {
 			if (model.video.active) {
 				video.close();
 			}
-			else {
-				console.error("no active call");
+			model.video.busy = false;
+			model.video.remote.src = "";
+			model.video.remote.userId = "";
+			model.video.active = false;
+			if (model.video.local.stream) {
+				model.video.local.stream.stop();
+				model.video.local.stream = null;
 			}
+		}
+
+		webrtc.hangup = function() { 
+			reset();
 		};
 
 		webrtc.enableVideo = function(enable) {
@@ -83,10 +97,8 @@
 					case "disconnected":
 					case "closed":
 						$rootScope.$apply(function() {
-							model.video.active = false;
-							model.video.remote.src = "";
+							reset();
 						});
-						video.peerConnection = null;
 				}
 			},
 			close: function() {
@@ -319,6 +331,7 @@
 		function onAddStream (e){
 			$rootScope.$apply(function() {
 				model.video.active = true;
+				console.log(e.stream);
 				model.video.remote.src = $sce.trustAsResourceUrl(URL.createObjectURL(e.stream));
 			});
 		}

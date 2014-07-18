@@ -115,8 +115,8 @@
 			active: null,
 			busy: null,
 			local: {
-				videoEnabled: false,
-				audioEnabled: false,
+				videoEnabled: true,
+				audioEnabled: true,
 				src: ""
 			},
 			remote: {
