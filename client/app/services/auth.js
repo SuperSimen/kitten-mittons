@@ -1,6 +1,6 @@
 (function () {
 
-	app.factory('UWAP', function ( $location, $http, $window) {
+	app.factory('UWAP', function ( $location, $http, utility) {
 		var factory = {};
 		var api = {
 			userInfo: "https://core.uwap.org/api/userinfo",
@@ -49,11 +49,7 @@
 			sendRequest(token, api.realms, callback);
 		};
 
-		function failedHTTP(something, errorCode) {
-			if (errorCode === 401) { $window.location.href = "/auth/uwap/login";}
-			else {console.err("Failed to fetch http. Error: " + errorCode);}
-			console.log(errorCode);
-		}
+		var failedHTTP = utility.handleHttpError;
 
 		return factory;
 	});

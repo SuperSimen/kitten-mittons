@@ -29,6 +29,9 @@ app.controller( 'friendsController', function(main, $state, $scope, model) {
 	$scope.removeBestFriend = function(friend) {
 		main.removeBestFriend(friend);
 	};
+	$scope.addBestFriendUWAP = function(friend) {
+		main.addBestFriendUWAP(friend);
+	};
 
 	$scope.friendFieldKeyDown = function(event) {
 	};

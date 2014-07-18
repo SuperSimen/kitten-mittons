@@ -8,6 +8,7 @@ var cookieSession = require('cookie-session');
 var fileSystem = require('fs');
 var https = require('https');
 var http = require('http');
+var bodyParser = require('body-parser');
 
 var app = express();
 app.use(cookieSession({
@@ -16,6 +17,8 @@ app.use(cookieSession({
 
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(bodyParser.json());
+
 
 var options = {
 	key: fileSystem.readFileSync('auth/server.key'),
@@ -40,6 +43,16 @@ app.get('/auth/uwap/callback', passport.authenticate('uwap', { successRedirect: 
 app.get('/api/info', function(req, res) {
 	if (req.user) {
 		res.send(JSON.stringify(userList.list[req.user.id]));
+	}
+	else {
+		res.status(401).send();
+	}
+});
+app.post('/api/addFriend', function(req, res) {
+	if (req.user) {
+		console.log(req.user);
+		console.log(req.body);
+		res.send("hola");
 	}
 	else {
 		res.status(401).send();
@@ -103,7 +116,6 @@ var getUserInfo = function(token, done) {
 		else {
 			var user = userList.findOrCreate(JSON.parse(body));
 			user.token = token;
-			console.log(user);
 			done(null, user);
 		}
 	});

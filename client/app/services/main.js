@@ -46,12 +46,7 @@
 					xmpp.connect(model.user.info.xmpp.jid, model.user.info.xmpp.password, constants.xmpp.boshUrl, connectedCallback);
 				}
 
-			}).error(failedHTTP);
-			function failedHTTP(something, errorCode) {
-				if (errorCode === 401) { $window.location.href = "/auth/uwap/login";}
-				else {console.err("Failed to fetch http. Error: " + errorCode);}
-				console.log(errorCode);
-			}
+			}).error(utility.handleHttpError);
 		}
 
 
@@ -123,6 +118,21 @@
 			function callback() {
 				xmpp.sendPresenceType(jid, "subscribe");
 			}
+		};
+
+		main.addBestFriendUWAP = function(person) {
+			console.log("uwaps friend");
+			var temp = {
+				name: person.name,
+				mail: person.mail,
+				o: person.o,
+				source: person.source,
+				userid: person.userid
+			};
+			$http.post('/api/addFriend', JSON.stringify(temp)).success(function(data, status) {
+				console.log(arguments);
+
+			}).error(utility.handleHttpError);
 		};
 
 		//TODO: uninett.jabber does not work

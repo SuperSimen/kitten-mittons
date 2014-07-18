@@ -279,7 +279,7 @@
 		};
 
 		model.search = {
-			query: "simen",
+			query: "ann",
 			searchId: 0,
 			unsettable: false,
 			currentRealm: "uninett.no",

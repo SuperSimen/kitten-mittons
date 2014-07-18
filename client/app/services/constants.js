@@ -42,7 +42,7 @@
 
 	});	
 
-	app.factory('utility', function(constants) {
+	app.factory('utility', function(constants, $window) {
 		var utility = {};
 
 		utility.getJidFromId = function(id) {
@@ -95,6 +95,13 @@
 				return bytes + ' B';
 			}
 		};
+
+		utility.handleHttpError = function(something, errorCode) {
+			if (errorCode === 401) { $window.location.href = "/auth/uwap/login";}
+			else {console.err("Failed to fetch http. Error: " + errorCode);}
+			console.log(errorCode);
+		};
+
 
 		return utility;
 	});
