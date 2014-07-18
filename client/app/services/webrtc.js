@@ -7,8 +7,8 @@
 		};
 
 		var userMediaOptions = {
-			audio: true,
-			video: true
+			audio: model.video.local.audioEnabled,
+			video: model.video.local.videoEnabled
 		};
 
 		webrtc.init = function() {
@@ -41,8 +41,8 @@
 
 
 		webrtc.call = function (to) {
-			if (!model.video.active) {
-				model.video.active = true;
+			if (!model.video.active && !model.video.busy) {
+				model.video.busy = true;
 				model.video.remote.userId = utility.getIdFromJid(to);
 				videoCall(to);
 			}
@@ -52,6 +52,7 @@
 		};
 
 		webrtc.hangup = function() { 
+			model.video.busy = false;
 			if (model.video.active) {
 				video.close();
 			}
@@ -317,6 +318,7 @@
 
 		function onAddStream (e){
 			$rootScope.$apply(function() {
+				model.video.active = true;
 				model.video.remote.src = $sce.trustAsResourceUrl(URL.createObjectURL(e.stream));
 			});
 		}

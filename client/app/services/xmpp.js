@@ -1,6 +1,6 @@
 (function () {
 
-	app.factory('xmpp', function(constants) {
+	app.factory('xmpp', function(constants, $timeout) {
 		var factory = {};
 
 		var connection;
@@ -82,9 +82,18 @@
 				console.log("Status " + status);
 				if (status === Strophe.Status.CONNECTED) {
 					logOn();
+					presenceLoop();
 					connectedCallback();
 				}
 			};
+
+			function presenceLoop() {
+				$timeout(function() {
+					console.log("sending presence");
+					send($pres());
+					presenceLoop();
+				}, 30*1000);
+			}
 		}
 
 		function send(obj) {
@@ -162,6 +171,7 @@
 		logOn = function logOn() {
 			send($pres());
 		};
+
 
 		function setStatus(show) {
 			send($pres().c("show", show));

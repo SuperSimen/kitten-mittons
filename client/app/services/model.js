@@ -113,6 +113,7 @@
 		};
 		model.video = {
 			active: null,
+			busy: null,
 			local: {
 				videoEnabled: false,
 				audioEnabled: false,

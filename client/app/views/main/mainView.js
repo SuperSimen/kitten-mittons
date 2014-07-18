@@ -13,6 +13,7 @@ app.config( function ($stateProvider) {
 		parent: 'friendsVisible',
 		views: {
 			"view2-animated@base": {
+				controller: "videoController",
 				templateUrl: "app/views/video/video.tpl.html"
 			}
 		}

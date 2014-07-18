@@ -4,16 +4,13 @@
 		var main = {
 			init: function() {
 				globalModel = model;
-				$state.go("file");
+				$rootScope.gotoState("video");
 				gatherInfoPart1();
 				fileSender.init();
 				fileReceiver.init();
 				$rootScope.$watch(function () {return model.video.active;}, function(newValue) {
-					if (newValue) {
-						$state.go("video.active");
-					}
-					if (newValue === false) {
-						$state.go("video");
+					if ($state.current.name === "video" || $state.current.name === "video.active") {
+						$rootScope.gotoState("video");
 					}
 				});
 
@@ -37,6 +34,31 @@
 			}
 		};
 
+		$rootScope.gotoState = function(state) {
+			if (state === "chat") {
+				model.chat.unread = 0;
+			}
+			if (state === "file") {
+				model.file.unseen = 0;
+			}
+			if (state === "conference") {
+				model.conference.unseen = 0;
+			}
+
+			if (state === "video") {
+				if (model.video.active) {
+					$state.go("video.active");
+				}
+				else {
+					$state.go("video");
+				}
+			}
+			else {
+				$state.go(state);
+			}
+		};
+		
+
 		function gatherInfoPart1 () { 
 			$http.get('/api/info').success(function(data, status) {
 				model.user.info = data;
@@ -48,7 +70,6 @@
 
 			}).error(utility.handleHttpError);
 		}
-
 
 		main.call = function(to) {
 			webrtc.call(utility.getJidFromId(to));
@@ -212,16 +233,17 @@
 				else {
 					var from = utility.getIdFromJid(data.from);
 					var friend = model.friends.get(from);
-					if (friend) {
-						$rootScope.$apply(function() {
-							if (data.type === "unavailable") {
-								friend.online = false;
-							}
-							else {
-								friend.online = true;
-							}
-						});
+					if (!friend) {
+						friend = addFriend(from);
 					}
+					$rootScope.$apply(function() {
+						if (data.type === "unavailable") {
+							friend.online = false;
+						}
+						else {
+							friend.online = true;
+						}
+					});
 				}
 			},
 			message: function(data) {
@@ -261,9 +283,9 @@
 									var friend = model.friends.get(userName);
 									if (!friend) {
 										friend = addFriend(userName);
-										if (codes["110"]) {
-											friend.me = true;
-										}
+									}
+									if (codes["110"]) {
+										friend.me = true;
 									}
 									model.groups.list[groupId].addFriend(friend);
 									if (data.type === "unavailable") {
@@ -294,7 +316,7 @@
 				for (var i in groups) {
 					var group = groups[i];
 					//Only for testing
-					if (group.groupType === constants.uwap.adHoc ) {
+					if (group.groupType === constants.uwap.orgUnit || group.groupType === constants.uwap.adHoc ) {
 						var userid = model.user.info.userid;
 						var groupId = encodeURIComponent(group.id).toLowerCase();
 						model.groups.create(groupId, group.displayName);
