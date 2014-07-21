@@ -36,8 +36,7 @@
 
 		function messageHandler (data) {
 			if (data.type === "chat" ||
-				data.type === "conferenceInvite"
-			   ) {
+				data.type === "conferenceInvite") {
 				var msg = $msg({to: data.from, type: 'ack', id: data.id});
 				send(msg);
 			}

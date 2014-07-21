@@ -4,7 +4,7 @@
 		var main = {
 			init: function() {
 				globalModel = model;
-				$rootScope.gotoState("video");
+				$rootScope.gotoState("chat");
 				gatherInfoPart1();
 				fileSender.init();
 				fileReceiver.init();
@@ -152,6 +152,7 @@
 			};
 			$http.post('/api/addFriend', JSON.stringify(temp)).success(function(data, status) {
 				model.user.info = data;
+
 			}).error(utility.handleHttpError);
 		};
 
@@ -317,9 +318,6 @@
 					var group = groups[i];
 					//Only for testing
 					if (group.groupType === constants.uwap.orgUnit || group.groupType === constants.uwap.adHoc) {
-						if (true) {
-							return;
-						}
 						var userid = model.user.info.userid;
 						var groupId = encodeURIComponent(group.id).toLowerCase();
 						model.groups.create(groupId, group.displayName);
@@ -336,6 +334,7 @@
 		main.setVCard = function () {
 			var properties = {};
 			properties.FN = model.user.info.name;
+			properties.userid = model.user.info.userid;
 			xmpp.setVCard(properties);
 		};
 

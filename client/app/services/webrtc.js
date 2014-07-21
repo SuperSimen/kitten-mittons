@@ -36,8 +36,7 @@
 				}, function() {
 					console.log("hilhlkh");
 					console.log(arguments);
-				}
-											);
+				});
 			}
 			catch (err) {
 				reset();

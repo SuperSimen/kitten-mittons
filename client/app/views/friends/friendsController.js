@@ -30,6 +30,7 @@ app.controller( 'friendsController', function(main, $state, $scope, model) {
 		main.removeBestFriend(friend);
 	};
 	$scope.addBestFriendUWAP = function(friend) {
+		$scope.showSearch = false;
 		main.addBestFriendUWAP(friend);
 	};
 

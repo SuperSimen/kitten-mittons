@@ -24,7 +24,6 @@ function registerNewXmppUser (user) {
 		register: true
 	});
 	client.on('online', function() {
-		console.log("logged on, logging off");
 		user.xmpp.registered = true;
 		writeUserToFile(user);
 		client.end();
@@ -124,7 +123,6 @@ var userList = {
 		};
 
 		this.list[id].addToRoster = function(friend) {
-			console.log("add to roster");
 			for (var i in this.tempFriends) {
 				if (this.tempFriends[i].userid === friend.userid) {
 					this.tempFriends.splice(i,1);
@@ -138,7 +136,6 @@ var userList = {
 
 			var randomId = Math.random().toString(32).substring(2);
 			client.on('online', function() {
-				console.log("inline");
 				var stanza = new ltx.Element('iq', { type: 'set', id: randomId }).
 					c('query', {xmlns: "jabber:iq:roster"}).
 					c('item', {jid: friend.xmpp.jid});
@@ -176,8 +173,6 @@ var userList = {
 				this.list[userId] = readUserFromFile(userId);
 			}
 			catch (err) {
-				console.log("could not read user from file");
-				console.log(userId);
 				this.list[userId] = user;
 				user.id = user.a;
 				delete user.a;
