@@ -1,4 +1,4 @@
-app.controller( 'videoController', function(model, $scope, main) {
+app.controller( 'videoController', function(model, $scope, main, utility) {
 	$scope.video = model.video.local;
 	$scope.call = model.call;
 
@@ -13,8 +13,14 @@ app.controller( 'videoController', function(model, $scope, main) {
 
 	};
 
+	$scope.calling = function(to) {
+		return (model.call.status === "calling" && model.call.currentId === utility.getIdFromJid(to));
+	};
 	$scope.callTo = function(to) {
 		main.call(to);
+	};
+	$scope.cancelCall = function(to) {
+		main.cancelCall(to);
 	};
 
 	$scope.acceptCall = function(to) {
@@ -24,4 +30,5 @@ app.controller( 'videoController', function(model, $scope, main) {
 	$scope.denyCall = function(to) {
 		main.denyCall(to);
 	};
+
 });

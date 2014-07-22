@@ -53,6 +53,8 @@
 					return false;
 				}
 			};
+			
+
 			var sender = webrtc.getFileSender(to, "fileSender", function(status) {
 				if (status === "sent") {
 					progress.counter++;
@@ -63,8 +65,8 @@
 								model.file.list[id].progress = value;
 							});
 						}
-
 					}
+
 				}
 				else if (status === "failed") {
 					model.file.list[id].failed = true;
@@ -185,6 +187,7 @@
 				};
 				sender.send(tempFile);
 			}
+
 
 			function signalFile(id, status, totalSlices, filename, size) {
 				var tempFile = {

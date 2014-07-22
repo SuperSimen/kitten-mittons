@@ -78,6 +78,15 @@
 			}
 		};
 
+		main.cancelCall = function(to) {
+			if (model.call.status === "calling" && model.call.currentId === utility.getIdFromJid(to)) {
+				model.call.status = "free";
+				model.call.currentId = "";
+				xmpp.sendMessage(to, "cancel", "call");
+
+				model.call.remove(utility.getIdFromJid(to));
+			}
+		};
 
 		main.acceptCall = function(to) {
 			model.call.currentId = utility.getIdFromJid(to);
@@ -92,6 +101,8 @@
 			model.call.currentId = "";
 			model.call.status = "free";
 		};
+
+
 
 		main.setupCall = function(to) {
 			model.call.add(to, true);
@@ -207,18 +218,48 @@
 					var type = body[0].children[0].data;
 					console.log(type);
 					if (type === "offer") {
-						$rootScope.$apply(function() {
-							model.call.add(utility.getIdFromJid(data.from), false);
-						});
+						if (model.call.status === "free") {
+							$rootScope.$apply(function() {
+								model.call.add(utility.getIdFromJid(data.from), false);
+							});
+						}
+						else {
+							xmpp.sendMessage(data.from, "deny", "call");
+						}
 					}
 					else if (type === "accept" && 
 						model.call.status === "calling" &&
 						model.call.currentId === utility.getIdFromJid(data.from)) {
 
-						model.call.remove(utility.getIdFromJid(data.from));
+						$rootScope.$apply(function() {
+							model.call.remove(utility.getIdFromJid(data.from));
+						});
+
+						model.call.status = "incall";
 
 						webrtc.call(data.from);
 					}
+					else if (type === "deny" && 
+						model.call.status === "calling" &&
+						model.call.currentId === utility.getIdFromJid(data.from)) {
+
+						$rootScope.$apply(function() {
+							model.call.remove(utility.getIdFromJid(data.from));
+						});
+
+						model.call.currentId = "";
+						model.call.status = "free";
+					}
+					else if (type === "cancel" && model.call.status === "free") {
+						$rootScope.$apply(function() {
+							model.call.remove(utility.getIdFromJid(data.from));
+						});
+					}
+					else {
+						console.error("received unwanted call signaling " + body);
+					}
+
+
 				} 
 			},
 			conferenceInvite: function(data) {

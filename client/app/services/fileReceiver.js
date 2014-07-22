@@ -16,6 +16,7 @@
 		}
 
 		function fileHandler(data, from) {
+
 			if (data.status === "sof") {
 				$rootScope.$apply(function() {
 					model.file.add(data.id, data.filename, from, false, data.size);
@@ -126,7 +127,7 @@
 				}
 				signalSlice(from, data.id, "eos_ack", data.slice, data.totalSlices, data.totalNumber, data.filename);
 			}
-
+			
 			if (storage[data.id] && storage[data.id].eof &&
 				storage[data.id].counter === storage[data.id].getTotalNumber() &&
 				storage[data.id].receivedEntireFile) {

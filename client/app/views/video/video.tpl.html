@@ -16,7 +16,8 @@
 						<input type="checkbox" class="tab"/>Video
 					</span>
 					<span ng-show="call.calling" class="tab">
-						<button class="btn btn-info" ng-click="callTo(call.id)">Call</button>
+						<button class="btn btn-info" ng-hide="calling(call.id)" ng-click="callTo(call.id)">Call</button>
+						<button class="btn btn-info" ng-show="calling(call.id)" ng-click="cancelCall(call.id)">Cancel</button>
 					</span>
 					<span ng-hide="call.calling" class="tab">
 						<button class="btn btn-info" ng-click="acceptCall(call.id)">Accept</button>
