@@ -1,16 +1,20 @@
 <div class="row color-grey fill-height" ng-class="border">
 	<div class="col-md-12 gutter fill-height-minus-gutter">
+            
 		<div class="fill-top auto-overflow">
-			<div class="align-center" ng-show="currentChat">Talking to {{getFriendFromId(currentChat.id) && getFriendFromId(currentChat.id).FN}}
+			<div class="align-center well-sm" ng-show="currentChat">Conversation with {{getFriendFromId(currentChat.id) && getFriendFromId(currentChat.id).FN}}
 			</div>
-			<div ng-repeat="message in currentChat.messages">
-				<b>{{getFriendFromId(message.from) && getFriendFromId(message.from).FN || message.from}}</b>
-				- {{message.message}}
+			<div class="uninett-chatbox-entry" ng-repeat="message in currentChat.messages" ng-class="isMyMessage(message) ? 'uninett-chatbox-entry-sent' : 'uninett-chatbox-entry-recv'">
+                                <div ng-hide="isMyMessage(message)"><b>{{getDisplayName(message)}} says:</b></div>
+                                <div style="word-wrap: break-word;">{{message.message}}</div>
 				<span class="right" ng-class="{'visible': !message.arrived, 'invisible': message.arrived}">
 					<i class="fa fa-spinner fa-spin"></i>
 				</span>
 			</div>
 		</div>
-		<input type="text" ng-model="chatMessage" ng-keydown="chatKeyDown($event)" class="fill-width"/>
+                <div class="input-group">
+                    <input ng-disabled="!currentChat" type="text" ng-model="chatMessage" ng-keydown="chatKeyDown($event)" class="form-control fill-width"/>
+                    <span ng-disabled="!currentChat" class="input-group-addon" ng-click="sendMessage()">Send</span>
+                </div>
 	</div>
 </div>

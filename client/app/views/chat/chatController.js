@@ -11,11 +11,39 @@ app.controller( 'chatController', function($state, $scope, main, model) {
 		});
 	}
 
+        /**
+         * Checks whether the message was sent by me
+         * @param {type} message
+         * @returns {Boolean}
+         */
+        $scope.isMyMessage = function(message) {
+            // @TODO: fix this so it doesn't stink
+            return $scope.getDisplayName(message) == "Me";
+        };
+
+        /**
+         * Generates a display name from the message
+         * @param {type} message
+         * @returns {String} Display name
+         */
+        $scope.getDisplayName = function(message) {
+            return $scope.getFriendFromId(message.from) && $scope.getFriendFromId(message.from).FN || message.from;
+        };
+
+        /**
+         * Validate and try to send a new chat message
+         * @returns {undefined}
+         */
+        $scope.sendMessage = function() {
+            if($scope.chatMessage && $scope.currentChat) {
+                main.sendMessage($scope.currentChat.id, $scope.chatMessage);
+                $scope.chatMessage = "";
+            }
+        }
 
 	$scope.chatKeyDown = function(event) {
-		if (event.keyCode === 13 && $scope.chatMessage && $scope.currentChat) {
-			main.sendMessage($scope.currentChat.id, $scope.chatMessage);
-			$scope.chatMessage = "";
+		if (event.keyCode === 13) {
+                    $scope.sendMessage();
 		}
 	};
 

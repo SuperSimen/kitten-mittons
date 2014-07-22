@@ -13,3 +13,4 @@ report/
 server/auth/server.crt
 server/auth/server.key
 server/*.txt
+/nbproject/private/

@@ -266,3 +266,61 @@ body {
 .width-0 {
 	width: 0px;
 }
+
+/* Cursor fix for custom buttons */
+
+span[ng-click] {
+    cursor: pointer;
+}
+
+span[ng-click][disabled] {
+    cursor: not-allowed;
+}
+
+/* Friend list view */
+.uninett-group {
+    margin: 5px 0 5px 0;
+}
+
+.uninett-group-heading {
+    vertical-align: bottom;
+}
+
+.box-center {
+    display:box;
+    box-pack:center;
+    box-align:center;
+}
+
+.uninett-group-name {
+    color: #666666;
+    
+}
+
+.uninett-group-membercount {
+}
+
+.uninett-chat-active {
+    color: #fff;
+    background: #eb212e !important;
+}
+
+.uninett-chatbox-entry {
+    clear: both;
+    margin: 10px;
+    width: 40%;
+    padding: 20px;
+    border: solid 1px transparent;
+    border-radius: 5px;
+}
+
+.uninett-chatbox-entry-sent {
+    background: #90cef1;
+    float: right;
+}
+
+.uninett-chatbox-entry-recv {
+    background: #252379;
+    color: #fff;
+    float: left;
+}

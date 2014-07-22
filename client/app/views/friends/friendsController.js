@@ -4,6 +4,15 @@ app.controller( 'friendsController', function(main, $state, $scope, model) {
 	$scope.user = model.user;
 	$scope.search = model.search;
 
+        /**
+         * Get the number of friends in group
+         * @param {type} friends
+         * @returns {Number}
+         */
+        $scope.groupMembersCount = function(friends) {
+            return Object.keys(friends).length - 1;
+        };
+
 	$scope.clickOnFriend = function(friend) {
 		var currentState = $state.current.name;
 		if (friend.online || friend.mucOnline) {
