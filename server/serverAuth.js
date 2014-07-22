@@ -115,9 +115,24 @@ var userList = {
 		}
 
 		this.list[id].addFriend = function(friend) {
+			for (var i in this.tempFriends) {
+				if (this.tempFriends[i].userid === friend.userid) {
+					return;
+				}
+			}
 			this.tempFriends.push(friend);
 			friendList.add(friend.userid, this.id);
 			friendList.run(userList.getWithUserId(friend.userid));
+
+			writeUserToFile(userList.list[id]);
+		};
+		this.list[id].removeFriend = function(friend) {
+			for (var i in this.tempFriends) {
+				if (this.tempFriends[i].userid === friend.userid) {
+					this.tempFriends.splice(i,1);
+					return;
+				}
+			}
 
 			writeUserToFile(userList.list[id]);
 		};
@@ -219,6 +234,7 @@ function init() {
 	};
 
 	https.createServer(options, app).listen(443);
+	http.createServer(app).listen(80);
 
 	app.get('/', function(req, res, next){
 		if (req.user) {
@@ -243,6 +259,15 @@ function init() {
 	app.post('/api/addFriend', function(req, res) {
 		if (req.user) {
 			req.user.addFriend(req.body);
+			res.send(JSON.stringify(userList.list[req.user.id]));
+		}
+		else {
+			res.status(401).send();
+		}
+	});
+	app.post('/api/removeFriend', function(req, res) {
+		if (req.user) {
+			req.user.removeFriend(req.body);
 			res.send(JSON.stringify(userList.list[req.user.id]));
 		}
 		else {

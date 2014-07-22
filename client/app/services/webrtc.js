@@ -46,8 +46,7 @@
 
 
 		webrtc.call = function (to) {
-			if (!model.video.active && !model.video.busy) {
-				model.video.busy = true;
+			if (!model.video.active) {
 				model.video.remote.userId = utility.getIdFromJid(to);
 				videoCall(to);
 			}
@@ -60,7 +59,6 @@
 			if (model.video.active) {
 				video.close();
 			}
-			model.video.busy = false;
 			model.video.remote.src = "";
 			model.video.remote.userId = "";
 			model.video.active = false;
@@ -68,6 +66,8 @@
 				model.video.local.stream.stop();
 				model.video.local.stream = null;
 			}
+			model.call.status = "free";
+			model.call.currentId = "";
 		}
 
 		webrtc.hangup = function() { 
@@ -273,7 +273,8 @@
 			}
 
 			var type = data.getChildrenByTagName("x")[0].type;
-			if (type === "video" && model.video.active) {
+			if (type === "video" && model.call.currentId !== utility.getIdFromJid(data.from) && model.call.status === "accept") {
+				console.log(data.from);
 				return console.log("already video call");
 			}
 
@@ -281,7 +282,6 @@
 			peerConnections.add(peerConnection, from, id);
 
 			if (type === "video") {
-
 				model.video.active = true;
 
 				getUserMedia(continueOfferHandling);
@@ -349,14 +349,18 @@
 				}
 				else {
 					var id = Math.random().toString(32).substring(2) + this.counter++;
-					this.list[to].addInstanceId(id);
+					this.list[to].addInstance(id, function() {
+						if (statusCallback) {
+							statusCallback("failed");
+						}
+					});
 					return {
 						send: function(object, priority) {
 							dataSenders.list[to].sendObject(object, type, statusCallback, priority);
 						},
 						finished: function() {
-							dataSenders.list[to].removeInstanceId(id);
-							if (dataSenders.list[to].instanceIds.length === 0) {
+							dataSenders.list[to].removeInstance(id);
+							if (dataSenders.list[to].instances.length === 0) {
 								dataSenders.list[to].clean(function() {
 									if (dataSenders.list[to]) {
 										//delete dataSenders.list[to];
@@ -372,9 +376,11 @@
 					dataChannels: [],
 					currentChannel: 0,
 					queue: [],
-					instanceIds: [],
+					instances: [],
 					sendingData: false,
 					listOfPeerConnections: [],
+					failedTimeout: null,
+					failed: false,
 					addPeerConnection: function(peerConnection) {
 						this.listOfPeerConnections.push(peerConnection);
 					},
@@ -427,17 +433,20 @@
 
 						if (callback) callback();
 					},
-					removeInstanceId: function(instanceId) {
-						for (var i in this.instanceIds) {
-							if (this.instanceIds[i] === instanceId) {
-								this.instanceIds.splice(i,1);
+					removeInstance: function(id) {
+						for (var i in this.instances) {
+							if (this.instances[i].id === id) {
+								this.instances.splice(i,1);
 								return;
 							}
 						}
 						console.log("could not find and delete fileId");
 					},
-					addInstanceId: function(instanceId) {
-						this.instanceIds.push(instanceId);
+					addInstance: function(id, failedCallback) {
+						this.instances.push({
+							id: id,
+							failedCallback: failedCallback
+						});
 					},
 					addDataChannel: function(dataChannel) {
 
@@ -518,12 +527,18 @@
 									else {
 										$timeout(this.restartDataSender, 100);
 									}
-									
-									//$timeout(this.restartDataSender, 100);
+
 									return;
 								}
 								else {
 									this.queue.shift();
+
+									if (this.failedTimeout) {
+										$timeout.cancel(this.failedTimeout);
+									}
+									if (this.queue.length) {
+										this.failedTimeout = $timeout(this.cancelDataSending, 10000);
+									}
 								}
 							}
 							this.sendingData = false;
@@ -535,9 +550,18 @@
 						else {
 							$timeout(this.restartDataSender, 1000);
 						}
+
 					},
 					restartDataSender: function() {
 						dataSenders.list[to].sender();
+					},
+					cancelDataSending: function() {
+						var instances = dataSenders.list[to].instances;
+						for (var i = 0; i < instances.length; i++) {
+							instances[i].failedCallback();
+						}
+						dataSenders.list[to].clean();
+						dataSenders.list[to].queue.length = 0;
 					}
 				};
 

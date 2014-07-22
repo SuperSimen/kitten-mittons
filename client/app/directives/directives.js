@@ -5,7 +5,6 @@
 		function link(scope, element, attr) {
 			element[0].onchange = function(event) {
 				scope.$apply(function() {
-					console.log(scope);
 					scope.files = event.target.files;
 				});
 			};

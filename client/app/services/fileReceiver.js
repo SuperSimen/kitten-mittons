@@ -12,8 +12,9 @@
 
 		function cleanUp(id) {
 			storage[id].sender.finished();
-			storage[id] = {};
+			delete storage[id];
 		}
+
 		function fileHandler(data, from) {
 			if (data.status === "sof") {
 				$rootScope.$apply(function() {
@@ -89,7 +90,14 @@
 				storage[data.id].slices[data.slice].chunks[data.number] = byteArrays;
 			}
 			else if (data.status === "eos") {
-				storage[data.id].slices[data.slice].eos = true;
+				if (storage[data.id].slices) {
+					storage[data.id].slices[data.slice].eos = true;
+				}
+				else {
+					console.error("This should not have happened. Deleted data before completing");
+					console.log(storage);
+					console.log(data);
+				}
 			}
 			else if (data.status === "eof") {
 				storage[data.id].eof = true;
@@ -111,6 +119,7 @@
 
 				if (data.slice === data.totalSlices) {
 					sandbox[data.id].appendBlob(blob, true);
+					storage[data.id].receivedEntireFile = true;
 				}
 				else {
 					sandbox[data.id].appendBlob(blob, false);
@@ -119,7 +128,8 @@
 			}
 
 			if (storage[data.id] && storage[data.id].eof &&
-				storage[data.id].counter === storage[data.id].getTotalNumber()) {
+				storage[data.id].counter === storage[data.id].getTotalNumber() &&
+				storage[data.id].receivedEntireFile) {
 
 				$rootScope.$apply(function() {
 					model.file.remove(data.id);

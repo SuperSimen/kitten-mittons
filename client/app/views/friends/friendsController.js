@@ -14,7 +14,7 @@ app.controller( 'friendsController', function(main, $state, $scope, model) {
 				main.sendFile(friend.id);
 			}
 			else if (currentState === "video") {
-				main.call(friend.id);
+				main.setupCall(friend.id);
 			}
 			else if (currentState === "conference") {
 				main.sendInvite(friend);
@@ -29,9 +29,16 @@ app.controller( 'friendsController', function(main, $state, $scope, model) {
 	$scope.removeBestFriend = function(friend) {
 		main.removeBestFriend(friend);
 	};
+	$scope.removeTempFriend = function(friend) {
+		main.removeTempFriend(friend);
+	};
 	$scope.addBestFriendUWAP = function(friend) {
 		$scope.showSearch = false;
 		main.addBestFriendUWAP(friend);
+	};
+
+	$scope.tempFriendExists = function(friend) {
+		return model.friends.getWithUserid(friend.userid); 
 	};
 
 	$scope.friendFieldKeyDown = function(event) {

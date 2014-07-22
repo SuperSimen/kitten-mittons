@@ -24,6 +24,11 @@
 					return console.error("handler id exists");
 				}
 				dataHandlers.list[id] = handler;
+			},
+			remove: function(id) {
+				if (dataHandlers.list[id]) {
+					delete dataHandlers.list[id];
+				}
 			}
 		};
 
@@ -60,6 +65,9 @@
 						}
 
 					}
+				}
+				else if (status === "failed") {
+					model.file.list[id].failed = true;
 				}
 			});
 
@@ -98,7 +106,7 @@
 					$rootScope.$apply(function() {
 						model.file.remove(id);
 					});
-					//sender = null;
+					dataHandlers.remove(id);
 				}
 			}
 
@@ -208,7 +216,6 @@
 			var me = model.user.info.xmpp.jid;
 			var userid = me.substring(0,me.indexOf("@"));
 			var id = userid + "-" + Math.random().toString(36).substring(7) + "-" + fileCounter++;
-			console.log(id);
 			return id;
 		}
 

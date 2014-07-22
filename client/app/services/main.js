@@ -4,7 +4,7 @@
 		var main = {
 			init: function() {
 				globalModel = model;
-				$rootScope.gotoState("chat");
+				$rootScope.gotoState("file");
 				gatherInfoPart1();
 				fileSender.init();
 				fileReceiver.init();
@@ -16,7 +16,6 @@
 
 				var timeoutPromise;
 				$rootScope.$watch(function() {return model.search.query;}, function(newValue) {
-					console.log("changed " + model.search.query);
 					if (newValue) {
 						if (timeoutPromise) {
 							$timeout.cancel(timeoutPromise);
@@ -72,7 +71,30 @@
 		}
 
 		main.call = function(to) {
-			webrtc.call(utility.getJidFromId(to));
+			if (model.call.status === "free") {
+				model.call.status = "calling";
+				model.call.currentId = to;
+				xmpp.sendMessage(to, "offer", "call");
+			}
+		};
+
+
+		main.acceptCall = function(to) {
+			model.call.currentId = utility.getIdFromJid(to);
+			model.call.status = "accept";
+			model.call.remove(utility.getIdFromJid(to));
+			xmpp.sendMessage(to, "accept", "call");
+		};
+
+		main.denyCall = function(to) {
+			model.call.remove(utility.getIdFromJid(to));
+			xmpp.sendMessage(to, "deny", "call");
+			model.call.currentId = "";
+			model.call.status = "free";
+		};
+
+		main.setupCall = function(to) {
+			model.call.add(to, true);
 		};
 
 		main.hangup = function() {
@@ -99,6 +121,7 @@
 			xmpp.addHandler(xmppHandlers.basicHandler);
 			xmpp.addHandler(xmppHandlers.message, null, "message", "chat");
 			xmpp.addHandler(xmppHandlers.conferenceInvite, null, "message", "conferenceInvite");
+			xmpp.addHandler(xmppHandlers.call, null, "message", "call");
 			xmpp.addHandler(xmppHandlers.presence, constants.xmpp.client, "presence");
 			xmpp.addHandler(xmppHandlers.roster, constants.xmpp.roster, "iq");
 
@@ -109,7 +132,7 @@
 			var jid = utility.getJidFromId(to);
 			var messageObject = model.chat.get(to).addMessage("Me", message, true);
 
-			xmpp.sendPrivateMessage(jid, message, function() {
+			xmpp.sendMessage(jid, message, "chat", function() {
 				$rootScope.$apply(function() {
 					messageObject.arrived = true;
 				});
@@ -142,7 +165,6 @@
 		};
 
 		main.addBestFriendUWAP = function(person) {
-			console.log("uwaps friend");
 			var temp = {
 				name: person.name,
 				mail: person.mail,
@@ -156,11 +178,14 @@
 			}).error(utility.handleHttpError);
 		};
 
-		//TODO: uninett.jabber does not work
+		main.removeTempFriend = function(friend) {
+			$http.post('/api/removeFriend', JSON.stringify(friend)).success(function(data, status) {
+				model.user.info = data;
+			}).error(utility.handleHttpError);
+		};
 		main.removeBestFriend = function(friend) {
 			var jid = utility.getJidFromId(friend.id);
 			if (model.friends.isBestFriend(friend.id)) {
-				//xmpp.removeFromRoster(jid, callback);
 
 				callback();
 			}
@@ -176,6 +201,26 @@
 			basicHandler: function(data) {
 				//console.log(data);
 			},
+			call: function(data) {
+				var body = data.getChildrenByTagName("body");
+				if (body) {
+					var type = body[0].children[0].data;
+					console.log(type);
+					if (type === "offer") {
+						$rootScope.$apply(function() {
+							model.call.add(utility.getIdFromJid(data.from), false);
+						});
+					}
+					else if (type === "accept" && 
+						model.call.status === "calling" &&
+						model.call.currentId === utility.getIdFromJid(data.from)) {
+
+						model.call.remove(utility.getIdFromJid(data.from));
+
+						webrtc.call(data.from);
+					}
+				} 
+			},
 			conferenceInvite: function(data) {
 				var body = data.getChildrenByTagName("body");
 				if (body) {
@@ -186,7 +231,6 @@
 				} 
 			},
 			roster: function(data) {
-				console.log(data);
 				var query = data.getChildrenByTagName("query")[0];
 				var items = query.getChildrenByTagName("item");
 
@@ -341,10 +385,16 @@
 		var vCardTimeout = {};
 		main.getVCard = function (jid) {
 			xmpp.getVCard(jid, function(stanza) {
-				if (stanza.getElementsByTagName("FN")) {
-					var userId = utility.getIdFromJid(jid);
+				var userId = utility.getIdFromJid(jid);
+				if (stanza.getElementsByTagName("FN").length) {
 					$rootScope.$apply(function () {
 						model.friends.get(userId).FN = stanza.getElementsByTagName("FN")[0].innerHTML;
+					});
+				}
+				if (stanza.getElementsByTagName("userid").length) {
+
+					$rootScope.$apply(function () {
+						model.friends.get(userId).userid = stanza.getElementsByTagName("userid")[0].innerHTML;
 					});
 				}
 			});
@@ -374,7 +424,7 @@
 				owner: conference.owner,
 				invitedBy: model.user.info.xmpp.jid
 			};
-			xmpp.sendConferenceInvite(friend.id, temp, function() {
+			xmpp.sendMessage(friend.id, JSON.stringify(temp), "conferenceInvite", function() {
 				$rootScope.$apply(function() {
 					model.conference.addInvite(friend);
 				});
@@ -396,7 +446,6 @@
 		};
 
 		main.sendFile = function(to) {
-			console.log("sending file");
 			var jid = utility.getJidFromId(to);
 			fileSender.sendFiles(jid);
 		};

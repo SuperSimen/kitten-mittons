@@ -16,6 +16,13 @@
 							<span class="right visible-span pointer" ><i class="fa fa-times" ba-click ng-click="removeBestFriend(friend)"></i></span>
 						</div>
 					</div>
+					<div ng-repeat="tempFriend in user.info.tempFriends" class="row hover-white">
+						<div ng-click="clickOnFriend(friend)" class="col-md-12 visible-on-hover" ng-hide="tempFriendExists(tempFriend)">
+							<i class="fa fa-circle icon presence-icon offline"></i>
+							<span class="tab">{{tempFriend.name}}</span>
+							<span class="right visible-span pointer" ><i class="fa fa-times" ba-click ng-click="removeTempFriend(tempFriend)"></i></span>
+						</div>
+					</div>
 					<div class="row" ng-class="{'border-top': friends.bestFriends.length}">
 						<div class="col-md-12">
 							<div ng-repeat="group in groups.list">

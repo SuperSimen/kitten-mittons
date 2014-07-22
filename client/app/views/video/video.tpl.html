@@ -5,14 +5,23 @@
 		</div>
 
 		<div class="col-md-8">
-			<div class="row">
-				<div class="col-md-4">
-					<input type="checkbox" ng-model="video.videoEnabled"> Include video
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-md-4">
-					<input type="checkbox" ng-model="video.audioEnabled"> {{y}} Include audio
+			<div ng-hide="hideInfo()"> Click on contacts to setup call</div>
+			<div ng-repeat="call in call.list">
+				<div class="">
+					{{getFriendFromId(call.id).FN}}
+					<span class="tab">
+						<input type="checkbox" class="tab"/>Audio
+					</span>
+					<span class="tab">
+						<input type="checkbox" class="tab"/>Video
+					</span>
+					<span ng-show="call.calling" class="tab">
+						<button class="btn btn-info" ng-click="callTo(call.id)">Call</button>
+					</span>
+					<span ng-hide="call.calling" class="tab">
+						<button class="btn btn-info" ng-click="acceptCall(call.id)">Accept</button>
+						<button class="btn btn-info" ng-click="denyCall(call.id)">Deny</button>
+					</span>
 				</div>
 			</div>
 		</div>

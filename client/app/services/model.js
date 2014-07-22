@@ -252,10 +252,45 @@
 			},
 			get: function(id) {
 				return this.list[id];
+			},
+			getWithUserid: function(userid) {
+				for (var i = 0; i < this.bestFriends.length; i++) {
+					if (this.list[this.bestFriends[i]].userid === userid) {
+						return true;
+					}
+				}
+				return false;
 			}
 		};
-		bestFriends = model.friends.bestFriends;
-		friends = model.friends.list;
+
+		model.call = {
+			list: {},
+			status: "free",
+			currentId: "",
+			add: function(id, calling) {
+				if (this.list[id]) {
+					console.log("already call with id");
+					return;
+				}
+				this.list[id] = {
+					id: id,
+					video: true,
+					audio: true,
+					calling: calling
+				};
+			},
+			remove: function(id) {
+				console.log("deleting id");
+				console.log(id);
+				console.log(this.list);
+				if (this.list[id]) {
+					delete this.list[id];
+				}
+				console.log("finished id");
+
+			}
+
+		};
 
 		model.groups = {
 			list: {},
@@ -280,7 +315,7 @@
 		};
 
 		model.search = {
-			query: "ann",
+			query: "",
 			searchId: 0,
 			unsettable: false,
 			currentRealm: "uninett.no",
@@ -330,9 +365,6 @@
 				this.list.length = 0;
 			}
 
-		};
-
-		model.webrtc = {
 		};
 
 
