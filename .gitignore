@@ -10,3 +10,6 @@ client/index.html
 fonts.zip
 server/basic_server.js
 report/
+server/auth/server.crt
+server/auth/server.key
+server/*.txt
