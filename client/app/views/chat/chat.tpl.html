@@ -1,35 +1,43 @@
 <div class="row color-grey fill-height" ng-class="border">
-	<div class="col-md-12 gutter fill-height-minus-gutter">
+	<div class="col-md-12 fill-height">
             
-		<div id="chatBox" class="fill-top auto-overflow" ng-auto-scroll>
-			<div class="align-center well-sm" ng-show="currentChat">
-				<!--<div>Conversation with {{getFriendFromId(currentChat.id) && getFriendFromId(currentChat.id).FN}}</div>-->
-				<div class="btn-group">
-					<button type="button" class="btn btn-primary">
-						<span class="glyphicon glyphicon-earphone"></span> Voice Call
-					</button>
-					<button ng-disabled="isVideoActive" type="button" class="btn btn-primary" ng-click="callTo()">
-						<span class="glyphicon glyphicon-facetime-video"></span> Video Call
-					</button>
+		<div id="chatBox" class="fill-top" ng-auto-scroll>
+			<div class="row name-tag">
+				<div class="col-md-12">
+					<div class="align-center" ng-show="currentChat">
+						<!--<div>Conversation with {{getFriendFromId(currentChat.id) && getFriendFromId(currentChat.id).FN}}</div>-->
+						<div class="btn-group">
+							<button type="button" class="btn btn-primary">
+								<span class="glyphicon glyphicon-earphone"></span> Voice Call
+							</button>
+							<button ng-disabled="isVideoActive" type="button" class="btn btn-primary" ng-click="callTo()">
+								<span class="glyphicon glyphicon-facetime-video"></span> Video Call
+							</button>
+						</div>
+					</div>
 				</div>
 			</div>
-			<div class="uninett-chatbox-entry" ng-repeat="message in currentChat.messages" ng-class="isSystemMessage(message) ? 'uninett-chatbox-entry-system' : isMyMessage(message) ? 'uninett-chatbox-entry-sent' : 'uninett-chatbox-entry-recv'">
-				<div ng-hide="isMyMessage(message) || isSystemMessage(message)"><b>{{getDisplayName(message)}} says:</b></div>
-				<div style="word-wrap: break-word;">{{message.message}}</div>
-				<span class="right" ng-class="{'visible': !message.arrived, 'invisible': message.arrived}">
-					<i class="fa fa-spinner fa-spin"></i>
-				</span>
-			</div>
-			<div class="uninett-chatbox-entry uninett-chatbox-entry-video-request" ng-show="currentChat && hasIncomingCall()">
-				<b>Lars is trying to call you.</b>
-				<div class="btn-group">
-					<button type="button" ng-click="acceptCall()" class="btn btn-success">Accept</button>
-					<button type="button" ng-click="rejectCall()" class="btn btn-danger">Reject</button>
+			<div class="row fill-under-name-tag auto-overflow">
+				<div class="col-md-12">
+					<div class="uninett-chatbox-entry" ng-repeat="message in currentChat.messages" ng-class="isSystemMessage(message) ? 'uninett-chatbox-entry-system' : isMyMessage(message) ? 'uninett-chatbox-entry-sent' : 'uninett-chatbox-entry-recv'">
+						<div ng-hide="isMyMessage(message) || isSystemMessage(message)"><b>{{getDisplayName(message)}} says:</b></div>
+						<div style="word-wrap: break-word;">{{message.message}}</div>
+						<span class="right" ng-class="{'visible': !message.arrived, 'invisible': message.arrived}">
+							<i class="fa fa-spinner fa-spin"></i>
+						</span>
+					</div>
+					<div class="uninett-chatbox-entry uninett-chatbox-entry-video-request" ng-show="currentChat && hasIncomingCall()">
+						<b>Lars is trying to call you.</b>
+						<div class="btn-group">
+							<button type="button" ng-click="acceptCall()" class="btn btn-success">Accept</button>
+							<button type="button" ng-click="rejectCall()" class="btn btn-danger">Reject</button>
+						</div>
+					</div>
+					<div ng-show="currentChat && isInCall()" class="uninett-chatbox-entry uninett-chatbox-entry-video">
+						asdasdadsoij
+						<video autoplay="true"></video>
+					</div>
 				</div>
-			</div>
-			<div ng-show="currentChat && isInCall()" class="uninett-chatbox-entry uninett-chatbox-entry-video">
-				asdasdadsoij
-				<video autoplay="true"></video>
 			</div>
 		</div>
 		<div class="input-group">
