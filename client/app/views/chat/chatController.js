@@ -17,8 +17,7 @@ app.controller( 'chatController', function($state, $scope, main, model) {
          * @returns {Boolean}
          */
         $scope.isMyMessage = function(message) {
-            // @TODO: fix this so it doesn't stink
-            return $scope.getDisplayName(message) == "Me";
+            return $scope.getFriendFromId(message.from).me;
         };
 
         /**
@@ -27,7 +26,7 @@ app.controller( 'chatController', function($state, $scope, main, model) {
          * @returns {String} Display name
          */
         $scope.getDisplayName = function(message) {
-            return $scope.getFriendFromId(message.from) && $scope.getFriendFromId(message.from).FN || message.from;
+            return $scope.getFriendFromId(message.from).FN;
         };
 
         /**
@@ -39,7 +38,7 @@ app.controller( 'chatController', function($state, $scope, main, model) {
                 main.sendMessage($scope.currentChat.id, $scope.chatMessage);
                 $scope.chatMessage = "";
             }
-        }
+        };
 
 	$scope.chatKeyDown = function(event) {
 		if (event.keyCode === 13) {

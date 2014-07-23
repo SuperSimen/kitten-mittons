@@ -23,22 +23,23 @@
 			}
 
 			try {
-				console.log("getting user media");
-				console.log(model.video.local);
+				var currentCall = model.call.getCurrent();
+				console.log(currentCall);
+				console.log("hihih");
 				navigator.webkitGetUserMedia({
-					video: model.video.local.videoEnabled,
-					audio: model.video.local.audioEnabled,
+					video: currentCall.video,
+					audio: currentCall.audio
 				},
 				function(stream) {
 					model.video.local.src = $sce.trustAsResourceUrl(URL.createObjectURL(stream));
 					model.video.local.stream = stream;
 					callback(stream);
 				}, function() {
-					console.log("hilhlkh");
-					console.log(arguments);
+					console.error(arguments);
 				});
 			}
 			catch (err) {
+				console.log(err);
 				reset();
 			}
 
@@ -67,7 +68,7 @@
 				model.video.local.stream = null;
 			}
 			model.call.status = "free";
-			model.call.currentId = "";
+			model.call.deleteCurrent();
 		}
 
 		webrtc.hangup = function() { 

@@ -91,7 +91,7 @@
 		main.acceptCall = function(to) {
 			model.call.currentId = utility.getIdFromJid(to);
 			model.call.status = "accept";
-			model.call.remove(utility.getIdFromJid(to));
+			model.call.getCurrent().hidden = true;
 			xmpp.sendMessage(to, "accept", "call");
 		};
 
@@ -141,7 +141,7 @@
 
 		main.sendMessage = function(to, message) {
 			var jid = utility.getJidFromId(to);
-			var messageObject = model.chat.get(to).addMessage("Me", message, true);
+			var messageObject = model.chat.get(to).addMessage(model.user.info.xmpp.jid, message, true);
 
 			xmpp.sendMessage(jid, message, "chat", function() {
 				$rootScope.$apply(function() {
@@ -232,7 +232,7 @@
 						model.call.currentId === utility.getIdFromJid(data.from)) {
 
 						$rootScope.$apply(function() {
-							model.call.remove(utility.getIdFromJid(data.from));
+							model.call.getCurrent().hidden = true;
 						});
 
 						model.call.status = "incall";
@@ -244,10 +244,9 @@
 						model.call.currentId === utility.getIdFromJid(data.from)) {
 
 						$rootScope.$apply(function() {
-							model.call.remove(utility.getIdFromJid(data.from));
+							model.call.deleteCurrent();
 						});
 
-						model.call.currentId = "";
 						model.call.status = "free";
 					}
 					else if (type === "cancel" && model.call.status === "free") {

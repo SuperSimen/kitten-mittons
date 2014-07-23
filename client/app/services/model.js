@@ -267,7 +267,14 @@
 			list: {},
 			status: "free",
 			currentId: "",
+			getCurrent: function() {
+				console.log("Get current");
+				console.log(this.list);
+				console.log(this.currentId);
+				return this.list[this.currentId];
+			},
 			add: function(id, calling) {
+				console.log("add call");
 				if (this.list[id]) {
 					console.log("already call with id");
 					return;
@@ -276,8 +283,15 @@
 					id: id,
 					video: true,
 					audio: true,
+					hidden: false,
 					calling: calling
 				};
+			},
+			deleteCurrent: function() {
+				if (this.list[this.currentId]) {
+					delete this.list[this.currentId];
+					this.currentId = "";
+				}
 			},
 			remove: function(id) {
 				console.log("deleting id");

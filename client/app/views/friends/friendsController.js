@@ -50,6 +50,4 @@ app.controller( 'friendsController', function(main, $state, $scope, model) {
 		return model.friends.getWithUserid(friend.userid); 
 	};
 
-	$scope.friendFieldKeyDown = function(event) {
-	};
 });

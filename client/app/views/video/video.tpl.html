@@ -7,13 +7,13 @@
 		<div class="col-md-8">
 			<div ng-hide="hideInfo()"> Click on contacts to setup call</div>
 			<div ng-repeat="call in call.list">
-				<div class="">
+				<div ng-hide="call.hidden">
 					{{getFriendFromId(call.id).FN}}
 					<span class="tab">
-						<input type="checkbox" class="tab"/>Audio
+						<input type="checkbox" ng-model="call.audio" class="tab"/>Audio
 					</span>
 					<span class="tab">
-						<input type="checkbox" class="tab"/>Video
+						<input type="checkbox" ng-model="call.video" class="tab"/>Video
 					</span>
 					<span ng-show="call.calling" class="tab">
 						<button class="btn btn-info" ng-hide="calling(call.id)" ng-click="callTo(call.id)">Call</button>
