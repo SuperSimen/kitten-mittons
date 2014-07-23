@@ -273,6 +273,7 @@
 						model.call.currentId === utility.getIdFromJid(data.from)) {
 
 						$rootScope.$apply(function() {
+							model.chat.get(utility.getIdFromJid(data.from)).addSystemMessage("Call denied");
 							model.call.deleteCurrent();
 						});
 
@@ -281,6 +282,7 @@
 					else if (type === "cancel" && model.call.status === "free") {
 						$rootScope.$apply(function() {
 							model.call.remove(utility.getIdFromJid(data.from));
+							model.chat.get(utility.getIdFromJid(data.from)).addSystemMessage("Call canceled");
 						});
 					}
 					else {

@@ -177,6 +177,14 @@
 					messages: [],
 					unread: 0,
 					isRoom: isRoom,
+				  	addSystemMessage: function(message) {
+						this.messages.push({
+							arrived: true,
+							message: 'Info: ' + message,
+							type: 'system',
+							from: 'System'
+						});
+					},
 					addMessage: function(from, message, sending) {
 						this.mostRecentTime = Date.now();
 						var temp = {
