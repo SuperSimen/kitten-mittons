@@ -1,41 +1,45 @@
 <div class="row color-grey fill-height" ng-class="border">
 	<div class="col-md-12 gutter fill-height-minus-gutter">
-            
-		<div id="chatBox" class="fill-top auto-overflow" ng-auto-scroll>
+        
+		<div class="row">
 			<div class="align-center well-sm" ng-show="currentChat">
 				<!--<div>Conversation with {{getFriendFromId(currentChat.id) && getFriendFromId(currentChat.id).FN}}</div>-->
 				<div class="btn-group uninett-btn-group uninett-fix-top">
 					<button type="button" class="btn btn-primary">
 						<span class="glyphicon glyphicon-earphone"></span> Voice Call
 					</button>
-					<button ng-disabled="!currentChat" type="button" class="btn btn-primary" ng-click="currentChat && !isInCall() ? (calling() ? cancelCall() : callTo()) : cancelCall()">
+					<button ng-disabled="!currentChat" type="button" class="btn btn-primary" ng-click="currentChat && !isInCall() ? (calling() ? cancelCall() : callTo()) : stopCall()">
 						<span class="glyphicon glyphicon-facetime-video"></span> {{getVideoControlMsg()}}
 					</button>
 				</div>
 			</div>
-			<div class="uninett-chatbox-entry" ng-repeat="message in currentChat.messages" ng-class="isSystemMessage(message) ? 'uninett-chatbox-entry-system' : isMyMessage(message) ? 'uninett-chatbox-entry-sent' : 'uninett-chatbox-entry-recv'">
-				<div ng-hide="isMyMessage(message) || isSystemMessage(message)"><b>{{getDisplayName(message)}} says:</b></div>
-				<div style="word-wrap: break-word;">{{message.message}}</div>
-				<span class="right" ng-class="{'visible': !message.arrived, 'invisible': message.arrived}">
-					<i class="fa fa-spinner fa-spin"></i>
-				</span>
-			</div>
-			<div class="uninett-chatbox-entry uninett-chatbox-entry-video-request" ng-show="currentChat && hasIncomingCall()">
-				<b>Lars is trying to call you.</b>
-				<div class="btn-group uninett-btn-group">
-					<button type="button" ng-click="acceptCall()" class="btn btn-success">Accept</button>
-					<button type="button" ng-click="rejectCall()" class="btn btn-danger">Reject</button>
-				</div>
-			</div>
-			<div ng-show="currentChat && isInCall()">
-				<div class="uninett-chatbox-entry uninett-chatbox-entry-video">
-					<video autoplay="true" src="{{videoSrc.src}}"></video>
-				</div>
-			</div>
 		</div>
-		<div class="input-group">
-			<input ng-disabled="!currentChat" type="text" ng-model="chatMessage" ng-keydown="chatKeyDown($event)" class="form-control fill-width"/>
-			<span ng-disabled="!currentChat" class="input-group-addon" ng-click="sendMessage()">Send</span>
+		<div class="row">
+			<div id="chatBox" class="fill-top auto-overflow" ng-auto-scroll>
+				<div class="uninett-chatbox-entry" ng-repeat="message in currentChat.messages" ng-class="isSystemMessage(message) ? 'uninett-chatbox-entry-system' : isMyMessage(message) ? 'uninett-chatbox-entry-sent' : 'uninett-chatbox-entry-recv'">
+					<div ng-hide="isMyMessage(message) || isSystemMessage(message)"><b>{{getDisplayName(message)}} says:</b></div>
+					<div style="word-wrap: break-word;">{{message.message}}</div>
+					<span class="right" ng-class="{'visible': !message.arrived, 'invisible': message.arrived}">
+						<i class="fa fa-spinner fa-spin"></i>
+					</span>
+				</div>
+				<div class="uninett-chatbox-entry uninett-chatbox-entry-video-request" ng-show="currentChat && hasIncomingCall()">
+					<b>Lars is trying to call you.</b>
+					<div class="btn-group uninett-btn-group">
+						<button type="button" ng-click="acceptCall()" class="btn btn-success">Accept</button>
+						<button type="button" ng-click="rejectCall()" class="btn btn-danger">Reject</button>
+					</div>
+				</div>
+				<div ng-show="currentChat && isInCall()">
+					<div class="uninett-chatbox-entry uninett-chatbox-entry-video">
+						<video autoplay="true" src="{{videoSrc.src}}"></video>
+					</div>
+				</div>
+			</div>
+			<div class="input-group">
+				<input ng-disabled="!currentChat" type="text" ng-model="chatMessage" ng-keydown="chatKeyDown($event)" class="form-control fill-width"/>
+				<span ng-disabled="!currentChat" class="input-group-addon" ng-click="sendMessage()">Send</span>
+			</div>
 		</div>
 	</div>
 </div>
