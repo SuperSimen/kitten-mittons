@@ -12,6 +12,9 @@
 			src: "",
 			active: false,
 			setActive: function(id) {
+				if (this.src) {
+					return console.log("Call already active");
+				}
 				this.src = $sce.trustAsResourceUrl(constants.conferenceUrl + "/" + id);
 				this.active = true;
 			},
@@ -39,6 +42,9 @@
 					invites: [],
 					owner: owner,
 					invitedBy: invitedBy,
+					open: function() {
+						model.conference.setActive(this.id);
+					},
 					isInvited: function(friend) {
 						if (friend) {
 							for (var i in this.invites) {

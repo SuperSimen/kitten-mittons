@@ -35,6 +35,7 @@
 						model.search.clearResults();
 					}
 				});
+
 			}
 		};
 
@@ -157,6 +158,8 @@
 			xmpp.addHandler(xmppHandlers.roster, constants.xmpp.roster, "iq");
 
 			gatherInfoPart2();
+
+			model.conference.create("Default conference");
 		}
 
 		main.sendMessage = function(to, message) {

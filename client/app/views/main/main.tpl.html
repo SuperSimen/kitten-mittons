@@ -28,6 +28,9 @@
 
 <div class="row hide-overflow fill-height-minus-navbar">
 	<div ng-show="showConference()" class="fill-height">
+		<div class="conference-menu">
+			<i class="pointer fa fa-phone-square uninett-fontColor-red fa-2x tab" ng-click="closeConference()"></i>
+		</div>
 		<iframe src={{conference.src}} class="fill-height fill-width"></iframe>
 	</div>
 	<div ng-class="getCol(1)" class="fill-height">

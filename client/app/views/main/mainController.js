@@ -36,6 +36,10 @@ app.controller( 'mainController', function($scope, model, $state, utility) {
 	$scope.showConference = function() {
 		return $state.current.name === "conference.active";
 	};
+	$scope.closeConference = function() {
+		model.conference.closeActive();
+	};
+
 
 	$scope.getCol = function(viewNumber) {
 		var state = $state.current.name;
@@ -48,8 +52,7 @@ app.controller( 'mainController', function($scope, model, $state, utility) {
 				return false;
 			}
 		}
-		return true;
-
+		return false;
 	};
 	$scope.getFriendFromId = function(id) {
 		if (!id) {

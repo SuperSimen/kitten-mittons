@@ -24,7 +24,7 @@
 						<div >Invited by: {{getFriendFromId(conference.invitedBy).FN}}</div>
 					</div>
 					<div class="col-md-2 align-left height-50">
-						<button ng-click="gotoConference(conference.id)" class="btn btn-info width-70">Go to</button>
+						<button ng-click="gotoConference(conference)" class="btn btn-info width-70">Go to</button>
 						<button class="btn btn-info width-70" ng-click="toggleInvite(conference.id)" ng-bind="isInviting(conference.id) && 'Close' || 'Invite'"></button>
 					</div>
 				</div>

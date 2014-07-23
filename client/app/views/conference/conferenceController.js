@@ -7,9 +7,9 @@ app.controller( 'conferenceController', function($scope, model, $window, constan
 		}
 	};
 
-	$scope.gotoConference = function(id) {
-		if (id) {
-			model.conference.setActive(id);
+	$scope.gotoConference = function(conference) {
+		if (conference) {
+			conference.open();
 		}
 	};
 
