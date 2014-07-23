@@ -71,6 +71,10 @@
 			}
 		};
 
+		$rootScope.getObjectLength = function(obj) {
+			return Object.keys(obj).length;
+		};
+
 		$rootScope.isMe = function(id) {
 			if (utility.getIdFromJid(id) === model.user.info.xmpp.jid) {
 				return true;
@@ -160,7 +164,7 @@
 
 			gatherInfoPart2();
 
-			model.conference.create("Default conference");
+			model.conference.create(model.user.info.name + "'s conference");
 		}
 
 		main.sendMessage = function(to, message) {
@@ -172,6 +176,14 @@
 					messageObject.arrived = true;
 				});
 			});
+		};
+
+		main.sendGroupMessage = function(to, message) {
+			var jid = utility.getJidFromId(to);
+			var messageObject = model.chat.get(to).addMessage(model.user.info.xmpp.jid, message, true);
+
+			xmpp.sendGroupMessage(jid, message);
+			messageObject.arrived = true;
 		};
 
 		main.addBestFriend = function(friend) {
@@ -220,6 +232,11 @@
 			}
 		};
 
+		main.createRoom = function() {
+			var id = model.chat.createRoom();
+			xmpp.joinRoom(groupId, utility.getIdFromJid(model.user.info.userid));
+		};
+
 		var xmppHandlers = {
 			basicHandler: function(data) {
 				//console.log(data);
@@ -229,10 +246,11 @@
 				if (body) {
 					var type = body[0].children[0].data;
 					console.log(type);
+					var from = utility.getIdFromJid(data.from);
 					if (type === "offer") {
 						if (model.call.status === "free") {
 							$rootScope.$apply(function() {
-								model.call.add(utility.getIdFromJid(data.from), false);
+								model.call.add(from, false);
 							});
 						}
 						else {
@@ -241,7 +259,7 @@
 					}
 					else if (type === "accept" && 
 						model.call.status === "calling" &&
-						model.call.currentId === utility.getIdFromJid(data.from)) {
+						model.call.currentId === from) {
 
 						$rootScope.$apply(function() {
 							model.call.getCurrent().hidden = true;
@@ -253,9 +271,10 @@
 					}
 					else if (type === "deny" && 
 						model.call.status === "calling" &&
-						model.call.currentId === utility.getIdFromJid(data.from)) {
+						model.call.currentId === from) {
 
 						$rootScope.$apply(function() {
+							model.chat.get(from).addSystemMessage("Call denied");
 							model.call.deleteCurrent();
 						});
 
@@ -263,7 +282,8 @@
 					}
 					else if (type === "cancel" && model.call.status === "free") {
 						$rootScope.$apply(function() {
-							model.call.remove(utility.getIdFromJid(data.from));
+							model.call.remove(from);
+							model.chat.get(from).addSystemMessage("Call canceled");
 						});
 					}
 					else {

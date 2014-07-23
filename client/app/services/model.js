@@ -1,6 +1,6 @@
 (function () {
 
-	app.factory('model', function($state, constants, $sce) {
+	app.factory('model', function($state, constants, $sce, utility) {
 		
 		var model = {};
 		
@@ -166,7 +166,7 @@
 					this.create(id);
 				}
 			},
-			create: function(id) {
+			create: function(id, isRoom) {
 				if (this.listOfIndices[id]) {
 					return;
 				}
@@ -176,6 +176,15 @@
 					mostRecentTime: 0,
 					messages: [],
 					unread: 0,
+					isRoom: isRoom,
+				  	addSystemMessage: function(message) {
+						this.messages.push({
+							arrived: true,
+							message: 'Info: ' + message,
+							type: 'system',
+							from: 'System'
+						});
+					},
 					addMessage: function(from, message, sending) {
 						this.mostRecentTime = Date.now();
 						var temp = {
@@ -215,6 +224,13 @@
 				}
 				this.create(id);
 				return this.sortableArray[this.listOfIndices[id]];
+			},
+			roomCounter: 0,
+			createRoom: function() {
+				var id = utility.getGroupIdFromJid(model.user.info.userid);
+				id += Math.random().toString(32).substring(2) + this.roomCounter++;
+				this.create(id, true);
+				return id;
 			},
 			sort: function() {
 				this.sortableArray.sort(function(a,b) {return b.mostRecentTime - a.mostRecentTime;});

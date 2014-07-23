@@ -3,6 +3,7 @@ app.controller( 'friendsController', function(main, $state, $scope, model) {
 	$scope.friends = model.friends;
 	$scope.user = model.user;
 	$scope.search = model.search;
+	$scope.conference = model.conference;
 
 	/**
 	 * Get the number of friends in group

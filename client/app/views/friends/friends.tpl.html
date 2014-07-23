@@ -57,6 +57,13 @@
 							</div>
 						</div>
 					</div>
+					<div class="row" ng-class="{'border-top': getObjectLength(conference.list)}">
+						<div class="col-md-12">
+							<div ng-repeat="conf in conference.list">
+								{{conf.name}}
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 			<div class="fill-bottom align-center fill-width">
