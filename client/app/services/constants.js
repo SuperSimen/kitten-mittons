@@ -61,6 +61,11 @@
 			return jid.substring(0, jid.indexOf("@"));
 		};
 
+		utility.getGroupJidFromId = function(id) {
+			return id + "@" + constants.mucServerUrl;
+
+		};
+
 		utility.getBareJid = function(jid) {
 			if (jid.indexOf("/") !== -1) {
 				return jid.substring(0, jid.indexOf("/"));

@@ -1,4 +1,4 @@
-app.controller( 'chatHistoryController', function($scope, model) {
+app.controller( 'chatHistoryController', function($scope, main, model) {
 
 	$scope.$watch(function () {return model.chat.currentId;}, function() {
 		$scope.history = model.chat.sortableArray;
@@ -17,6 +17,10 @@ app.controller( 'chatHistoryController', function($scope, model) {
 		else {
 			return false;
 		}
+	};
+
+	$scope.clickOnPlus = function() {
+		main.createRoom();
 	};
 
 	$scope.getUnread = function(id) {

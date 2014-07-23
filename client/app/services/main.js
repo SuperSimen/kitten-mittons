@@ -71,6 +71,10 @@
 			}
 		};
 
+		$rootScope.getObjectLength = function(obj) {
+			return Object.keys(obj).length;
+		};
+
 		$rootScope.isMe = function(id) {
 			if (utility.getIdFromJid(id) === model.user.info.xmpp.jid) {
 				return true;
@@ -159,7 +163,7 @@
 
 			gatherInfoPart2();
 
-			model.conference.create("Default conference");
+			model.conference.create(model.user.info.name + "'s conference");
 		}
 
 		main.sendMessage = function(to, message) {
@@ -217,6 +221,11 @@
 			function callback() {
 				xmpp.sendPresenceType(jid, "unsubscribe");
 			}
+		};
+
+		main.createRoom = function() {
+			var id = model.chat.createRoom();
+
 		};
 
 		var xmppHandlers = {
