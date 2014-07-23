@@ -2,10 +2,11 @@
     
 	app.directive("ngAutoScroll", function() { 
 		return function(scope, element, attrs) {
-			var e = element[0];
-			scope.$watch(function() {
+			scope.scrollDown = function() {
+				var e = element[0];
+				console.log($(e).height());
 				$(e).animate({ scrollTop: $(e).height() }, "slow");
-			});
+			};
 		};
 	});
     

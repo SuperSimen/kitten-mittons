@@ -1,7 +1,8 @@
 var app = angular.module( 'app', [
 	'ui.router',
 	'ngAnimate',
-	'mainView'
+	'mainView',
+	'ng-context-menu'
 ]);
 app.config( function ( $stateProvider) {
 	$stateProvider.state('base', {

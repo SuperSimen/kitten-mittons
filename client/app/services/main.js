@@ -99,6 +99,7 @@
 			if (model.call.status === "free") {
 				model.call.status = "calling";
 				model.call.currentId = to;
+				main.setupCall(to);
 				xmpp.sendMessage(to, "offer", "call");
 			}
 		};

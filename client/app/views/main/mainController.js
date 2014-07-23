@@ -28,8 +28,8 @@ app.controller( 'mainController', function($scope, model, $state, utility) {
 		],
 		"video.active": [
 			"hidden",
-			"col-xs-10",
-			"col-xs-2",
+			"col-xs-12",
+			"hidden"
 		],
 	};
 	$scope.conference = model.conference;

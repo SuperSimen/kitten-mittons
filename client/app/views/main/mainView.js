@@ -20,10 +20,6 @@ app.config( function ($stateProvider) {
 		}
 	}).state('video.active', {
 		views: {
-			"view3@base": {
-				controller: "chatController",
-				templateUrl: "app/views/chat/chat.tpl.html"
-			},
 			"view2@base": {
 				controller: "videoActiveController",
 				templateUrl: "app/views/video/videoActive.tpl.html"

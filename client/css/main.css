@@ -330,3 +330,22 @@ span[ng-click][disabled] {
     color: #fff;
     float: left;
 }
+
+.uninett-chatbox-entry-system {
+	width: auto;
+	padding: 8px;
+	background-color: #46c1be !important;
+	font-weight: bold;
+	border-width: 3px;
+	color: #ffffff;
+}
+
+.uninett-chatbox-entry-video-request {
+	background: white;
+	width: auto;
+}
+
+.uninett-chatbox-entry-video {
+	padding: 5px !important; 
+	width: auto !important;
+}
