@@ -12,6 +12,16 @@ app.controller( 'videoController', function(model, $scope, main, utility) {
 		}
 
 	};
+                
+        $scope.receivingCall = function() {
+            var call;
+            for(call in $scope.call.list) {
+                if(!$scope.call.list[call].calling && !$scope.call.list[call].hidden) {
+                    return true;
+                }
+            }
+            return false;
+        };
 
 	$scope.calling = function(to) {
 		return (model.call.status === "calling" && model.call.currentId === utility.getIdFromJid(to));
