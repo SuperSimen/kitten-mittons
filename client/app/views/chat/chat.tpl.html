@@ -1,7 +1,7 @@
 <div class="row color-grey fill-height" ng-class="border">
 	<div class="col-md-12 gutter fill-height-minus-gutter">
             
-		<div class="fill-top auto-overflow">
+		<div class="fill-top auto-overflow" ng-auto-scroll>
 			<div class="align-center well-sm" ng-show="currentChat">Conversation with {{getFriendFromId(currentChat.id) && getFriendFromId(currentChat.id).FN}}
 			</div>
 			<div class="uninett-chatbox-entry" ng-repeat="message in currentChat.messages" ng-class="isMyMessage(message) ? 'uninett-chatbox-entry-sent' : 'uninett-chatbox-entry-recv'">
