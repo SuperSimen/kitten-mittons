@@ -355,3 +355,15 @@ span[ng-click][disabled] {
 	width: 100%;
 	padding: 0; 
 }
+
+.uninett-fix-top {
+	
+}
+
+.uninett-btn-group button {
+	margin: 0 !important;
+}
+
+.uninett-btn-group button:first-child {
+	border-right: solid 1px #252379;
+}
