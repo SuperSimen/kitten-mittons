@@ -314,7 +314,7 @@ span[ng-click][disabled] {
 .uninett-chatbox-entry {
     clear: both;
     margin: 10px;
-    width: 40%;
+    width: 60%;
     padding: 20px;
     border: solid 1px transparent;
     border-radius: 5px;
@@ -346,14 +346,16 @@ span[ng-click][disabled] {
 }
 
 .uninett-chatbox-entry-video {
-	background: #252379;
-	padding: 5px !important; 
+	background: transparent;
+	padding: 0px !important;
 }
 
 .uninett-chatbox-entry-video video {
 	background: #252379;
 	width: 100%;
 	padding: 0; 
+	border: solid 0px transparent;
+	border-radius: 5px;
 }
 
 .uninett-fix-top {

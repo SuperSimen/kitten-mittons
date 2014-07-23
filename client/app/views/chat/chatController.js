@@ -125,6 +125,9 @@ app.controller( 'chatController', function($state, $scope, main, model) {
 		main.denyCall($scope.currentChat.id);
 	};
 
+	$scope.enterVideoFull = function() {
+		$scope.gotoState("video");
+	};
 
 	/**
 	 * Checks whether the message was sent by current user
