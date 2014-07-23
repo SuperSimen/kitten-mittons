@@ -49,6 +49,19 @@ app.controller( 'mainController', function($scope, model, $state, utility) {
 		return model.friends.get(id);
 	};
 	
+	/**
+	 * Checks if there's an incoming call request
+	 * @returns {Boolean}
+	 */
+	$scope.receivingCall = function() {
+		for(var i in model.call.list) {
+			if(!model.call.list[i].calling && !model.call.list[i].hidden) {
+				return true;
+			}
+		}
+		return false;
+	};
+	
 
 });
 

@@ -6,7 +6,6 @@
 
 		<div class="col-md-8">
 			<div ng-hide="hideInfo()"> Click on contacts to setup call</div>
-			<audio src="resource/telephone.wav" ng-audio ng-bind="playAudio(receivingCall())"></audio>
 			<div ng-repeat="call in call.list">
 				<div ng-hide="call.hidden">
 					{{getFriendFromId(call.id).FN}}
