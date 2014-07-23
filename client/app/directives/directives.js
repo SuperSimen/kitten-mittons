@@ -1,19 +1,27 @@
 (function () {
     
+	app.directive("ngAutoScroll", function() { 
+		return function(scope, element, attrs) {
+			var e = element[0];
+			scope.$watch(function() {
+				$(e).animate({ scrollTop: $(e).height() }, "slow");
+			});
+		};
+	});
     
-        app.directive("ngAudio", function(){
-            return function(scope, element, attrs){
-                element[0].loop = true;
-                scope.playAudio = function(status) {
-                    if(status) {
-                        element[0].play();
-                    }
-                    else {
-                        element[0].pause();
-                    }
-                };
-            };
-        });
+	app.directive("ngAudio", function(){
+		return function(scope, element, attrs){
+			element[0].loop = true;
+			scope.playAudio = function(status) {
+				if(status) {
+					element[0].play();
+				}
+				else {
+					element[0].pause();
+				}
+			};
+		};
+	});
 
 	app.directive('baFileSelector', function () {
 
