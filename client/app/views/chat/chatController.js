@@ -12,7 +12,6 @@ app.controller( 'chatController', function($state, $scope, main, model) {
 		});
 	}
 	
-	$scope.isVideoActive = false;
 	$scope.video = model.video.local;
 	$scope.call = model.call;
 
@@ -20,11 +19,19 @@ app.controller( 'chatController', function($state, $scope, main, model) {
 		return message.type == 'system';
 	};
 	
+	/**
+	 * Checks if we're currently in a call
+	 * @returns {Boolean}
+	 */
 	$scope.isInCall = function() {
 		return $scope.currentChat.id in $scope.call.list && 
 				$scope.call.list[$scope.currentChat.id].hidden;
 	};
 	
+	/**
+	 * Checks if there's an incoming call
+	 * @returns {Boolean}
+	 */
 	$scope.hasIncomingCall = function() {
 		return $scope.currentChat.id in $scope.call.list && 
 				!$scope.call.list[$scope.currentChat.id].calling &&
@@ -44,13 +51,33 @@ app.controller( 'chatController', function($state, $scope, main, model) {
 		});
 	}
 	
+	$scope.onVideoUpdateAction = function() {
+		
+	};
+	
+	$scope.getVideoControlMsg = function() {
+		
+		if(!$scope.currentChat) {
+			return "Start Video";
+		}
+		
+		if($scope.isInCall() || $scope.calling()) {
+			return "Stop Video";
+		} else {
+			return "Start Video";
+		}
+		
+	};
+	
 	/**
 	 * Check if we're currently calling
 	 * @param {type} to
 	 * @returns {Boolean}
 	 */
 	$scope.calling = function(to) {
-		return (model.call.status === "calling" && model.call.currentId === utility.getIdFromJid(to));
+		if(!model.call || !model.call.currentId)
+			return false;
+		return (model.call.status === "calling");
 	};
 	
 	/**
@@ -58,20 +85,7 @@ app.controller( 'chatController', function($state, $scope, main, model) {
 	 * @returns {undefined}
 	 */
 	$scope.callTo = function() {
-		
-		$scope.isVideoActive = true;
-		
 		systemMessage("Call request has been sent");
-		
-		/*
-		$scope.currentChat.messages.push({
-			arrived: true,
-			message: "Video call accepted",
-			type: 'system',
-			from: 'System'
-		});
-		*/
-	   
 		main.call($scope.currentChat.id);
 	};
 	
@@ -81,7 +95,7 @@ app.controller( 'chatController', function($state, $scope, main, model) {
 	 * @returns {undefined}
 	 */
 	$scope.cancelCall = function() {
-		systemMessage("Ending call");
+		systemMessage("Cancelled call request");
 		main.hangup();
 	};
 
@@ -99,6 +113,7 @@ app.controller( 'chatController', function($state, $scope, main, model) {
 	 * @returns {undefined}
 	 */
 	$scope.rejectCall = function() {
+		systemMessage("");
 		main.denyCall($scope.currentChat.id);
 	};
 
