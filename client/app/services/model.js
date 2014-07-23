@@ -1,6 +1,6 @@
 (function () {
 
-	app.factory('model', function($state) {
+	app.factory('model', function($state, constants, $sce) {
 		
 		var model = {};
 		
@@ -8,6 +8,18 @@
 			list: {},
 			idCounter: 0,
 			unseen: 0,
+
+			src: "",
+			active: false,
+			setActive: function(id) {
+				this.src = $sce.trustAsResourceUrl(constants.conferenceUrl + "/" + id);
+				this.active = true;
+			},
+			closeActive: function() {
+				this.src = "";
+				this.active = false;
+			},
+
 			addInvitedTo: function(conference) {
 				var id = conference.id;
 				if (this.list[id]) {
@@ -305,6 +317,7 @@
 			}
 
 		};
+
 
 		model.groups = {
 			list: {},

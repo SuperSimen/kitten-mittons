@@ -27,6 +27,9 @@
 </div>
 
 <div class="row hide-overflow fill-height-minus-navbar">
+	<div ng-show="showConference()" class="fill-height">
+		<iframe src={{conference.src}} class="fill-height fill-width"></iframe>
+	</div>
 	<div ng-class="getCol(1)" class="fill-height">
 		<div ui-view="view1" class="fill-height" ng-class="{'animate-view': isViewAnimated(1)}"> </div>
 	</div>

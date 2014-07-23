@@ -24,8 +24,6 @@
 
 			try {
 				var currentCall = model.call.getCurrent();
-				console.log(currentCall);
-				console.log("hihih");
 				navigator.webkitGetUserMedia({
 					video: currentCall.video,
 					audio: currentCall.audio

@@ -11,6 +11,11 @@ app.controller( 'mainController', function($scope, model, $state, utility) {
 			"col-xs-10",
 			"col-xs-2",
 		],
+		"conference.active": [
+			"hidden",
+			"hidden",
+			"hidden",
+		],
 		chat: [
 			"col-xs-2",
 			"col-xs-8",
@@ -27,6 +32,11 @@ app.controller( 'mainController', function($scope, model, $state, utility) {
 			"col-xs-2",
 		],
 	};
+	$scope.conference = model.conference;
+	$scope.showConference = function() {
+		return $state.current.name === "conference.active";
+	};
+
 	$scope.getCol = function(viewNumber) {
 		var state = $state.current.name;
 		return stateViewCols[state][viewNumber - 1];

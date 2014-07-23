@@ -1,5 +1,6 @@
 app.controller( 'conferenceController', function($scope, model, $window, constants) {
 	$scope.conference = model.conference;
+
 	$scope.create = function() {
 		if ($scope.conferenceName) {
 			model.conference.create($scope.conferenceName);
@@ -8,8 +9,7 @@ app.controller( 'conferenceController', function($scope, model, $window, constan
 
 	$scope.gotoConference = function(id) {
 		if (id) {
-			var url = constants.conferenceUrl + "/" + id;
-			$window.open(url);
+			model.conference.setActive(id);
 		}
 	};
 
