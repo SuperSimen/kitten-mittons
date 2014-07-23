@@ -1,6 +1,6 @@
 (function () {
 
-	app.factory('main', function(UWAP, xmpp, model, $state, $rootScope, $http, constants, webrtc, fileSender, fileReceiver, $timeout, utility) {
+	app.factory('main', function(UWAP, xmpp, model, $state, $rootScope, $http, constants, webrtc, fileSender, fileReceiver, $timeout, utility, $sce) {
 		var main = {
 			init: function() {
 				globalModel = model;
@@ -11,6 +11,11 @@
 				$rootScope.$watch(function () {return model.video.active;}, function(newValue) {
 					if ($state.current.name === "video" || $state.current.name === "video.active") {
 						$rootScope.gotoState("video");
+					}
+				});
+				$rootScope.$watch(function () {return model.conference.active;}, function(newValue) {
+					if ($state.current.name === "conference" || $state.current.name === "conference.active") {
+						$rootScope.gotoState("conference");
 					}
 				});
 
@@ -30,6 +35,7 @@
 						model.search.clearResults();
 					}
 				});
+
 			}
 		};
 
@@ -52,13 +58,21 @@
 					$state.go("video");
 				}
 			}
+			else if (state === "conference") {
+				if (model.conference.active) {
+					$state.go("conference.active");
+				}
+				else {
+					$state.go("conference");
+				}
+			}
 			else {
 				$state.go(state);
 			}
 		};
 
 		$rootScope.isMe = function(id) {
-			if (id === model.user.info.xmpp.jid) {
+			if (utility.getIdFromJid(id) === model.user.info.xmpp.jid) {
 				return true;
 			}
 			return false;
@@ -145,6 +159,8 @@
 			xmpp.addHandler(xmppHandlers.roster, constants.xmpp.roster, "iq");
 
 			gatherInfoPart2();
+
+			model.conference.create("Default conference");
 		}
 
 		main.sendMessage = function(to, message) {
@@ -156,18 +172,6 @@
 					messageObject.arrived = true;
 				});
 			});
-		};
-
-		addBestFriendJid = function(jid) {
-			if (!model.friends.isBestFriend(jid)) {
-				xmpp.addToRoster(jid, callback);
-			}
-			else {
-				console.log("already best friend");
-			}
-			function callback() {
-				xmpp.sendPresenceType(jid, "subscribe");
-			}
 		};
 
 		main.addBestFriend = function(friend) {

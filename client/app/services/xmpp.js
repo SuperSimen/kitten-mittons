@@ -139,11 +139,6 @@
 			sendIQ(iq, callback);
 		};
 
-		removeFromRoster = function(jid, callback) {
-			var iq = $iq({type: 'set'}).c('query', {xmlns: constants.xmpp.roster})
-			.c('item', {jid: jid, subscription: "remove"});
-			sendIQ(iq, callback);
-		};
 
 		factory.sendPresenceType = function (to, type) {
 			var msg = $pres({to: to, "type": type});
@@ -155,14 +150,14 @@
 			send(msg);
 		};
 
-		logOff = function logOff() {
+		function logOff() {
 			send($pres({type: "unavailable"}));
-		};
+		}
 
 
-		logOn = function logOn() {
+		function logOn() {
 			send($pres());
-		};
+		}
 
 
 		function setStatus(show) {

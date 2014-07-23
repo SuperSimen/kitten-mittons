@@ -11,6 +11,11 @@ app.controller( 'mainController', function($scope, model, $state, utility) {
 			"col-xs-10",
 			"col-xs-2",
 		],
+		"conference.active": [
+			"hidden",
+			"hidden",
+			"hidden",
+		],
 		chat: [
 			"col-xs-2",
 			"col-xs-8",
@@ -27,6 +32,15 @@ app.controller( 'mainController', function($scope, model, $state, utility) {
 			"hidden"
 		],
 	};
+	$scope.conference = model.conference;
+	$scope.showConference = function() {
+		return $state.current.name === "conference.active";
+	};
+	$scope.closeConference = function() {
+		model.conference.closeActive();
+	};
+
+
 	$scope.getCol = function(viewNumber) {
 		var state = $state.current.name;
 		return stateViewCols[state][viewNumber - 1];
@@ -38,8 +52,7 @@ app.controller( 'mainController', function($scope, model, $state, utility) {
 				return false;
 			}
 		}
-		return true;
-
+		return false;
 	};
 	$scope.getFriendFromId = function(id) {
 		if (!id) {

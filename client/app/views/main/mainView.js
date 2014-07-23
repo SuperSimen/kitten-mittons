@@ -56,5 +56,10 @@ app.config( function ($stateProvider) {
 				templateUrl: "app/views/conference/conference.tpl.html"
 			}
 		}
+	}).state('conference.active', {
+		views: {
+			"view2@base": {},
+			"view3@base": {},
+		}
 	});
 });

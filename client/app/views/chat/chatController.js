@@ -135,7 +135,7 @@ app.controller( 'chatController', function($state, $scope, main, model) {
 
 	$scope.chatKeyDown = function(event) {
 		if (event.keyCode === 13) {
-                    $scope.sendMessage();
+			$scope.sendMessage();
 		}
 	};
 
