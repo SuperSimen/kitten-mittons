@@ -13,7 +13,8 @@
 							<span class="glyphicon glyphicon-user"></span> {{getFriendFromId(entry.id).FN}} {{entry.isRoom && "Group"}}
 							<span class="badge" ng-bind="getUnread(entry.id)"></span>
 						</div>
-						<div class="visible-span width-3 right"><i ng-click="close(entry.id)" class="fa pointer fa-times"></i></div>
+						<div class="visible-span width-3 right" ng-hide="entry.isRoom"><i ng-click="close(entry.id)" class="fa pointer fa-times"></i></div>
+						<div class="visible-span width-3 right" ng-show="entry.isRoom"><i ng-click="invite(entry.id)" class="fa pointer fa-plus"></i></div>
 					</div>
 				</div>
 			</div>

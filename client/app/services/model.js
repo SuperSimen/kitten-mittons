@@ -226,9 +226,12 @@
 				return this.sortableArray[this.listOfIndices[id]];
 			},
 			roomCounter: 0,
-			createRoom: function() {
-				var id = utility.getGroupIdFromJid(model.user.info.userid);
-				id += Math.random().toString(32).substring(2) + this.roomCounter++;
+			createRoom: function(id) {
+				if (!id) {
+					id = utility.getNicknameFromJid(model.user.info.userid);
+					id += Math.random().toString(32).substring(2) + this.roomCounter++;
+				}
+				console.log(id);
 				this.create(id, true);
 				return id;
 			},
@@ -291,10 +294,9 @@
 			getWithUserid: function(userid) {
 				for (var i = 0; i < this.bestFriends.length; i++) {
 					if (this.list[this.bestFriends[i]].userid === userid) {
-						return true;
+						return this.list[this.bestFriends[i]];
 					}
 				}
-				return false;
 			}
 		};
 

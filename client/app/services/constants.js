@@ -61,9 +61,15 @@
 			return jid.substring(0, jid.indexOf("@"));
 		};
 
-		utility.getGroupJidFromId = function(id) {
-			return id + "@" + constants.mucServerUrl;
+		utility.getNicknameFromJid = function(jid) {
+			return jid.substring(0, jid.indexOf("@"));
+		};
 
+		utility.getRoomIdFromJid = function(jid) {
+			return jid.substring(0, jid.indexOf("@"));
+		};
+		utility.getRoomJidFromId = function(id) {
+			return id + "@" + constants.xmpp.mucServerUrl;
 		};
 
 		utility.getBareJid = function(jid) {

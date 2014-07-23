@@ -10,6 +10,11 @@ app.controller( 'chatHistoryController', function($scope, main, model) {
 		model.chat.getCurrent().unread = 0;
 	};
 
+	$scope.invite = function(id) {
+		var friend = model.friends.getWithUserid("owesenle@uninett.no");
+		main.sendRoomInvite(friend, model.chat.get(id).id);
+	};
+
 	$scope.isActive = function(id) {
 		if (id === model.chat.currentId) {
 			return true;

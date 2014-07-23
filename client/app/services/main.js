@@ -4,7 +4,7 @@
 		var main = {
 			init: function() {
 				globalModel = model;
-				$rootScope.gotoState("file");
+				$rootScope.gotoState("chat");
 				gatherInfoPart1();
 				fileSender.init();
 				fileReceiver.init();
@@ -99,7 +99,7 @@
 			if (model.call.status === "free") {
 				model.call.status = "calling";
 				model.call.currentId = to;
-				main.setupCall(to);
+				model.call.add(to, true);
 				xmpp.sendMessage(to, "offer", "call");
 			}
 		};
@@ -128,12 +128,6 @@
 			model.call.status = "free";
 		};
 
-
-
-		main.setupCall = function(to) {
-			model.call.add(to, true);
-		};
-
 		main.hangup = function() {
 			webrtc.hangup();
 		};
@@ -158,6 +152,7 @@
 			xmpp.addHandler(xmppHandlers.basicHandler);
 			xmpp.addHandler(xmppHandlers.message, null, "message", "chat");
 			xmpp.addHandler(xmppHandlers.conferenceInvite, null, "message", "conferenceInvite");
+			xmpp.addHandler(xmppHandlers.roomInvite, null, "message", "roomInvite");
 			xmpp.addHandler(xmppHandlers.call, null, "message", "call");
 			xmpp.addHandler(xmppHandlers.presence, constants.xmpp.client, "presence");
 			xmpp.addHandler(xmppHandlers.roster, constants.xmpp.roster, "iq");
@@ -179,11 +174,8 @@
 		};
 
 		main.sendGroupMessage = function(to, message) {
-			var jid = utility.getJidFromId(to);
-			var messageObject = model.chat.get(to).addMessage(model.user.info.xmpp.jid, message, true);
-
+			var jid = utility.getRoomJidFromId(to);
 			xmpp.sendGroupMessage(jid, message);
-			messageObject.arrived = true;
 		};
 
 		main.addBestFriend = function(friend) {
@@ -234,7 +226,7 @@
 
 		main.createRoom = function() {
 			var id = model.chat.createRoom();
-			xmpp.joinRoom(groupId, utility.getIdFromJid(model.user.info.userid));
+			xmpp.joinRoom(id, utility.getRoomIdFromJid(model.user.info.userid));
 		};
 
 		var xmppHandlers = {
@@ -302,6 +294,16 @@
 					});
 				} 
 			},
+			roomInvite: function(data) {
+				var body = data.getChildrenByTagName("body");
+				if (body) {
+					var roomId = body[0].children[0].data;
+					$rootScope.$apply(function() {
+						model.chat.createRoom(roomId);
+					});
+					xmpp.joinRoom(roomId, utility.getRoomIdFromJid(model.user.info.userid));
+				} 
+			},
 			roster: function(data) {
 				var query = data.getChildrenByTagName("query")[0];
 				var items = query.getChildrenByTagName("item");
@@ -316,12 +318,12 @@
 						case "to":
 							case "both":
 							$rootScope.$apply(add(id));
-						break;
+							break;
 						case "remove":
 							case "none":
 							case "from":
 							$rootScope.$apply(remove(id));
-						break;
+							break;
 					}
 				}
 				function add(id) {
@@ -343,7 +345,6 @@
 				}
 				else if (data.type === "unsubscribe") {
 					xmpp.sendPresenceType(data.from, "unsubscribed");
-					//xmpp.sendPresenceType(data.from, "unsubscribe");
 				}
 				else if (data.type === "unsubscribed") {
 				}
@@ -371,9 +372,17 @@
 					model.chat.get(id).addMessage(id, message);
 				});
 			},
+			mucMessage: function(data) {
+				var message = data.getChildrenByTagName("body")[0].children[0].data;
+				var id = utility.getIdFromJid(data.from);
+
+				$rootScope.$apply(function() {
+					model.chat.get(id).addMessage(id, message);
+				});
+			},
 			mucPresence: function(data) {
 				var from = data.from;
-				groupId = utility.getGroupIdFromJid(from);
+				var groupId = utility.getRoomIdFromJid(from);
 
 				var x = data.getChildrenByTagName("x");
 				if (x.length && x[0].xmlns === constants.xmpp.mucUser) {
@@ -429,12 +438,11 @@
 				var groups = data.Resources;
 				for (var i in groups) {
 					var group = groups[i];
-					//Only for testing
 					if (group.groupType === constants.uwap.orgUnit || group.groupType === constants.uwap.adHoc) {
 						var userid = model.user.info.userid;
 						var groupId = encodeURIComponent(group.id).toLowerCase();
 						model.groups.create(groupId, group.displayName);
-						xmpp.joinRoom(groupId, utility.getIdFromJid(userid));
+						xmpp.joinRoom(groupId, utility.getGroupIdFromJid(userid));
 					}
 				}
 			}); 
@@ -482,7 +490,9 @@
 		}
 
 		main.sendRoomInvite = function(friend, roomId) {
-			xmpp.sendMessage(friend.id, JSON.stringify(temp), "roomInvite", function() {
+			console.log("Sendgin " + roomId + " to " + friend.id );
+			
+			xmpp.sendMessage(friend.id, roomId, "roomInvite", function() {
 				$rootScope.$apply(function() {
 
 				});
