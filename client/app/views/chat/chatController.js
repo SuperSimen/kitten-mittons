@@ -90,12 +90,20 @@ app.controller( 'chatController', function($state, $scope, main, model) {
 	};
 	
 	/**
-	 * Stop call
-	 * @param {type} to
+	 * Cancel call request
 	 * @returns {undefined}
 	 */
 	$scope.cancelCall = function() {
 		systemMessage("Cancelled call request");
+		main.cancelCall($scope.currentChat.id);
+	};
+	
+	/**
+	 * End call
+	 * @returns {undefined}
+	 */
+	$scope.stopCall = function() {
+		systemMessage("Ended call");
 		main.hangup();
 	};
 
@@ -117,6 +125,9 @@ app.controller( 'chatController', function($state, $scope, main, model) {
 		main.denyCall($scope.currentChat.id);
 	};
 
+	$scope.enterVideoFull = function() {
+		$scope.gotoState("video");
+	};
 
 	/**
 	 * Checks whether the message was sent by current user
