@@ -128,7 +128,12 @@ app.controller( 'chatController', function($state, $scope, main, model) {
 	 */
 	$scope.sendMessage = function() {
 		if($scope.chatMessage && $scope.currentChat) {
-			main.sendMessage($scope.currentChat.id, $scope.chatMessage);
+			if ($scope.currentChat.isRoom) {
+				main.sendGroupMessage($scope.currentChat.id, $scope.chatMessage);
+			}
+			else {
+				main.sendMessage($scope.currentChat.id, $scope.chatMessage);
+			}
 			$scope.chatMessage = "";
 		}
 	};

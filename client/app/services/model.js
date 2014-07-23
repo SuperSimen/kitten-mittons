@@ -1,6 +1,6 @@
 (function () {
 
-	app.factory('model', function($state, constants, $sce) {
+	app.factory('model', function($state, constants, $sce, utility) {
 		
 		var model = {};
 		

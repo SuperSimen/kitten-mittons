@@ -178,6 +178,14 @@
 			});
 		};
 
+		main.sendGroupMessage = function(to, message) {
+			var jid = utility.getJidFromId(to);
+			var messageObject = model.chat.get(to).addMessage(model.user.info.xmpp.jid, message, true);
+
+			xmpp.sendGroupMessage(jid, message);
+			messageObject.arrived = true;
+		};
+
 		main.addBestFriend = function(friend) {
 			var jid = utility.getJidFromId(friend.id);
 			if (!model.friends.isBestFriend(friend.id)) {
@@ -226,7 +234,7 @@
 
 		main.createRoom = function() {
 			var id = model.chat.createRoom();
-
+			xmpp.joinRoom(groupId, utility.getIdFromJid(model.user.info.userid));
 		};
 
 		var xmppHandlers = {
