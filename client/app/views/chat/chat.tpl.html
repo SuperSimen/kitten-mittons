@@ -8,7 +8,7 @@
 					<button type="button" class="btn btn-primary">
 						<span class="glyphicon glyphicon-earphone"></span> Voice Call
 					</button>
-					<button ng-disabled="isVideoActive" type="button" class="btn btn-primary" ng-click="callTo()">
+					<button ng-disabled="currentChat && isInCall()" type="button" class="btn btn-primary" ng-click="callTo()">
 						<span class="glyphicon glyphicon-facetime-video"></span> Video Call
 					</button>
 				</div>
@@ -27,9 +27,10 @@
 					<button type="button" ng-click="rejectCall()" class="btn btn-danger">Reject</button>
 				</div>
 			</div>
-			<div ng-show="currentChat && isInCall()" class="uninett-chatbox-entry uninett-chatbox-entry-video">
-				asdasdadsoij
-				<video autoplay="true"></video>
+			<div ng-show="currentChat && isInCall()">
+				<div class="uninett-chatbox-entry uninett-chatbox-entry-video">
+					<video autoplay="true" width="400" src="{{videoSrc.src}}"></video>
+				</div>
 			</div>
 		</div>
 		<div class="input-group">

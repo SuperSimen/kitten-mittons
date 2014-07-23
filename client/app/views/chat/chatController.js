@@ -21,17 +21,18 @@ app.controller( 'chatController', function($state, $scope, main, model) {
 	};
 	
 	$scope.isInCall = function() {
-		console.log($scope.call.list[$scope.currentChat.id]);
 		return $scope.currentChat.id in $scope.call.list && 
 				$scope.call.list[$scope.currentChat.id].hidden;
 	};
 	
 	$scope.hasIncomingCall = function() {
 		return $scope.currentChat.id in $scope.call.list && 
+				!$scope.call.list[$scope.currentChat.id].calling &&
 				!$scope.call.list[$scope.currentChat.id].hidden;
 	};
 
 	$scope.video = model.video.local;
+	$scope.videoSrc = model.video.remote;
 	$scope.call = model.call;
 	
 	function systemMessage(message) {

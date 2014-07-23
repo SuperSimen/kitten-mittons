@@ -346,6 +346,8 @@ span[ng-click][disabled] {
 }
 
 .uninett-chatbox-entry-video {
+	background: #252379;
+	width: auto !important;
 	padding: 5px !important; 
 	width: auto !important;
 }
