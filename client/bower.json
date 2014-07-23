@@ -23,7 +23,7 @@
     "uninett-bootstrap-theme": "*",
     "angular-animate": "~1.2.19",
     "font-awesome": "~4.1.0",
-    "ng-context-menu": "0.1.4"
+    "ng-context-menu": "~0.1.5"
   },
   "devDependencies": {
     "jquery": "~2.1.1"

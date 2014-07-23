@@ -41,7 +41,7 @@ app.controller( 'chatController', function($state, $scope, main, model) {
 			type: 'system',
 			from: 'System'
 		});
-	};
+	}
 	
 	/**
 	 * Check if we're currently calling
