@@ -12,7 +12,7 @@
                         element[0].pause();
                     }
                 };
-            }
+            };
         });
 
 	app.directive('baFileSelector', function () {

@@ -36,7 +36,7 @@
 									</div>
 								</div>
 								<div ng-show="showMembers" ng-repeat="friend in group.friends" class="row hover-white">
-									<div ng-hide="friend.me" ng-click="clickOnFriend(friend)" class="col-md-12 visible-on-hover">
+									<div ng-hide="isMe(friend.id)" ng-click="clickOnFriend(friend)" class="col-md-12 visible-on-hover">
 										<div class="width-95">
 											<i class="fa fa-circle icon presence-icon" ng-class="{'online': friend.online || friend.mucOnline, 'offline': !(friend.online || friend.mucOnline)}"></i>
 											<span class="tab">{{friend.FN}}</span>

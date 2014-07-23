@@ -56,6 +56,13 @@
 				$state.go(state);
 			}
 		};
+
+		$rootScope.isMe = function(id) {
+			if (id === model.user.info.xmpp.jid) {
+				return true;
+			}
+			return false;
+		};
 		
 
 		function gatherInfoPart1 () { 
@@ -368,9 +375,6 @@
 									var friend = model.friends.get(userName);
 									if (!friend) {
 										friend = addFriend(userName);
-									}
-									if (codes["110"]) {
-										friend.me = true;
 									}
 									model.groups.list[groupId].addFriend(friend);
 									if (data.type === "unavailable") {

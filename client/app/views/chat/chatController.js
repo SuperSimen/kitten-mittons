@@ -17,7 +17,7 @@ app.controller( 'chatController', function($state, $scope, main, model) {
          * @returns {Boolean}
          */
         $scope.isMyMessage = function(message) {
-            return $scope.getFriendFromId(message.from).me;
+            return $scope.isMe(message.from);
         };
 
         /**

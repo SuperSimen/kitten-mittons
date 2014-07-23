@@ -19,7 +19,7 @@
 					<li ng-class="{'active': isActive('chat')}" ><a href ng-click="gotoState('chat')">Chat<span class="badge" ng-show="chat.unread != 0" ng-bind="chat.unread"></span></a></li>
 					<li ng-class="{'active': isActive('video')}"><a href ng-click="gotoState('video')">Call</a></li>
 					<li ng-class="{'active': isActive('file')}"><a href ng-click="gotoState('file')">File<span class="badge" ng-show="file.unseen != 0" ng-bind="file.unseen"></span></a></li>
-					<li ng-class="{'active': isActive('conference')}"><a href ng-click="gotoState('conference')">Conference<span class="badge" ng-show="conference.unseen != 0" ng-bind="conference.unseen"></a></li>
+					<li ng-class="{'active': isActive('conference')}"><a href ng-click="gotoState('conference')">Conference<span class="badge" ng-show="conference.unseen != 0" ng-bind="conference.unseen"></span></a></li>
 				</ul>
 			</div>
 		</div>
@@ -28,13 +28,12 @@
 
 <div class="row hide-overflow fill-height-minus-navbar">
 	<div ng-class="getCol(1)" class="fill-height">
-		<div ui-view="view1-animated" class="fill-height animate-view"> </div>
+		<div ui-view="view1" class="fill-height" ng-class="{'animate-view': isViewAnimated(1)}"> </div>
 	</div>
 	<div ng-class="getCol(2)" class="fill-height">
-		<div ui-view="view2-animated" class="fill-height animate-view"></div>
-		<div ui-view="view2" class="fill-height"></div>
+		<div ui-view="view2" class="fill-height" ng-class="{'animate-view': isViewAnimated(2)}"></div>
 	</div>
 	<div ng-class="getCol(3)" class="fill-height">
-		<div ui-view="view3-animated" class="fill-height animate-view"></div>
+		<div ui-view="view3" class="fill-height" ng-class="{'animate-view': isViewAnimated(3)}"></div>
 	</div>
 </div>

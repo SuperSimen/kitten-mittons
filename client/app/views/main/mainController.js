@@ -25,11 +25,21 @@ app.controller( 'mainController', function($scope, model, $state, utility) {
 			"hidden",
 			"col-xs-10",
 			"col-xs-2",
-		]
+		],
 	};
 	$scope.getCol = function(viewNumber) {
 		var state = $state.current.name;
 		return stateViewCols[state][viewNumber - 1];
+	};
+	$scope.isViewAnimated = function(viewNumber) {
+		var state = $state.current.name;
+		if (state == "video.active") {
+			if (viewNumber === 2) {
+				return false;
+			}
+		}
+		return true;
+
 	};
 	$scope.getFriendFromId = function(id) {
 		if (!id) {
