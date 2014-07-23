@@ -481,6 +481,14 @@
 			return friend;
 		}
 
+		main.sendRoomInvite = function(friend, roomId) {
+			xmpp.sendMessage(friend.id, JSON.stringify(temp), "roomInvite", function() {
+				$rootScope.$apply(function() {
+
+				});
+			});
+		};
+
 		main.sendInvite = function(friend) {
 			var conference = model.conference.getCurrent();
 			console.log(conference);
