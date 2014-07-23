@@ -163,6 +163,7 @@
 						var temp = {
 							from: from, 
 							message: message,
+							type: 'chat',
 							arrived: !sending
 						};
 
