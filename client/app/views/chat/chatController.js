@@ -81,7 +81,8 @@ app.controller( 'chatController', function($state, $scope, main, model) {
 	 * @returns {undefined}
 	 */
 	$scope.cancelCall = function() {
-		main.cancelCall($scope.currentChat.id);
+		systemMessage("Ending call");
+		main.hangup();
 	};
 
 	/**
@@ -89,9 +90,7 @@ app.controller( 'chatController', function($state, $scope, main, model) {
 	 * @returns {undefined}
 	 */
 	$scope.acceptCall = function() {
-		
 		systemMessage("Accepted the call request");
-		
 		main.acceptCall($scope.currentChat.id);
 	};
 

@@ -8,8 +8,8 @@
 					<button type="button" class="btn btn-primary">
 						<span class="glyphicon glyphicon-earphone"></span> Voice Call
 					</button>
-					<button ng-disabled="currentChat && isInCall()" type="button" class="btn btn-primary" ng-click="callTo()">
-						<span class="glyphicon glyphicon-facetime-video"></span> Video Call
+					<button ng-disabled="!currentChat" type="button" class="btn btn-primary" ng-click="currentChat && !isInCall() ? callTo() : cancelCall()">
+						<span class="glyphicon glyphicon-facetime-video"></span> {{ currentChat && !isInCall() ? 'Start Video' : 'Stop Video' }}
 					</button>
 				</div>
 			</div>
