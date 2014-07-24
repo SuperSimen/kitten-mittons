@@ -164,11 +164,14 @@
 			send($pres().c("show", show));
 		}
 
-		factory.joinRoom = function (roomId, userId) {
+		factory.joinRoom = function (roomId) {
 			var room = roomId + "@" + constants.xmpp.mucServerUrl;
-			var to = room + "/" + model.user.nickname;
+			var to = room + "/" + model.user.info.nickname;
 
 			var pres = $pres({to: to}).c("x", {xmlns: constants.xmpp.muc});
+
+			console.log("joining " + to);
+
 			send(pres);
 		};
 

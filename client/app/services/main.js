@@ -242,6 +242,7 @@
 					if (type === "offer") {
 						if (model.call.status === "free") {
 							$rootScope.$apply(function() {
+								model.chat.get(from).ping();
 								model.call.add(from, false);
 							});
 						}
@@ -439,7 +440,6 @@
 				for (var i in groups) {
 					var group = groups[i];
 					if (group.groupType === constants.uwap.orgUnit || group.groupType === constants.uwap.adHoc) {
-						var userid = model.user.info.userid;
 						var groupId = encodeURIComponent(group.id).toLowerCase();
 						model.groups.create(groupId, group.displayName);
 						xmpp.joinRoom(groupId);
