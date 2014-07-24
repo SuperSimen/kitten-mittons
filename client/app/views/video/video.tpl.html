@@ -8,7 +8,7 @@
 			<div ng-hide="hideInfo()"> Click on contacts to setup call</div>
 			<div ng-repeat="call in call.list">
 				<div ng-hide="call.hidden">
-					{{getFriendFromId(call.id).FN}}
+					{{getFriendFromId(call.id).name}}
 					<span class="tab">
 						<input type="checkbox" ng-model="call.audio" class="tab"/>Audio
 					</span>

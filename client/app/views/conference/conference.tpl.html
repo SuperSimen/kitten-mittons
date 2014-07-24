@@ -21,7 +21,7 @@
 						{{conference.name}} 
 					</div>
 					<div ng-show="conference.invitedBy"class="col-md-3 height-50 hide-overflow">
-						<div >Invited by: {{getFriendFromId(conference.invitedBy).FN}}</div>
+						<div >Invited by: {{getFriendFromId(conference.invitedBy).name}}</div>
 					</div>
 					<div class="col-md-2 align-left height-50">
 						<button ng-click="gotoConference(conference)" class="btn btn-info width-70">Go to</button>
@@ -36,7 +36,7 @@
 						Invites sent to:
 					</div>
 					<div ng-repeat="invitee in conference.invites">
-						{{invitee.FN}}
+						{{invitee.name}}
 					</div>
 				</div>
 			</div>

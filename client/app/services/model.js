@@ -59,7 +59,7 @@
 				};
 			},
 			create: function(name) {
-				var id = Math.random().toString(32).substring(2) + name.toLowerCase().replace(/[^a-z]+/g, '') + this.idCounter++;
+				var id = utility.randomString() + name.toLowerCase().replace(/[^a-z]+/g, '') + this.idCounter++;
 				if (this.list[id]) {
 					return console.error("id not unique");
 				}
@@ -229,7 +229,7 @@
 			createRoom: function(id) {
 				if (!id) {
 					id = utility.getNicknameFromJid(model.user.info.userid);
-					id += Math.random().toString(32).substring(2) + this.roomCounter++;
+					id += utility.randomString() + this.roomCounter++;
 				}
 				console.log(id);
 				this.create(id, true);

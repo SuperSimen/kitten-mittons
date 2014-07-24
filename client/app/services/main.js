@@ -87,6 +87,7 @@
 			$http.get('/api/info').success(function(data, status) {
 				model.user.info = data;
 				model.user.token = data.token;
+				model.user.nickname = utility.getNicknameFromJid(data.userid) + utility.randomString();
 
 				if (model.user.info.xmpp.registered) {
 					xmpp.connect(model.user.info.xmpp.jid, model.user.info.xmpp.password, constants.xmpp.boshUrl, connectedCallback);
@@ -226,7 +227,7 @@
 
 		main.createRoom = function() {
 			var id = model.chat.createRoom();
-			xmpp.joinRoom(id, utility.getRoomIdFromJid(model.user.info.userid));
+			xmpp.joinRoom(id);
 		};
 
 		var xmppHandlers = {
@@ -301,7 +302,7 @@
 					$rootScope.$apply(function() {
 						model.chat.createRoom(roomId);
 					});
-					xmpp.joinRoom(roomId, utility.getRoomIdFromJid(model.user.info.userid));
+					xmpp.joinRoom(roomId);
 				} 
 			},
 			roster: function(data) {
@@ -442,7 +443,7 @@
 						var userid = model.user.info.userid;
 						var groupId = encodeURIComponent(group.id).toLowerCase();
 						model.groups.create(groupId, group.displayName);
-						xmpp.joinRoom(groupId, utility.getGroupIdFromJid(userid));
+						xmpp.joinRoom(groupId);
 					}
 				}
 			}); 
@@ -454,24 +455,28 @@
 
 		main.setVCard = function () {
 			var properties = {};
-			properties.FN = model.user.info.name;
+			properties.name = model.user.info.name;
 			properties.userid = model.user.info.userid;
+			properties.nickname = model.user.nickname;
 			xmpp.setVCard(properties);
 		};
 
-		var vCardTimeout = {};
 		main.getVCard = function (jid) {
 			xmpp.getVCard(jid, function(stanza) {
 				var userId = utility.getIdFromJid(jid);
-				if (stanza.getElementsByTagName("FN").length) {
+				if (stanza.getElementsByTagName("name").length) {
 					$rootScope.$apply(function () {
-						model.friends.get(userId).FN = stanza.getElementsByTagName("FN")[0].innerHTML;
+						model.friends.get(userId).name = stanza.getElementsByTagName("name")[0].innerHTML;
 					});
 				}
 				if (stanza.getElementsByTagName("userid").length) {
-
 					$rootScope.$apply(function () {
 						model.friends.get(userId).userid = stanza.getElementsByTagName("userid")[0].innerHTML;
+					});
+				}
+				if (stanza.getElementsByTagName("nickname").length) {
+					$rootScope.$apply(function () {
+						model.friends.get(userId).nickname = stanza.getElementsByTagName("nickname")[0].innerHTML;
 					});
 				}
 			});

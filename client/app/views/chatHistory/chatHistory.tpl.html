@@ -10,7 +10,7 @@
 				<div ng-click="clickEntry(entry.id)" ng-class="{'active uninett-chat-active': isActive(entry.id)}" class="row hide-overflow hover-white chat-entry">
 					<div class="col-md-12 visible-on-hover">
 						<div class="width-95">
-							<span class="glyphicon glyphicon-user"></span> {{getFriendFromId(entry.id).FN}} {{entry.isRoom && "Group"}}
+							<span class="glyphicon glyphicon-user"></span> {{getFriendFromId(entry.id).name}} {{entry.isRoom && "Group"}}
 							<span class="badge" ng-bind="getUnread(entry.id)"></span>
 						</div>
 						<div class="visible-span width-3 right" ng-hide="entry.isRoom"><i ng-click="close(entry.id)" class="fa pointer fa-times"></i></div>

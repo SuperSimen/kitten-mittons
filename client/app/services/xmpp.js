@@ -1,6 +1,6 @@
 (function () {
 
-	app.factory('xmpp', function(constants, $timeout) {
+	app.factory('xmpp', function(constants, $timeout, model) {
 		var factory = {};
 
 		var connection;
@@ -103,7 +103,7 @@
 
 		var messageCounter = 0;
 		factory.sendMessage = function (to, text, type, callback) {
-			var id = Math.random().toString(32).substring(2) + messageCounter++;
+			var id = utility.randomString() + messageCounter++;
 			var msg = $msg({to: to, type: type, id: id}).c("body").t(text);
 
 			addTemporaryHandler(handler, null, "message", "ack", id);
@@ -166,7 +166,7 @@
 
 		factory.joinRoom = function (roomId, userId) {
 			var room = roomId + "@" + constants.xmpp.mucServerUrl;
-			var to = room + "/" + userId;
+			var to = room + "/" + model.user.nickname;
 
 			var pres = $pres({to: to}).c("x", {xmlns: constants.xmpp.muc});
 			send(pres);

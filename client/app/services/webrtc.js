@@ -227,7 +227,7 @@
 			generateRandomId: function() {
 				var me = model.user.info.xmpp.jid;
 				var userid = utility.getIdFromJid(me);
-				var randomId = userid + " - " + Math.random().toString(32).substring(2) + "-" + this.counter++;
+				var randomId = userid + " - " + utility.randomString() + "-" + this.counter++;
 				return randomId;
 			},
 			createAnswerHandler: function (peerConnection, callback) {
@@ -347,7 +347,7 @@
 					return this.list[to];
 				}
 				else {
-					var id = Math.random().toString(32).substring(2) + this.counter++;
+					var id = utility.randomString() + this.counter++;
 					this.list[to].addInstance(id, function() {
 						if (statusCallback) {
 							statusCallback("failed");

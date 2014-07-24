@@ -80,6 +80,10 @@
 				return jid;
 			}
 		};
+		
+		utility.randomString = function() {
+			return Math.random().toString(32).substring(2);
+		};
 
 		utility.bytesToSize = function (bytes, precision) { 
 			var kilobyte = 1024;

@@ -245,7 +245,7 @@
 		};
 		function onInitFs(id, filenameInput, totalSlices, callback) {
 			return function(fs) {
-				var filename = "files/" + filenameInput + "-" + Math.random().toString(32).substring(2) + "-" + sandbox.counter++;
+				var filename = "files/" + filenameInput + "-" + utility.randomString() + "-" + sandbox.counter++;
 
 				continueFileInit(1);
 
