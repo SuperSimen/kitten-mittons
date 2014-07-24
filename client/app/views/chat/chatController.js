@@ -1,17 +1,3 @@
-app.filter('recipient', function() {
-  return function(list, to) {
-	
-	var o = {};
-	
-	for(var i in list) {
-		if(list[i].user == to)
-			o[i] = list[i];
-	}
-	
-	return o;
-	
-  };
-})
 
 app.controller( 'chatController', function($state, $scope, main, model, utility) {
 	
