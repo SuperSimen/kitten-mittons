@@ -178,42 +178,52 @@
 					unread: 0,
 					isRoom: isRoom,
 				  	addSystemMessage: function(message) {
-						this.messages.push({
+						var temp = {
 							arrived: true,
 							message: 'Info: ' + message,
 							type: 'system',
+							from: 'System',
+							hidden: false
+						};
+						this.addObjectToList(temp);
+					},
+					ping: function() {
+						var temp = {
+							hidden: true,
+							arrived: true,
+							message: 'Ping',
+							type: 'system',
 							from: 'System'
-						});
+						};
+						this.addObjectToList(temp);
 					},
 					addMessage: function(from, message, sending) {
-						this.mostRecentTime = Date.now();
 						var temp = {
 							from: from, 
 							message: message,
 							type: 'chat',
-							arrived: !sending
+							arrived: !sending,
+							hidden: false
 						};
-
+						this.addObjectToList(temp);
+						return temp;
+					},
+					addObjectToList: function(object) {
+						this.mostRecentTime = Date.now();
 						if ($state.current.name !== "chat") {
-							if ($state.current.name === "video.active" && model.video.remote.userId === id) {
-
+							if (model.chat.currentId !== id) {
+								this.unread ++;
 							}
-							else {
-								if (model.chat.currentId !== id) {
-									this.unread ++;
-								}
 
-								model.chat.unread ++;
-							}
+							model.chat.unread ++;
 						}
 						else if (model.chat.currentId !== id) {
 							this.unread ++;
 						}
 
-						this.messages.push(temp);
+						this.messages.push(object);
 
 						model.chat.sort();
-						return temp; 
 					},
 				});
 				this.sort();

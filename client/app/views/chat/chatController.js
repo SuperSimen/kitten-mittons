@@ -1,4 +1,8 @@
 app.controller( 'chatController', function($state, $scope, main, model) {
+	
+	$scope.call = model.call;
+	$scope.video = model.video;
+
 		
 	$scope.$watch(function () {return model.chat.currentId;}, function() {
 		$scope.currentChat = model.chat.getCurrent();
@@ -19,9 +23,6 @@ app.controller( 'chatController', function($state, $scope, main, model) {
 			});
 		}
 	});
-	
-	$scope.video = model.video.local;
-	$scope.call = model.call;
 
 	$scope.isSystemMessage = function(message) {
 		return message.type == 'system';
@@ -46,17 +47,9 @@ app.controller( 'chatController', function($state, $scope, main, model) {
 				!$scope.call.list[$scope.currentChat.id].hidden;
 	};
 
-	$scope.video = model.video.local;
-	$scope.videoSrc = model.video.remote;
-	$scope.call = model.call;
 	
 	function systemMessage(message) {
-		$scope.currentChat.messages.push({
-			arrived: true,
-			message: 'Info: ' + message,
-			type: 'system',
-			from: 'System'
-		});
+		$scope.currentChat.addSystemMessage(message);
 	}
 	
 	$scope.onVideoUpdateAction = function() {

@@ -64,6 +64,15 @@
 		utility.getNicknameFromJid = function(jid) {
 			return jid.substring(0, jid.indexOf("@"));
 		};
+		utility.getNicknameFromRoomJid = function(jid) {
+			if (jid.indexOf("/") !== -1) {
+				return jid.substring(jid.indexOf("/") + 1);
+			}
+			else {
+				console.error("could not get nickname");
+				return;
+			}
+		};
 
 		utility.getRoomIdFromJid = function(jid) {
 			return jid.substring(0, jid.indexOf("@"));
