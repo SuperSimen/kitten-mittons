@@ -546,10 +546,19 @@
 			})(model.search.getId()), model.search.currentRealm , model.search.query);
 		};
 
-		main.sendFile = function(to) {
+		main.sendFiles = function(to, files) {
 			var jid = utility.getJidFromId(to);
-			fileSender.sendFiles(jid);
+			if (!files) {
+				files = model.file.selectedFiles;
+			}
+			else {
+				if (!files.length) {return console.error("no files!!");}
+				for (var i = 0; i < files.length; i++) {
+					fileSender.sendFile(files[i], jid);
+				}
+			}
 		};
+
 
 		return main;
 	});

@@ -33,12 +33,11 @@
 		};
 
 
-		fileSender.sendFiles = function(to) {
-			if (!model.file.selectedFiles.length) {return console.error("no files!!");}
-			for (var i = 0; i < model.file.selectedFiles.length; i++) {
-				sendFile(model.file.selectedFiles[i], to);
-			}
+		fileSender.sendFile = function(file, to) {
+			sendFile(file,to);
 		};
+
+		
 
 		function sendFile (file, to) {
 			if (!file || !to) {
