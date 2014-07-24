@@ -170,7 +170,6 @@
 
 			var pres = $pres({to: to}).c("x", {xmlns: constants.xmpp.muc});
 
-			console.log("joining " + to);
 
 			send(pres);
 		};

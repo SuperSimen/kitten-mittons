@@ -182,13 +182,18 @@
 							arrived: true,
 							message: 'Info: ' + message,
 							type: 'system',
-							from: 'System'
+							from: 'System',
+							hidden: false
 						};
 						this.addObjectToList(temp);
 					},
 					ping: function() {
 						var temp = {
-							hidden: true
+							hidden: true,
+							arrived: true,
+							message: 'Ping',
+							type: 'system',
+							from: 'System'
 						};
 						this.addObjectToList(temp);
 					},
@@ -197,7 +202,8 @@
 							from: from, 
 							message: message,
 							type: 'chat',
-							arrived: !sending
+							arrived: !sending,
+							hidden: false
 						};
 						this.addObjectToList(temp);
 						return temp;
