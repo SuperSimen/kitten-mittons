@@ -42,7 +42,7 @@
 						</div>
 					</div>
 					<div ng-show="showInfoBar()" class="align-center uninett-info-bar">
-						<div ng-repeat="f in file.list | recipient:currentChat.id">
+						<div ng-repeat="f in file.list">
 							<div>{{f.sending && "Sending " + f.filename + " to " || "Receiving " + f.filename + " from "}} {{getFriendFromId(f.user).name}}<span class="tab">{{bytesToSize(f.size)}}</span>{{f.failed && " - Failed"}}</div>
 							<div class="progress">
 								<div class="progress-bar" ng-class="{'progress-bar-danger': f.failed}" ba-progress-bar progress="f.progress">

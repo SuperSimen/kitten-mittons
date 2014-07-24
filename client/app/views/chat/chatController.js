@@ -13,7 +13,7 @@ app.filter('recipient', function() {
   };
 })
 
-app.controller( 'chatController', function($state, $scope, main, model) {
+app.controller( 'chatController', function($state, $scope, main, model, utility) {
 	
 	$scope.call = model.call;
 	$scope.video = model.video;
@@ -26,8 +26,7 @@ app.controller( 'chatController', function($state, $scope, main, model) {
 
 	$scope.hasTranferringFile = function() {
 		for(var file in $scope.file.list) {
-			if($scope.file.list[file].sending 
-					&& $scope.file.list[file].user == $scope.currentChat.id) {
+			if(utility.getIdFromJid($scope.file.list[file].user) == $scope.currentChat.id) {
 				return true;
 			}
 		}
