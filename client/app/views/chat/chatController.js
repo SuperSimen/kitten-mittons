@@ -1,16 +1,8 @@
 app.controller( 'chatController', function($state, $scope, main, model) {
 		
-	if ($state.current.name === "video.active") {
-		$scope.border = "border-left";
-		$scope.currentChat = model.chat.get(model.video.remote.userId);
-	}
-	else {
-		$scope.$watch(function() {return model.chat.currentChatId;}, function(newValue) {
-			$scope.$watch(function () {return model.chat.currentId;}, function() {
-				$scope.currentChat = model.chat.getCurrent();
-			});
-		});
-	}
+	$scope.$watch(function () {return model.chat.currentId;}, function() {
+		$scope.currentChat = model.chat.getCurrent();
+	});
 	
 	$scope.video = model.video.local;
 	$scope.call = model.call;
