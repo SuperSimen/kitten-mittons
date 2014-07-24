@@ -28,10 +28,10 @@
 						<div ng-repeat="message in currentChat.messages" ng-hide="message.hidden">
 							<div class="uninett-chatbox-entry" ng-class="isSystemMessage(message) ? 'uninett-chatbox-entry-system' : isMyMessage(message) ? 'uninett-chatbox-entry-sent' : 'uninett-chatbox-entry-recv'" >
 								<div ng-hide="isMyMessage(message) || isSystemMessage(message)"><b>{{getDisplayName(message)}} says:</b></div>
-								<div style="word-wrap: break-word;">{{message.message}}</div>
 								<span class="right" ng-class="{'visible': !message.arrived, 'invisible': message.arrived}">
 									<i class="fa fa-spinner fa-spin"></i>
 								</span>
+								<div style="word-wrap: break-word;">{{message.message}}</div>
 							</div>
 						</div>
 						<div ng-show="currentChat && isInCall()">
