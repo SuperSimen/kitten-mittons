@@ -1,6 +1,6 @@
 (function () {
 
-	app.factory('fileReceiver', function($rootScope, webrtc, model) {
+	app.factory('fileReceiver', function($rootScope, webrtc, model, utility) {
 		var fileReceiver = {
 			init: function() {
 				webrtc.addMessageHandler(fileHandler, "fileSender");

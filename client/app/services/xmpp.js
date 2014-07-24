@@ -1,6 +1,6 @@
 (function () {
 
-	app.factory('xmpp', function(constants, $timeout, model) {
+	app.factory('xmpp', function(constants, $timeout, model, utility) {
 		var factory = {};
 
 		var connection;
