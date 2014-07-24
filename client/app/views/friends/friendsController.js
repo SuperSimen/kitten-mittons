@@ -20,7 +20,7 @@ app.controller( 'friendsController', function(main, $state, $scope, model, fileD
 	
 	$scope.actionSendFileSelected = function(friend) {
 		fileDialog.open().then(function(file) {
-			//main.
+			main.sendFiles(friend.id, [file]);
 		});
 	};
 

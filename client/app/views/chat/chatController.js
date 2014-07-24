@@ -1,15 +1,41 @@
+app.filter('recipient', function() {
+  return function(list, to) {
+	
+	var o = {};
+	
+	for(var i in list) {
+		if(list[i].user == to)
+			o[i] = list[i];
+	}
+	
+	return o;
+	
+  };
+})
+
 app.controller( 'chatController', function($state, $scope, main, model) {
 	
 	$scope.call = model.call;
 	$scope.video = model.video;
 
+	$scope.file = model.file;
 		
 	$scope.$watch(function () {return model.chat.currentId;}, function() {
 		$scope.currentChat = model.chat.getCurrent();
 	});
 
+	$scope.hasTranferringFile = function() {
+		for(var file in $scope.file.list) {
+			if($scope.file.list[file].sending 
+					&& $scope.file.list[file].user == $scope.currentChat.id) {
+				return true;
+			}
+		}
+		return false;
+	};
+
 	$scope.showInfoBar = function() {
-		return $scope.hasIncomingCall();
+		return $scope.hasIncomingCall() || $scope.hasTranferringFile();
 	};
 
 	$scope.isSystemMessage = function(message) {
