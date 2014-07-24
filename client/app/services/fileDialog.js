@@ -7,7 +7,7 @@
 
 (function () {
 
-	app.factory('fileDialog', function($q) {
+	app.factory('fileDialog', function($q, $timeout) {
 		
 		var el = null;
 				
@@ -21,7 +21,7 @@
 				} else {
 					defer.reject('No files available');
 				}
-			};
+			}
 			
 			if(!el) {
 			
@@ -48,7 +48,9 @@
 				'cancelable': true
 			});
 			
-			el.dispatchEvent(e);
+			$timeout(function() {
+				el.dispatchEvent(e);
+			},0);
 			
 			return defer.promise;
 			
