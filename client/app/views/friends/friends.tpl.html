@@ -13,10 +13,10 @@
 					<span class="uninett-group-heading">
 						<span class="uninett-group-name">My friends</span>
 					</span>
-					<div ng-repeat="bestFriendId in friends.bestFriends" class="row hover-white">
+					<div ng-repeat="bestFriendId in friends.bestFriends" class="row hover-white uninett-friend-list-entry">
 						<div context-menu data-target="contextMenu{{$index}}" ng-click="clickOnFriend(friend)" class="col-md-12 visible-on-hover" ng-init="friend = getFriendFromId(bestFriendId)">
 							<i class="fa fa-circle icon presence-icon" ng-class="{'online': friend.online || friend.mucOnline, 'offline': !(friend.online || friend.mucOnline)}"></i>
-							<span class="tab">{{friend.name}}</span>
+							<span class="tab" title="{{friend.name}} is {{ friend.online ? 'online' : 'offline' }}">{{friend.name}}</span>
 							<span class="right visible-span pointer" ><i class="fa fa-times" ba-click ng-click="removeBestFriend(friend)"></i></span>
 						</div>
 						
@@ -31,14 +31,14 @@
 						</div>
 						
 					</div>
-					<div ng-repeat="tempFriend in user.info.tempFriends" class="row hover-white">
+					<div ng-repeat="tempFriend in user.info.tempFriends" class="row hover-white uninett-friend-list-entry">
 						<div ng-click="clickOnFriend(friend)" class="col-md-12 visible-on-hover" ng-hide="tempFriendExists(tempFriend)">
 							<i class="fa fa-circle icon presence-icon offline"></i>
 							<span class="tab">{{tempFriend.name}}</span>
-							<span class="right visible-span pointer" ><i class="fa fa-times" ba-click ng-click="removeTempFriend(tempFriend)"></i></span>
+							<span class="right visible-span pointer"><i class="fa fa-times" ba-click ng-click="removeTempFriend(tempFriend)"></i></span>
 						</div>
 					</div>
-					<div class="row" ng-class="{'border-top': friends.bestFriends.length}">
+					<div ng-show="getNumGroups() > 0" class="row" ng-class="{'border-top': friends.bestFriends.length}">
 						<div class="col-md-12">
 							<div class="uninett-group" ng-repeat="group in groups.list">
 								<div class="uninett-group-heading row hover-white" ng-click="showMembers = !showMembers" ng-init="showMembers = 1">
@@ -46,6 +46,9 @@
 										<span class="btn btn-sm pull-right glyphicon" ng-class="showMembers ? 'glyphicon-chevron-up' : 'glyphicon-chevron-down'"></span>
 										<span class="uninett-group-name">{{group.displayName}}</span> <span class="uninett-group-membercount" ng-show="!showMembers">({{groupMembersCount(group.friends)}})</span>
 									</div>
+								</div>
+								<div ng-show="showMembers && !group.friends.length">
+									<p><i>No members are online</i></p>
 								</div>
 								<div ng-show="showMembers" ng-repeat="friend in group.friends" class="row hover-white">
 									

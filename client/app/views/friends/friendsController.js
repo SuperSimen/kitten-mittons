@@ -14,6 +14,14 @@ app.controller( 'friendsController', function(main, $state, $scope, model, fileD
 		return Object.keys(friends).length - 1;
 	};
 	
+	/**
+	 * Get number of groups
+	 * @returns {Number}
+	 */
+	$scope.getNumGroups = function() {
+		return Object.keys($scope.groups.list).length;
+	};
+	
 	$scope.actionCallSelected = function(friend) {
 		console.log(friend);
 	};
