@@ -379,3 +379,13 @@ span[ng-click][disabled] {
 .uninett-btn-group button:first-child {
 	border-right: solid 1px #252379;
 }
+
+.uninett-section-header-bar {
+	background: #337db1;
+	color: #fff;
+	height: 60px;
+}
+
+.uninett-section-header {
+	font-family: colfaxLight;
+}

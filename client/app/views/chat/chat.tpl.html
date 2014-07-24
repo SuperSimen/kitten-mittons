@@ -2,18 +2,23 @@
 	<div class="col-md-12 fill-height">
             
 		<div class="fill-top"> 
-			<div class="row name-tag">
+			<div class="row name-tag border-bottom uninett-section-header-bar">
 				<div class="col-md-12">
-					<div class="align-center" ng-show="currentChat">
-						<!--<div>Conversation with {{getFriendFromId(currentChat.id) && getFriendFromId(currentChat.id).name}}</div>-->
-						<div class="btn-group">
-							<button type="button" class="btn btn-primary">
+					<div class="align-center">
+						<div ng-show="currentChat" class="btn-group" style="position: absolute; right: 10px; top: 12px;" >
+							<button type="button" class="btn btn-default">
 								<span class="glyphicon glyphicon-earphone"></span> Voice Call
 							</button>
-							<button ng-disabled="!currentChat" type="button" class="btn btn-primary" ng-click="currentChat && !isInCall() ? (calling() ? cancelCall() : callTo()) : stopCall()">
+							<button ng-disabled="!currentChat" type="button" class="btn" ng-class="currentChat && !isInCall() && !calling() ? 'btn-success' : 'btn-danger'" ng-click="currentChat && !isInCall() ? (calling() ? cancelCall() : callTo()) : stopCall()">
 								<span class="glyphicon glyphicon-facetime-video"></span> {{getVideoControlMsg()}}
 							</button>
 						</div>
+						<p ng-show="currentChat">
+							Conversation with {{getFriendFromId(currentChat.id) && getFriendFromId(currentChat.id).name}}
+						</p>
+						<p ng-show="!currentChat">
+							Click a contact on the right to start a new conversation.
+						</p>
 					</div>
 				</div>
 			</div>
