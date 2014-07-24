@@ -9,8 +9,10 @@
 				fileSender.init();
 				fileReceiver.init();
 				$rootScope.$watch(function () {return model.video.active;}, function(newValue) {
-					if ($state.current.name === "video" || $state.current.name === "video.active") {
-						$rootScope.gotoState("video");
+					if (!newValue) {
+						if ($state.current.name === "video.active") {
+							$rootScope.gotoState("chat");
+						}
 					}
 				});
 				$rootScope.$watch(function () {return model.conference.active;}, function(newValue) {

@@ -344,6 +344,16 @@ span[ng-click][disabled] {
 	background: white;
 	width: auto;
 }
+.uninett-info-bar {
+    clear: both;
+    margin: 5px;
+	height: 50px;
+	line-height: 50px;
+    border: solid 1px transparent;
+    border-radius: 5px;
+	background: white;
+	width: auto;
+}
 
 .uninett-chatbox-entry-video {
 	background: transparent;

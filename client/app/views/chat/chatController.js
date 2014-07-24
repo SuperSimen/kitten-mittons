@@ -7,13 +7,15 @@ app.controller( 'chatController', function($state, $scope, main, model) {
 	$scope.$watch(function () {return model.chat.currentId;}, function() {
 		$scope.currentChat = model.chat.getCurrent();
 		
+		
 		// Auto scroll on new message
 		if($scope.currentChat !== undefined) {
 			$scope.$watch((function() {
 				var len = 0;
 				return function() {
 					if($scope.currentChat.messages.length != len) {
-						$scope.scrollDown();
+
+						//$scope.scrollDown();
 						len = $scope.currentChat.messages.length;
 					}
 					return $scope.currentChat.messages;
@@ -23,6 +25,10 @@ app.controller( 'chatController', function($state, $scope, main, model) {
 			});
 		}
 	});
+
+	$scope.showInfoBar = function() {
+		return $scope.hasIncomingCall();
+	};
 
 	$scope.isSystemMessage = function(message) {
 		return message.type == 'system';
@@ -42,7 +48,7 @@ app.controller( 'chatController', function($state, $scope, main, model) {
 	 * @returns {Boolean}
 	 */
 	$scope.hasIncomingCall = function() {
-		return $scope.currentChat.id in $scope.call.list && 
+		return $scope.currentChat && $scope.currentChat.id in $scope.call.list && 
 				!$scope.call.list[$scope.currentChat.id].calling &&
 				!$scope.call.list[$scope.currentChat.id].hidden;
 	};
@@ -122,7 +128,7 @@ app.controller( 'chatController', function($state, $scope, main, model) {
 	 * @returns {undefined}
 	 */
 	$scope.rejectCall = function() {
-		systemMessage("");
+		systemMessage("Call rejected");
 		main.denyCall($scope.currentChat.id);
 	};
 

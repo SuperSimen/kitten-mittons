@@ -2,18 +2,12 @@
     
 	app.directive("ngAutoScroll", function() { 
 		return function(scope, element, attrs) {
-			scope.scrollDown = (function(element) {
-				return function() {
-					var e = element[0];
-					//console.log(e, e.scrollHeight, e.height, e.style.height);
-					$('#chatBox').scrollTop($('#chatBox')[0].scrollHeight + 10);
-					//$(e).animate({ scrollTop: e.scrollHeight }, "fast");
-					//e.scrollTop = e.scrollHeight;
-				};
-			})(element);
+			scope.$watch(function() {return element[0].scrollHeight;}, function() {
+				element.scrollTop(element[0].scrollHeight);
+			});
 		};
 	});
-    
+
 	app.directive("ngAudio", function(){
 		return function(scope, element, attrs){
 			element[0].loop = true;
@@ -116,6 +110,30 @@
 			$window.onresize = function() {
 				scope.$apply();
 			};
+		}
+
+		return {
+			link: link,
+		};
+	});
+
+	app.directive('baAutoUpdate', function($timeout) {
+		function link (scope, element, attr) {
+			scope.$watch(function() {return attr.baAutoUpdate;}, function(newValue) {
+				if (newValue) {
+					waitForVideo();
+				}
+			});
+			function waitForVideo() {
+				if (element[0].readyState === 4) {
+					scope.$apply();
+				}
+				else {
+					$timeout(function() {
+						waitForVideo();
+					}, 50);
+				}
+			}
 		}
 
 		return {
