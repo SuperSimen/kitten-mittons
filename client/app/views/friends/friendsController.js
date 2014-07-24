@@ -13,6 +13,14 @@ app.controller( 'friendsController', function(main, $state, $scope, model) {
 	$scope.groupMembersCount = function(friends) {
 		return Object.keys(friends).length - 1;
 	};
+	
+	$scope.actionCallSelected = function(friend) {
+		console.log(friend);
+	};
+	
+	$scope.actionSendFileSelected = function(friend) {
+		console.log(friend);
+	};
 
 	$scope.clickOnFriend = function(friend) {
 		var currentState = $state.current.name;

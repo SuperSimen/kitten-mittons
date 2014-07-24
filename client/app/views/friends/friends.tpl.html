@@ -1,14 +1,5 @@
 <div class="row color-grey fill-height border-left scroll-y default-cursor">
-	
-	<!-- Context menu -->
-	<div class="dropdown" id="contextMenu" style="position: fixed; z-index: 100;">
-		<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu2">
-			<li><a class="pointer ng-binding" role="menuitem" tabindex="1">Call</a></li>
-			<li><a class="pointer ng-binding" role="menuitem" tabindex="2">Chat</a></li>
-			<li><a class="pointer ng-binding" role="menuitem" tabindex="2">Send file</a></li>
-		</ul>
-	</div>
-	
+		
 	<div class="col-md-12 fill-height">
 		<div ng-hide="showSearch" class="fill-height" ng-init="showSearch = false">
 
@@ -23,11 +14,21 @@
 						<span class="uninett-group-name">My friends</span>
 					</span>
 					<div ng-repeat="bestFriendId in friends.bestFriends" class="row hover-white">
-						<div ng-class="{ 'expanded': true, 'highlight': true }" context-menu data-target="contextMenu" ng-click="clickOnFriend(friend)" class="col-md-12 visible-on-hover" ng-init="friend = getFriendFromId(bestFriendId)">
+						<div ng-class="{ 'expanded': true, 'highlight': true, 'friend':  bestFriendId}" context-menu data-target="contextMenu{{$index}}" ng-click="clickOnFriend(friend)" class="col-md-12 visible-on-hover" ng-init="friend = getFriendFromId(bestFriendId)">
 							<i class="fa fa-circle icon presence-icon" ng-class="{'online': friend.online || friend.mucOnline, 'offline': !(friend.online || friend.mucOnline)}"></i>
 							<span class="tab">{{friend.name}}</span>
 							<span class="right visible-span pointer" ><i class="fa fa-times" ba-click ng-click="removeBestFriend(friend)"></i></span>
 						</div>
+						
+						<!-- Context menu -->
+						<div class="dropdown" id="contextMenu{{$index}}" style="position: fixed; z-index: 100;">
+							<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu2">
+								<li><a class="pointer ng-binding" role="menuitem" tabindex="1" ng-click="actionCallSelected(friend)">Call</a></li>
+								<li><a class="pointer ng-binding" role="menuitem" tabindex="2" ng-click="clickOnFriend(friend)">Open chat</a></li>
+								<li><a class="pointer ng-binding" role="menuitem" tabindex="2" ng-click="actionSendFileSelected(friend)">Send file</a></li>
+							</ul>
+						</div>
+						
 					</div>
 					<div ng-repeat="tempFriend in user.info.tempFriends" class="row hover-white">
 						<div ng-click="clickOnFriend(friend)" class="col-md-12 visible-on-hover" ng-hide="tempFriendExists(tempFriend)">
