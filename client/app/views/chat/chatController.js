@@ -6,24 +6,6 @@ app.controller( 'chatController', function($state, $scope, main, model) {
 		
 	$scope.$watch(function () {return model.chat.currentId;}, function() {
 		$scope.currentChat = model.chat.getCurrent();
-		
-		
-		// Auto scroll on new message
-		if($scope.currentChat !== undefined) {
-			$scope.$watch((function() {
-				var len = 0;
-				return function() {
-					if($scope.currentChat.messages.length != len) {
-
-						//$scope.scrollDown();
-						len = $scope.currentChat.messages.length;
-					}
-					return $scope.currentChat.messages;
-				};
-			})(), function() {
-				//console.log('new message');
-			});
-		}
 	});
 
 	$scope.showInfoBar = function() {

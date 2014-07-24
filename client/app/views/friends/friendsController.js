@@ -29,7 +29,7 @@ app.controller( 'friendsController', function(main, $state, $scope, model) {
 				model.chat.setCurrent(friend.id);
 			}
 			else if (currentState === "file") {
-				main.sendFile(friend.id);
+				main.sendFiles(friend.id);
 			}
 			else if (currentState === "video") {
 				main.setupCall(friend.id);
