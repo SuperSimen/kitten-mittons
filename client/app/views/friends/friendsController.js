@@ -58,6 +58,9 @@ app.controller( 'friendsController', function(main, $state, $scope, model, fileD
 	};
 	
 	$scope.isBestFriend = function(friend) {
+		if(!friend) {
+			return false;
+		}
 		return $scope.friends.isBestFriend(friend.id);
 	};
 

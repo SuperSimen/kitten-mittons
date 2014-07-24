@@ -49,13 +49,14 @@
 								</div>
 								<div ng-show="showMembers" ng-repeat="friend in group.friends" class="row hover-white">
 									
-												<!-- Context menu -->
+									<!-- Context menu -->
 									<div class="dropdown" id="g_contextMenu{{$index}}" style="position: fixed; z-index: 100;">
 										<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu2">
 											<li><a class="pointer ng-binding" role="menuitem" tabindex="1" ng-disabled="!friend.online" ng-click="actionCallSelected(friend)">Call</a></li>
 											<li><a class="pointer ng-binding" role="menuitem" tabindex="2" ng-disabled="!friend.online" ng-click="clickOnFriend(friend)">Open chat</a></li>
 											<li><a class="pointer ng-binding" role="menuitem" tabindex="2" ng-disabled="!friend.online" ng-click="actionSendFileSelected(friend)">Send file</a></li>
-											<li ng-hide="$scope.isBestFriend(friend)"><a class="pointer ng-binding" role="menuitem" tabindex="3" ng-click="addBestFriend(friend)">Add as friend</a></li>
+											<li ng-show="!isBestFriend(friend)"><a class="pointer ng-binding" role="menuitem" tabindex="3" ng-click="addBestFriend(friend)">Add as friend</a></li>
+											<li ng-show="isBestFriend(friend)"><a class="pointer ng-binding" role="menuitem" tabindex="4" ng-click="removeBestFriend(friend)">Remove as friend</a></li>
 										</ul>
 									</div>
 									
