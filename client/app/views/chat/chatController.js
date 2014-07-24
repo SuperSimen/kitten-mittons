@@ -11,6 +11,8 @@ app.controller( 'chatController', function($state, $scope, main, model, utility)
 	});
 
 	$scope.hasTranferringFile = function() {
+		if(!$scope.currentChat)
+			return false;
 		for(var file in $scope.file.list) {
 			if(utility.getIdFromJid($scope.file.list[file].user) == $scope.currentChat.id) {
 				return true;
