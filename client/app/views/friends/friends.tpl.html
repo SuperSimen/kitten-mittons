@@ -55,7 +55,7 @@
 											<li><a class="pointer ng-binding" role="menuitem" tabindex="1" ng-disabled="!friend.online" ng-click="actionCallSelected(friend)">Call</a></li>
 											<li><a class="pointer ng-binding" role="menuitem" tabindex="2" ng-disabled="!friend.online" ng-click="clickOnFriend(friend)">Open chat</a></li>
 											<li><a class="pointer ng-binding" role="menuitem" tabindex="2" ng-disabled="!friend.online" ng-click="actionSendFileSelected(friend)">Send file</a></li>
-											<li><a class="pointer ng-binding" role="menuitem" tabindex="3" ng-click="addBestFriend(friend)">Add as friend</a></li>
+											<li ng-hide="$scope.isBestFriend(friend)"><a class="pointer ng-binding" role="menuitem" tabindex="3" ng-click="addBestFriend(friend)">Add as friend</a></li>
 										</ul>
 									</div>
 									

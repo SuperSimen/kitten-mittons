@@ -56,6 +56,10 @@ app.controller( 'friendsController', function(main, $state, $scope, model, fileD
 		$scope.showSearch = false;
 		main.addBestFriendUWAP(friend);
 	};
+	
+	$scope.isBestFriend = function(friend) {
+		return $scope.friends.isBestFriend(friend.id);
+	};
 
 	$scope.tempFriendExists = function(friend) {
 		return model.friends.getWithUserid(friend.userid); 
