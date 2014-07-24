@@ -6,7 +6,7 @@
 				return function() {
 					var e = element[0];
 					//console.log(e, e.scrollHeight, e.height, e.style.height);
-					$('#chatBox').scrollTop($('#chatBox')[0].scrollHeight);
+					$('#chatBox').scrollTop($('#chatBox')[0].scrollHeight + 10);
 					//$(e).animate({ scrollTop: e.scrollHeight }, "fast");
 					//e.scrollTop = e.scrollHeight;
 				};
