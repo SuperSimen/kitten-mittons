@@ -1,7 +1,7 @@
 <div class="row color-grey fill-height" ng-class="border">
 	<div class="col-md-12 fill-height">
             
-		<div id="chatBox" class="fill-top" ng-auto-scroll>
+		<div class="fill-top" ng-auto-scroll>
 			<div class="row name-tag">
 				<div class="col-md-12">
 					<div class="align-center" ng-show="currentChat">
@@ -17,7 +17,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="row fill-under-name-tag auto-overflow">
+			<div class="row fill-under-name-tag auto-overflow" id="chatBox">
 				<div class="col-md-12">
 					<div ng-repeat="message in currentChat.messages" ng-hide="message.hidden">
 						<div class="uninett-chatbox-entry" ng-class="isSystemMessage(message) ? 'uninett-chatbox-entry-system' : isMyMessage(message) ? 'uninett-chatbox-entry-sent' : 'uninett-chatbox-entry-recv'" >

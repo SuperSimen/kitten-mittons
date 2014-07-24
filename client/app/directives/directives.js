@@ -5,9 +5,10 @@
 			scope.scrollDown = (function(element) {
 				return function() {
 					var e = element[0];
-					console.log(e, e.scrollHeight, e.height, e.style.height);
+					//console.log(e, e.scrollHeight, e.height, e.style.height);
+					$('#chatBox').scrollTop($('#chatBox')[0].scrollHeight);
 					//$(e).animate({ scrollTop: e.scrollHeight }, "fast");
-					e.scrollTop = e.scrollHeight;
+					//e.scrollTop = e.scrollHeight;
 				};
 			})(element);
 		};
