@@ -87,7 +87,6 @@
 			$http.get('/api/info').success(function(data, status) {
 				model.user.info = data;
 				model.user.token = data.token;
-				model.user.nickname = utility.getNicknameFromJid(data.userid) + utility.randomString();
 
 				if (model.user.info.xmpp.registered) {
 					xmpp.connect(model.user.info.xmpp.jid, model.user.info.xmpp.password, constants.xmpp.boshUrl, connectedCallback);
@@ -457,7 +456,7 @@
 			var properties = {};
 			properties.name = model.user.info.name;
 			properties.userid = model.user.info.userid;
-			properties.nickname = model.user.nickname;
+			properties.nickname = model.user.info.nickname;
 			xmpp.setVCard(properties);
 		};
 

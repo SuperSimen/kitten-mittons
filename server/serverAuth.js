@@ -196,8 +196,9 @@ var userList = {
 				user.tempFriends = [];
 				user.roster = [];
 				user.xmpp = {};
-				user.xmpp.password = this.generateRandomPassword();
+				user.xmpp.password = randomString();
 				user.xmpp.jid = userId + "@" + constants.xmppServer;
+				user.nickname = user.userid.substring(0, user.userid.indexOf("@")) + randomString();
 
 				registerNewXmppUser(user);
 			}
@@ -210,10 +211,11 @@ var userList = {
 
 		return temp;
 	},
-	generateRandomPassword: function() {
-		return Math.random().toString(36).substring(7);
-	}
 };
+
+function randomString() {
+	return Math.random().toString(36).substring(2);
+}
 
 
 
