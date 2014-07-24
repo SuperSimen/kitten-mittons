@@ -1,5 +1,5 @@
 <div class="row fill-height">
-	<video src={{largeVideo.src}} class="large-video fill-width" autoplay ba-center-video></video>
+	<video src={{largeVideo.src}} ng-dblclick="returnToChat()" class="large-video fill-width" autoplay ba-center-video></video>
 	<video src={{smallVideo.src}} ng-click="switchVideos()" class="small-video pointer" autoplay></video>
 	<div class="video-menu">
 		<i class="pointer fa fa-2x tab" ng-click="toggleVideo()" ng-class="{'fa-eye': video.local.videoEnabled, 'fa-eye-slash': !video.local.videoEnabled}"></i>

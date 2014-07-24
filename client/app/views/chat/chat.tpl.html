@@ -9,7 +9,7 @@
 							<button type="button" class="btn btn-default">
 								<span class="glyphicon glyphicon-earphone"></span> Voice Call
 							</button>
-							<button ng-disabled="!currentChat" type="button" class="btn" ng-class="currentChat && !isInCall() && !calling() ? 'btn-success' : 'btn-danger'" ng-click="currentChat && !isInCall() ? (calling() ? cancelCall() : callTo()) : stopCall()">
+							<button ng-disabled="!currentChat" type="button" class="btn" ng-class="currentChat && !isInCall() && !calling() ? 'btn-success' : 'btn-danger'" ng-click="currentChat && !isInCall() ? hasIncomingCall() ? acceptCall() : (calling() ? cancelCall() : callTo()) : stopCall()">
 								<span class="glyphicon glyphicon-facetime-video"></span> {{getVideoControlMsg()}}
 							</button>
 						</div>
@@ -37,7 +37,7 @@
 						<div ng-show="currentChat && isInCall()">
 							<div class="uninett-chatbox-entry uninett-chatbox-entry-video">
 								<i class="fa fa-expand video-expand"></i>
-								<video ng-dblclick="enterVideoFull()" autoplay="true" ba-auto-update="{{video.remote.src}}" src="{{video.remote.src}}"></video>
+								<video title="Tip: Double click to enter full screen" ng-dblclick="enterVideoFull()" autoplay="true" ba-auto-update="{{video.remote.src}}" src="{{video.remote.src}}"></video>
 							</div>
 						</div>
 					</div>

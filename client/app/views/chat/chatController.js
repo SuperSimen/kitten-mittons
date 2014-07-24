@@ -63,6 +63,10 @@ app.controller( 'chatController', function($state, $scope, main, model, utility)
 			return "Start Video";
 		}
 		
+		if($scope.hasIncomingCall()) {
+			return "Accept video";
+		}
+		
 		if($scope.isInCall() || $scope.calling()) {
 			return "Stop Video";
 		} else {
