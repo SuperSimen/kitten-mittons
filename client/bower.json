@@ -26,6 +26,5 @@
     "ng-context-menu": "~0.1.5"
   },
   "devDependencies": {
-    "jquery": "~2.1.1"
   }
 }

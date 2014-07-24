@@ -1,4 +1,4 @@
-app.controller( 'friendsController', function(main, $state, $scope, model) {
+app.controller( 'friendsController', function(main, $state, $scope, model, fileDialog) {
 	$scope.groups = model.groups;
 	$scope.friends = model.friends;
 	$scope.user = model.user;
@@ -19,7 +19,9 @@ app.controller( 'friendsController', function(main, $state, $scope, model) {
 	};
 	
 	$scope.actionSendFileSelected = function(friend) {
-		console.log(friend);
+		fileDialog.open().then(function(file) {
+			//main.
+		});
 	};
 
 	$scope.clickOnFriend = function(friend) {
