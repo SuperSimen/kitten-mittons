@@ -329,6 +329,7 @@
 		function onAddStream (e){
 			$rootScope.$apply(function() {
 				model.video.active = true;
+				model.call.status = "in-call";
 				console.log(e.stream);
 				model.video.remote.src = $sce.trustAsResourceUrl(URL.createObjectURL(e.stream));
 			});

@@ -209,7 +209,9 @@
 						return temp;
 					},
 					addObjectToList: function(object) {
-						this.mostRecentTime = Date.now();
+						var time = Date.now();
+						this.mostRecentTime = time;
+						object.time = time;
 						if ($state.current.name !== "chat") {
 							if (model.chat.currentId !== id) {
 								this.unread ++;

@@ -129,7 +129,11 @@
 		};
 
 		main.hangup = function() {
-			webrtc.hangup();
+			if (model.call.status === "in-call" && model.call.currentId) {
+				xmpp.sendMessage(model.call.currentId, "hangup", "call");
+				model.chat.get(model.call.currentId).addSystemMessage("Call ended");
+				webrtc.hangup();
+			}
 		};
 
 		main.toggleVideo = function() {
@@ -258,8 +262,6 @@
 							model.call.getCurrent().hidden = true;
 						});
 
-						model.call.status = "incall";
-
 						webrtc.call(data.from);
 					}
 					else if (type === "deny" && 
@@ -277,6 +279,12 @@
 						$rootScope.$apply(function() {
 							model.call.remove(from);
 							model.chat.get(from).addSystemMessage("Call canceled");
+						});
+					}
+					else if (type === "hangup" && model.call.status === "in-call") {
+						$rootScope.$apply(function() {
+							webrtc.hangup();
+							model.chat.get(from).addSystemMessage("Call ended");
 						});
 					}
 					else {
