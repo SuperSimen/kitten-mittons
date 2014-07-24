@@ -17,7 +17,7 @@ app.controller( 'chatController', function($state, $scope, main, model) {
 						len = $scope.currentChat.messages.length;
 					}
 					return $scope.currentChat.messages;
-				}
+				};
 			})(), function() {
 				//console.log('new message');
 			});
@@ -146,7 +146,7 @@ app.controller( 'chatController', function($state, $scope, main, model) {
 	 */
 	$scope.getDisplayName = function(message) {
 		var friend = $scope.getFriendFromId(message.from);
-		return friend && friend.FN ? friend.FN : "Unknown";
+		return friend && friend.name ? friend.name : "Unknown";
 	};
 
 	/**
