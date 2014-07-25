@@ -51,6 +51,11 @@ app.controller( 'friendsController', function(main, $state, $scope, model, fileD
 		}
 	};
 
+	$scope.openConference = function(conference) {
+		conference.open();
+		$scope.gotoState("conference.active");
+	};
+
 	$scope.addBestFriend = function(friend) {
 		main.addBestFriend(friend);
 	};
