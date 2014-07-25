@@ -543,7 +543,7 @@
 			};
 			xmpp.sendMessage(friend.id, JSON.stringify(temp), "conferenceInvite", function() {
 				$rootScope.$apply(function() {
-					model.conference.addInvite(friend);
+					conference.addInvite(friend);
 				});
 			});
 		};

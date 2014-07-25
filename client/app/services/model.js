@@ -55,6 +55,23 @@
 						}
 						return false;
 
+					},
+					addInvite: function(friend) {
+							for (var i in this.invites) {
+								if (this.invites[i] === friend) {
+									return console.log("already invited");
+								}
+							}
+							this.invites.push(friend);
+					},
+					removeInvite: function(friend) {
+						for (var i in this.invites) {
+							if (this.invites[i] === friend) {
+								this.invites.splice(i,1);
+								return;
+							}
+						}
+						console.log("could not find invite");
 					}
 				};
 			},
@@ -67,33 +84,6 @@
 				this.list[id] = this.createNew(name, id, model.user.info.xmpp.jid);
 				return id;
 			},
-			invitingid: "",
-			getCurrent: function() {
-				return this.list[this.invitingid]; 
-			},
-			addInvite: function(friend) {
-				var conference = this.list[this.invitingid];
-				if (this.invitingid && conference) {
-					for (var i in conference.invites) {
-						if (conference.invites[i] === friend) {
-							return console.log("already invited");
-						}
-					}
-					conference.invites.push(friend);
-				}
-			},
-			removeInvite: function(friend) {
-				var conference = this.list[this.invitingid];
-				if (invitingid && conference) {
-					for (var i in conference.invites) {
-						if (conference.invites[i] === friend) {
-							conference.invites.splice(i,1);
-							return;
-						}
-					}
-				}
-				console.log("could not find invite");
-			}
 		};
 
 		model.file = {
