@@ -47,7 +47,7 @@
 										<span class="uninett-group-name">{{group.displayName}}</span> <span class="uninett-group-membercount" ng-show="!showMembers">({{groupMembersCount(group.friends)}})</span>
 									</div>
 								</div>
-								<div ng-show="showMembers && !group.friends.length">
+								<div ng-show="showMembers && (getObjectLength(group.friends) === 1)">
 									<p><i>No members are online</i></p>
 								</div>
 								<div ng-show="showMembers" ng-repeat="friend in group.friends" class="row hover-white">
