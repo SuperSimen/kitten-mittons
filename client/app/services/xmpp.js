@@ -35,7 +35,7 @@
 		}
 
 		function messageHandler (data) {
-			if (data.type !== "ack") {
+			if (data.type !== "ack" && data.type !== "groupchat") {
 				var msg = $msg({to: data.from, type: 'ack', id: data.id});
 				send(msg);
 			}
@@ -169,7 +169,6 @@
 			var to = room + "/" + model.user.info.nickname;
 
 			var pres = $pres({to: to}).c("x", {xmlns: constants.xmpp.muc});
-
 
 			send(pres);
 		};

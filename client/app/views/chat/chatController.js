@@ -9,6 +9,10 @@ app.controller( 'chatController', function($state, $scope, main, model, utility,
 		$scope.currentChat = model.chat.getCurrent();
 	});
 
+	$scope.createConference = function() {
+		model.conference.create();
+	};
+
 	$scope.clickAudioButton = function() {
 		if ($scope.isInCall()) {
 			if (!model.call.getCurrent().video) {
@@ -251,7 +255,15 @@ app.controller( 'chatController', function($state, $scope, main, model, utility,
 	 */
 	$scope.getDisplayName = function(message) {
 		var friend = $scope.getFriendFromId(message.from);
-		return friend && friend.name ? friend.name : "Unknown";
+		if (friend) {
+			return friend.name;
+		}
+		friend = model.friends.getWithNickname(message.from);
+		if (friend) {
+			return friend.name;
+		}
+
+		return "Unknown";
 	};
 
 	/**

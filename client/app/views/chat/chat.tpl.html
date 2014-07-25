@@ -5,21 +5,31 @@
 			<div class="row name-tag border-bottom uninett-section-header-bar">
 				<div class="col-md-12 fill-height">
 					<div class="align-center">
-						<div ng-show="currentChat" class="btn-group" style="position: absolute; right: 10px; top: 12px;" >
-							<button type="button" class="btn btn-default" ng-click="sendFileRequest()">
-								<span class="glyphicon glyphicon-file"></span> Send File
-							</button>
-							<button type="button" class="btn btn-default" ng-click="clickAudioButton()" ng-disabled="isVideoButtonActive()">
-								<span class="glyphicon glyphicon-earphone"></span> {{getAudioControlMsg()}}
-							</button>
-							<button type="button" ng-disabled="isAudioButtonActive()" class="btn" ng-click="clickVideoButton()" ng-class="!isVideoButtonActive() ? 'btn-success' : 'btn-danger'" >
-								<span class="glyphicon glyphicon-facetime-video"></span> {{getVideoControlMsg()}}
-							</button>
+						<div ng-show="currentChat" >
+							<div ng-hide="currentChat.isRoom" class="btn-group button-group">
+								<button type="button" class="btn btn-default" ng-click="sendFileRequest()">
+									<span class="glyphicon glyphicon-file"></span> Send File
+								</button>
+								<button type="button" class="btn btn-default" ng-click="clickAudioButton()" ng-disabled="isVideoButtonActive()">
+									<span class="glyphicon glyphicon-earphone"></span> {{getAudioControlMsg()}}
+								</button>
+								<button type="button" ng-disabled="isAudioButtonActive()" class="btn" ng-click="clickVideoButton()" ng-class="!isVideoButtonActive() ? 'btn-success' : 'btn-danger'" >
+									<span class="glyphicon glyphicon-facetime-video"></span> {{getVideoControlMsg()}}
+								</button>
+							</div>
+							<div ng-show="currentChat.isRoom" class="btn-group button-group">
+								<button type="button" class="btn btn-default" ng-click="createConference()">
+									<i class="fa fa-users"></i> Create conference and invite all
+								</button>
+							</div>
 						</div>
-						<p ng-show="currentChat">
+						<p ng-show="currentChat && !currentChat.isRoom">
 							Conversation with {{getFriendFromId(currentChat.id) && getFriendFromId(currentChat.id).name}}
 						</p>
-						<p ng-show="!currentChat">
+						<p ng-show="currentChat.isRoom">
+							Group conversation
+						</p>
+						<p ng-hide="currentChat">
 							Click a contact on the right to start a new conversation.
 						</p>
 					</div>
