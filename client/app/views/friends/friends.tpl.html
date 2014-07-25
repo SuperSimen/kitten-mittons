@@ -77,7 +77,15 @@
 					<div class="row" ng-class="{'border-top': getObjectLength(conference.list)}">
 						<div class="col-md-12">
 							<div ng-repeat="conf in conference.list">
-								{{conf.name}}
+								<!-- Context menu -->
+								<div class="dropdown" id="conference-contextMenu{{$index}}" style="position: fixed; z-index: 100;">
+									<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu2">
+										<li><a class="pointer ng-binding" role="menuitem" tabindex="1" ng-click="openConference(conf)">Open</a></li>
+									</ul>
+								</div>
+								<div context-menu data-target="conference-contextMenu{{$index}}" class="col-md-12 visible-on-hover">
+									{{conf.name}}
+								</div>
 							</div>
 						</div>
 					</div>

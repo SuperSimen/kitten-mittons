@@ -16,8 +16,11 @@
 					}
 				});
 				$rootScope.$watch(function () {return model.conference.active;}, function(newValue) {
-					if ($state.current.name === "conference" || $state.current.name === "conference.active") {
-						$rootScope.gotoState("conference");
+					if (!newValue) {
+						if ($state.current.name === "conference.active") {
+							$rootScope.gotoState("chat");
+						}
+
 					}
 				});
 
