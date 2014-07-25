@@ -22,7 +22,7 @@ app.controller( 'chatController', function($state, $scope, main, model, utility,
 			}
 		}
 		else if ($scope.hasIncomingCall()) {
-			if (!model.call.getCurrent().video) {
+			if (!model.call.list[$scope.currentChat.id].video) {
 				$scope.acceptCall();
 			}
 		}
@@ -43,7 +43,7 @@ app.controller( 'chatController', function($state, $scope, main, model, utility,
 			}
 		}
 		else if ($scope.hasIncomingCall()) {
-			if (model.call.getCurrent().video) {
+			if (model.call.list[$scope.currentChat.id].video) {
 				$scope.acceptCall();
 			}
 		}
@@ -53,6 +53,12 @@ app.controller( 'chatController', function($state, $scope, main, model, utility,
 	};
 
 	$scope.isVideoButtonActive = function() {
+		if ($scope.hasIncomingCall()) {
+			if (model.call.list[$scope.currentChat.id].video) {
+				return true;
+			}
+		}
+
 		if($scope.isInCall() || $scope.isCalling()) {
 			if (model.call.getCurrent().video) {
 				return true;
@@ -62,6 +68,12 @@ app.controller( 'chatController', function($state, $scope, main, model, utility,
 	};
 
 	$scope.isAudioButtonActive = function() {
+		if ($scope.hasIncomingCall()) {
+			if (!model.call.list[$scope.currentChat.id].video) {
+				return true;
+			}
+		}
+
 		if($scope.isInCall() || $scope.isCalling()) {
 			if (!model.call.getCurrent().video) {
 				return true;
@@ -71,8 +83,10 @@ app.controller( 'chatController', function($state, $scope, main, model, utility,
 	};
 
 	$scope.getVideoControlMsg = function() {
-		if($scope.hasIncomingCall()) {
-			return "Accept video";
+		if ($scope.hasIncomingCall()) {
+			if (model.call.list[$scope.currentChat.id].video) {
+				return "Accept Video";
+			}
 		}
 
 		if($scope.isInCall() || $scope.isCalling()) {
@@ -85,6 +99,12 @@ app.controller( 'chatController', function($state, $scope, main, model, utility,
 	};
 
 	$scope.getAudioControlMsg = function() {
+		if ($scope.hasIncomingCall()) {
+			if (!model.call.list[$scope.currentChat.id].video) {
+				return "Accept Audio";
+			}
+		}
+
 		if($scope.isInCall() || $scope.isCalling()) {
 			if (!model.call.getCurrent().video) {
 				return "Stop Audio";
