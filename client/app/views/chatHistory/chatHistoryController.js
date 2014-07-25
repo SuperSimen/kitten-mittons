@@ -9,6 +9,7 @@ app.controller( 'chatHistoryController', function($scope, main, model, dialogs) 
 	});
 
 	$scope.clickEntry = function(id) {
+		$scope.gotoState('chat');
 		model.chat.setCurrent(id);
 		model.chat.getCurrent().unread = 0;
 	};
@@ -43,6 +44,12 @@ app.controller( 'chatHistoryController', function($scope, main, model, dialogs) 
 
 	$scope.close = function(id) {
 		model.chat.close(id);
+	};
+	
+	$scope.clickConference = function(conference) {
+		model.conference.current = conference;
+		$scope.gotoState('conference');
+		//model.
 	};
 	
 	$scope.createConference = function() {

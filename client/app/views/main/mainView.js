@@ -50,6 +50,10 @@ app.config( function ($stateProvider) {
 			"view2@base": {
 				controller: "conferenceController",
 				templateUrl: "app/views/conference/conference.tpl.html"
+			},
+			"view1@base": {
+				controller: "chatHistoryController",
+				templateUrl: "app/views/chatHistory/chatHistory.tpl.html"
 			}
 		}
 	}).state('conference.active', {

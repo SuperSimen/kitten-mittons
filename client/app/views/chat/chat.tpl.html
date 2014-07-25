@@ -4,7 +4,7 @@
 		<div class="fill-top"> 
 			<div class="row name-tag border-bottom uninett-section-header-bar">
 				<div class="col-md-12 fill-height">
-					<div class="align-center">
+					<div>
 						<div ng-show="currentChat" class="btn-group" style="position: absolute; right: 10px; top: 12px;" >
 							<button type="button" class="btn btn-default" ng-click="sendFileRequest()">
 								<span class="glyphicon glyphicon-file"></span> Send File
@@ -17,7 +17,7 @@
 							</button>
 						</div>
 						<p ng-show="currentChat">
-							Conversation with {{getFriendFromId(currentChat.id) && getFriendFromId(currentChat.id).name}}
+							Conversation <span class="glyphicon glyphicon-chevron-right uninett-glyphicon-sm"></span> {{getFriendFromId(currentChat.id) && getFriendFromId(currentChat.id).name}}
 						</p>
 						<p ng-show="!currentChat">
 							Click a contact on the right to start a new conversation.

@@ -11,6 +11,12 @@
 
 			src: "",
 			active: false,
+			
+			/**
+			 * Current confernce object
+			 */
+			current: null,
+			
 			setActive: function(id) {
 				if (this.src) {
 					return console.log("Call already active");

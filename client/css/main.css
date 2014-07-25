@@ -428,3 +428,7 @@ span[ng-click][disabled] {
 	margin: 15px 0 -15px 0;
 	border-radius: 5px;
 }
+
+.uninett-glyphicon-sm {
+	font-size: 0.8em;
+}
