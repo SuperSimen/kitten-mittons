@@ -189,6 +189,7 @@ body {
 .chat-entry {
 	height:50px;
 	line-height:50px;
+	cursor: pointer;
 }
 
 .visible-on-hover .visible-span {
@@ -408,4 +409,5 @@ span[ng-click][disabled] {
 
 .uninett-friend-list-entry {
 	padding: 5px 0 5px 0;
+	cursor: pointer;
 }
