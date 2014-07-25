@@ -1,5 +1,5 @@
 <div class="row color-grey fill-height border-right default-cursor auto-overflow">
-	<div class="col-md-12 fill-height">
+	<div class="col-md-12 fill-half">
 		<div class="fill-top">
 			<div class="row border-bottom name-tag uninett-section-header-bar">
 				<div class="col-md-12 fill-height">
@@ -21,6 +21,22 @@
 		</div>
 		<div class="fill-bottom align-center fill-width"> 
 			<i class="fa fa-plus-circle uninett-fontColor-white icon large pointer" ng-click="clickOnPlus()"></i>
+		</div>
+	</div>
+	<div class="col-md-12 fill-half">
+		<div class="row border-bottom name-tag uninett-section-header-bar">
+			<h3 class="uninett-section-header align-center name-tag">Transfers</h3>
+		</div>
+		<div class="row">
+			<div class="width-95" style="padding: 5px;">
+				<div ng-repeat="f in file.list">
+					<div>{{f.sending && "Sending" || "Receiving"}} {{f.filename}}</div>
+					<div class="progress">
+						<div class="progress-bar" ng-class="{'progress-bar-danger': f.failed}" ba-progress-bar progress="f.progress">
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>
