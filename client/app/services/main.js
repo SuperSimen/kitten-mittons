@@ -97,20 +97,33 @@
 			}).error(utility.handleHttpError);
 		}
 
-		main.call = function(to) {
+		main.videoCall = function(to) {
 			if (model.call.status === "free") {
 				model.call.status = "calling";
 				model.call.currentId = to;
-				model.call.add(to, true);
-				xmpp.sendMessage(to, "offer", "call");
+				model.call.add(to, true, true, true);
+				sendCallSignal(to, {type: "offer", audio: true, video: true});
 			}
 		};
+
+		main.audioCall = function(to) {
+			if (model.call.status === "free") {
+				model.call.status = "calling";
+				model.call.currentId = to;
+				model.call.add(to, true, true, false);
+				sendCallSignal(to, {type: "offer", audio: true, video: false});
+			}
+		};
+
+		function sendCallSignal (to, object) {
+			xmpp.sendMessage(to, JSON.stringify(object), "call");
+		}
 
 		main.cancelCall = function(to) {
 			if (model.call.status === "calling" && model.call.currentId === utility.getIdFromJid(to)) {
 				model.call.status = "free";
 				model.call.currentId = "";
-				xmpp.sendMessage(to, "cancel", "call");
+				sendCallSignal(to, {type: "cancel"});
 
 				model.call.remove(utility.getIdFromJid(to));
 			}
@@ -120,19 +133,19 @@
 			model.call.currentId = utility.getIdFromJid(to);
 			model.call.status = "accept";
 			model.call.getCurrent().hidden = true;
-			xmpp.sendMessage(to, "accept", "call");
+			sendCallSignal(to, {type: "accept"});
 		};
 
 		main.denyCall = function(to) {
 			model.call.remove(utility.getIdFromJid(to));
-			xmpp.sendMessage(to, "deny", "call");
+			sendCallSignal(to, {type: "deny"});
 			model.call.currentId = "";
 			model.call.status = "free";
 		};
 
 		main.hangup = function() {
 			if (model.call.status === "in-call" && model.call.currentId) {
-				xmpp.sendMessage(model.call.currentId, "hangup", "call");
+				sendCallSignal(model.call.currentId, {type: "hangup"});
 				model.chat.get(model.call.currentId).addSystemMessage("Call ended");
 				webrtc.hangup();
 			}
@@ -242,18 +255,20 @@
 			call: function(data) {
 				var body = data.getChildrenByTagName("body");
 				if (body) {
-					var type = body[0].children[0].data;
+					var callMessage = JSON.parse(body[0].children[0].data);
+					var type = callMessage.type;
 					console.log(type);
 					var from = utility.getIdFromJid(data.from);
 					if (type === "offer") {
 						if (model.call.status === "free") {
 							$rootScope.$apply(function() {
 								model.chat.get(from).ping();
-								model.call.add(from, false);
+								console.log(callMessage);
+								model.call.add(from, false, callMessage.audio, callMessage.video);
 							});
 						}
 						else {
-							xmpp.sendMessage(data.from, "deny", "call");
+							sendCallSignal(data.from, {type: "deny"});
 						}
 					}
 					else if (type === "accept" && 

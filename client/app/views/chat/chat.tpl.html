@@ -6,10 +6,10 @@
 				<div class="col-md-12 fill-height">
 					<div class="align-center">
 						<div ng-show="currentChat" class="btn-group" style="position: absolute; right: 10px; top: 12px;" >
-							<button type="button" class="btn btn-default">
-								<span class="glyphicon glyphicon-earphone"></span> Voice Call
+							<button type="button" class="btn btn-default" ng-click="clickAudioButton()" ng-disabled="isVideoButtonActive()">
+								<span class="glyphicon glyphicon-earphone"></span> {{getAudioControlMsg()}}
 							</button>
-							<button ng-disabled="!currentChat" type="button" class="btn" ng-class="currentChat && !isInCall() && !calling() ? 'btn-success' : 'btn-danger'" ng-click="currentChat && !isInCall() ? (calling() ? cancelCall() : callTo()) : stopCall()">
+							<button ng-disabled="!currentChat" type="button" ng-disabled="isAudioButtonActive()" class="btn" ng-click="clickVideoButton()" ng-class="!isVideoButtonActive() ? 'btn-success' : 'btn-danger'" >
 								<span class="glyphicon glyphicon-facetime-video"></span> {{getVideoControlMsg()}}
 							</button>
 						</div>
@@ -36,24 +36,27 @@
 						</div>
 						<div ng-show="currentChat && isInCall()">
 							<div class="uninett-chatbox-entry uninett-chatbox-entry-video">
-								<i class="fa fa-expand video-expand"></i>
-								<video ng-dblclick="enterVideoFull()" autoplay="true" ba-auto-update="{{video.remote.src}}" src="{{video.remote.src}}"></video>
+								<video ng-show="call.getCurrent().video" ng-dblclick="enterVideoFull()" autoplay="true" ba-auto-update="{{video.remote.src}}" src="{{video.remote.src}}"></video>
+								<div class="uninett-chatbox-entry-audio align-center uninett-fontColor-white">
+									<i ng-hide="call.getCurrent().video" class="fa fa-volume-up fa-5x"></i>
+								</div>
 							</div>
 						</div>
 					</div>
 					<div ng-show="showInfoBar()" class="align-center uninett-info-bar">
-						<div ng-repeat="f in file.list">
-							<div>{{f.sending && "Sending " + f.filename + " to " || "Receiving " + f.filename + " from "}} {{getFriendFromId(f.user).name}}<span class="tab">{{bytesToSize(f.size)}}</span>{{f.failed && " - Failed"}}</div>
-							<div class="progress">
-								<div class="progress-bar" ng-class="{'progress-bar-danger': f.failed}" ba-progress-bar progress="f.progress">
-								</div>
-							</div>
-						</div>
 						<div ng-show="hasIncomingCall()">
 							<b>{{getFriendFromId(currentChat.id).name}} is trying to call you.</b>
 							<div class="btn-group">
 								<button type="button" ng-click="acceptCall()" class="btn btn-success">Accept</button>
 								<button type="button" ng-click="rejectCall()" class="btn btn-danger">Reject</button>
+							</div>
+						</div>
+
+						<div ng-repeat="f in file.list">
+							<div>{{f.sending && "Sending " + f.filename + " to " || "Receiving " + f.filename + " from "}} {{getFriendFromId(f.user).name}}<span class="tab">{{bytesToSize(f.size)}}</span>{{f.failed && " - Failed"}}</div>
+							<div class="progress">
+								<div class="progress-bar" ng-class="{'progress-bar-danger': f.failed}" ba-progress-bar progress="f.progress">
+								</div>
 							</div>
 						</div>
 					</div>

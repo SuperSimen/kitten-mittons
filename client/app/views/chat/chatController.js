@@ -10,6 +10,74 @@ app.controller( 'chatController', function($state, $scope, main, model, utility)
 		$scope.currentChat = model.chat.getCurrent();
 	});
 
+	$scope.clickAudioButton = function() {
+		if ($scope.isInCall()) {
+			if (!model.call.getCurrent().video) {
+				hangup();
+			}
+		}
+		else if ($scope.isCalling()){
+			if (!model.call.getCurrent().video) {
+				cancelCall();
+			}
+		}
+		else {
+			audioCall();
+		}
+	};
+
+	$scope.clickVideoButton = function() {
+		if ($scope.isInCall()) {
+			if (model.call.getCurrent().video) {
+				hangup();
+			}
+		}
+		else if ($scope.isCalling()){
+			if (model.call.getCurrent().video) {
+				cancelCall();
+			}
+		}
+		else {
+			videoCall();
+		}
+	};
+
+	$scope.isVideoButtonActive = function() {
+		if($scope.isInCall() || $scope.isCalling()) {
+			if (model.call.getCurrent().video) {
+				return true;
+			}
+		}
+		return false;
+	};
+	$scope.isAudioButtonActive = function() {
+		if($scope.isInCall() || $scope.isCalling()) {
+			if (!model.call.getCurrent().video) {
+				return true;
+			}
+		}
+		return false;
+	};
+
+	$scope.getVideoControlMsg = function() {
+		if($scope.isInCall() || $scope.isCalling()) {
+			if (model.call.getCurrent().video) {
+				return "Stop Video";
+			}
+		}
+		return "Start Video";
+		
+	};
+
+	$scope.getAudioControlMsg = function() {
+		if($scope.isInCall() || $scope.isCalling()) {
+			if (!model.call.getCurrent().video) {
+				return "Stop Audio";
+			}
+		}
+		return "Start Audio";
+	};
+
 	$scope.hasTranferringFile = function() {
 		for(var file in $scope.file.list) {
 			if(utility.getIdFromJid($scope.file.list[file].user) == $scope.currentChat.id) {
@@ -32,7 +100,7 @@ app.controller( 'chatController', function($state, $scope, main, model, utility)
 	 * @returns {Boolean}
 	 */
 	$scope.isInCall = function() {
-		return $scope.currentChat.id in $scope.call.list && 
+		return $scope.currentChat && $scope.currentChat.id in $scope.call.list && 
 				$scope.call.list[$scope.currentChat.id].hidden;
 	};
 	
@@ -55,28 +123,16 @@ app.controller( 'chatController', function($state, $scope, main, model, utility)
 		
 	};
 	
-	$scope.getVideoControlMsg = function() {
-		
-		if(!$scope.currentChat) {
-			return "Start Video";
-		}
-		
-		if($scope.isInCall() || $scope.calling()) {
-			return "Stop Video";
-		} else {
-			return "Start Video";
-		}
-		
-	};
 	
 	/**
 	 * Check if we're currently calling
 	 * @param {type} to
 	 * @returns {Boolean}
 	 */
-	$scope.calling = function(to) {
-		if(!model.call || !model.call.currentId)
+	$scope.isCalling = function() {
+		if(!model.call || !model.call.currentId) {
 			return false;
+		}
 		return (model.call.status === "calling");
 	};
 	
@@ -84,28 +140,33 @@ app.controller( 'chatController', function($state, $scope, main, model, utility)
 	 * Send call request
 	 * @returns {undefined}
 	 */
-	$scope.callTo = function() {
+	function videoCall() {
 		systemMessage("Call request has been sent");
-		main.call($scope.currentChat.id);
-	};
+		main.videoCall($scope.currentChat.id);
+	}
+
+	function audioCall() {
+		systemMessage("Call request has been sent");
+		main.audioCall($scope.currentChat.id);
+	}
 	
 	/**
 	 * Cancel call request
 	 * @returns {undefined}
 	 */
-	$scope.cancelCall = function() {
+	function cancelCall () {
 		systemMessage("Cancelled call request");
 		main.cancelCall($scope.currentChat.id);
-	};
+	}
 	
 	/**
 	 * End call
 	 * @returns {undefined}
 	 */
-	$scope.stopCall = function() {
+	function hangup () {
 		systemMessage("Ended call");
 		main.hangup();
-	};
+	}
 
 	/**
 	 * Accept incoming call

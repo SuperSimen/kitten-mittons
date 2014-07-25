@@ -18,12 +18,15 @@
 			
 		function getUserMedia(callback) {
 			if (model.video.local.stream) {
+				console.log("already has stream");
 				callback(model.video.local.stream);
 				return;
 			}
 
 			try {
 				var currentCall = model.call.getCurrent();
+				console.log("current call");
+				console.log(currentCall);
 				navigator.webkitGetUserMedia({
 					video: currentCall.video,
 					audio: currentCall.audio
@@ -125,6 +128,7 @@
 
 			function continueCall (stream) {
 				var peerConnection = new webkitRTCPeerConnection(config);
+				globalStream = stream;
 				peerConnection.addStream(stream);
 				video.setPeerConnection(peerConnection);
 
@@ -292,9 +296,11 @@
 
 			function continueOfferHandling(stream) {
 				if (stream) {
+					globalStream = stream;
 					peerConnection.addStream(stream);
 					video.setPeerConnection(peerConnection);
 				}
+
 				peerConnection.setRemoteDescription(new RTCSessionDescription(desc), function() {},
 				function(err) {
 					console.log(err);
@@ -332,6 +338,7 @@
 				model.call.status = "in-call";
 				console.log(e.stream);
 				model.video.remote.src = $sce.trustAsResourceUrl(URL.createObjectURL(e.stream));
+				model.video.remote.stream = e.stream;
 			});
 		}
 

@@ -317,12 +317,9 @@
 			status: "free",
 			currentId: "",
 			getCurrent: function() {
-				console.log("Get current");
-				console.log(this.list);
-				console.log(this.currentId);
 				return this.list[this.currentId];
 			},
-			add: function(id, calling) {
+			add: function(id, calling, audio, video) {
 				console.log("add call");
 				if (this.list[id]) {
 					console.log("already call with id");
@@ -330,8 +327,8 @@
 				}
 				this.list[id] = {
 					id: id,
-					video: true,
-					audio: true,
+					video: video,
+					audio: audio,
 					hidden: false,
 					calling: calling
 				};

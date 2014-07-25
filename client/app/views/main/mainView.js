@@ -10,7 +10,6 @@ app.config( function ($stateProvider) {
 			}
 		}
 	}).state('video', {
-		url: '/call',
 		parent: 'friendsVisible',
 		views: {
 			"view2@base": {
@@ -26,7 +25,6 @@ app.config( function ($stateProvider) {
 			},
 		}
 	}).state('chat', {
-		url: '/chat',
 		parent: 'friendsVisible',
 		views: {
 			"view2@base": {
@@ -40,7 +38,6 @@ app.config( function ($stateProvider) {
 		}
 	}).state('file', {
 		parent: 'friendsVisible',
-		url: '/file',
 		views: {
 			"view2@base": {
 				controller: "fileController",
@@ -49,7 +46,6 @@ app.config( function ($stateProvider) {
 		}
 	}).state('conference', {
 		parent: 'friendsVisible',
-		url: '/conference',
 		views: {
 			"view2@base": {
 				controller: "conferenceController",

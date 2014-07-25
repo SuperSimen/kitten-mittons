@@ -375,6 +375,15 @@ span[ng-click][disabled] {
 	border-radius: 5px;
 }
 
+.uninett-chatbox-entry-audio {
+	background: #252379;
+	width: 100%;
+	padding: 0; 
+	border: solid 0px transparent;
+	border-radius: 5px;
+}
+
+
 .uninett-fix-top {
 	
 }
