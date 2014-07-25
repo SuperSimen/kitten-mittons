@@ -381,10 +381,14 @@
 				}
 				else if (data.type === "unsubscribed") {
 				}
-				else {
+				else if (data.to) {
+					if (data.from.indexOf("conference") !== -1) {
+						return;
+					}
 					var from = utility.getIdFromJid(data.from);
 					var friend = model.friends.get(from);
 					if (!friend) {
+						console.log(data);
 						friend = addFriend(from);
 					}
 					$rootScope.$apply(function() {
@@ -441,7 +445,7 @@
 						var jid = item[0].jid;
 						if (jid) {
 							$rootScope.$apply(function() {
-								if (model.groups.list[groupId]) {
+								if (model.groups.list[groupId] && data.to) {
 									var userName = utility.getIdFromJid(jid);
 									var friend = model.friends.get(userName);
 									if (!friend) {
