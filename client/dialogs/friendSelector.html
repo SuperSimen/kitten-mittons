@@ -1,0 +1,18 @@
+<div class="modal-header">
+    <h4 class="modal-title">
+        Select friends
+    </h4>
+</div>
+
+<div class="modal-body">
+	<div ng-repeat="friend in friends">
+		<div ng-show="!isMe(friend.id) && (friend.online || friend.mucOnline)">
+			<input type="checkbox" ng-checked="isFriendSelected(friend)" ng-click="toggleFriend(friend)"/>{{friend.name}}
+		</div>
+	</div>
+</div>
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-default" ng-click="cancel()">Cancel</button>
+    <button type="button" class="btn btn-primary" ng-click="accept()">Accept</button>
+</div>

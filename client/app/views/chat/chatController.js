@@ -1,4 +1,4 @@
-app.controller( 'chatController', function($state, $scope, main, model, utility, fileDialog) {
+app.controller( 'chatController', function($state, $scope, main, model, utility, fileDialog, dialogs) {
 	
 	$scope.call = model.call;
 	$scope.video = model.video;
@@ -11,6 +11,21 @@ app.controller( 'chatController', function($state, $scope, main, model, utility,
 
 	$scope.createConference = function() {
 		model.conference.create();
+	};
+
+
+	$scope.openFriendSelector = function() {
+		var dlg = dialogs.create('/dialogs/friendSelector.html','friendSelectorController', {}, 'lg');
+		
+		dlg.result.then(function(selectedFriends){
+			for (var i in selectedFriends) {
+				if (selectedFriends[i]) {
+					main.sendRoomInvite(model.friends.get(i), $scope.currentChat.id);
+				}
+			}
+		}, function(){
+			console.log(arguments);
+		});
 	};
 
 	$scope.clickAudioButton = function() {

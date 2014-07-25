@@ -81,4 +81,33 @@ app.controller( 'friendsController', function(main, $state, $scope, model, fileD
 		return model.friends.getWithUserid(friend.userid); 
 	};
 
+
+
 });
+
+app.controller('friendSelectorController', function($scope,$modalInstance,data, $rootScope, model){
+
+	$scope.friends = model.friends.list;
+	var selectedFriends = {};
+
+	console.log($scope);
+
+	$scope.isMe = $rootScope.isMe;
+
+
+	$scope.toggleFriend = function(friend) {
+		selectedFriends[friend.id] = !selectedFriends[friend.id];
+	};
+	$scope.isFriendSelected = function(friend) {
+		return selectedFriends[friend.id];
+	};
+
+	$scope.accept = function(){
+		$modalInstance.close(selectedFriends);
+	};
+
+	$scope.cancel = function(){
+		$modalInstance.dismiss();
+	}; 
+});
+
