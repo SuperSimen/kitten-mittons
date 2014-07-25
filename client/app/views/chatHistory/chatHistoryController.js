@@ -1,6 +1,7 @@
-app.controller( 'chatHistoryController', function($scope, main, model) {
+app.controller( 'chatHistoryController', function($scope, main, model, dialogs) {
 
 	$scope.file = model.file;
+	$scope.conference = model.conference;
 
 	$scope.$watch(function () {return model.chat.currentId;}, function() {
 		$scope.history = model.chat.sortableArray;
@@ -42,5 +43,43 @@ app.controller( 'chatHistoryController', function($scope, main, model) {
 
 	$scope.close = function(id) {
 		model.chat.close(id);
+	};
+	
+	$scope.createConference = function() {
+		
+		var dlg = dialogs.create('/dialogs/create.conference.html','conferenceDialogCtrl', {}, 'lg');
+		
+		dlg.result.then(function(name){
+			model.conference.create(name);
+		}, function(){
+			if(angular.equals($scope.name,''))
+				$scope.name = 'You did not enter in your name!';
+		});
+		
+	};
+	
+});
+
+/**
+ * Controller for new conference dialog
+ */
+app.controller('conferenceDialogCtrl', function($scope,$modalInstance,data){
+	//-- Variables --//
+
+	$scope.conference = {name : ''};
+
+	//-- Methods --//
+
+	$scope.cancel = function(){
+		$modalInstance.dismiss('Canceled');
+	}; // end cancel
+
+	$scope.save = function(){
+		$modalInstance.close($scope.conference.name);
+	}; // end save
+
+	$scope.hitEnter = function(evt){
+		if(angular.equals(evt.keyCode,13) && !(angular.equals($scope.conference.name,null) || angular.equals($scope.conference.name,'')))
+			$scope.save();
 	};
 });
