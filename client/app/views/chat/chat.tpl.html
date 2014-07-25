@@ -4,7 +4,7 @@
 		<div class="fill-top"> 
 			<div class="row name-tag border-bottom uninett-section-header-bar">
 				<div class="col-md-12 fill-height">
-					<div class="align-center">
+					<div>
 						<div ng-show="currentChat" >
 							<div ng-hide="currentChat.isRoom" class="btn-group button-group">
 								<button type="button" class="btn btn-default" ng-click="sendFileRequest()">
@@ -27,10 +27,10 @@
 							</div>
 						</div>
 						<p ng-show="currentChat && !currentChat.isRoom">
-							Conversation with {{getFriendFromId(currentChat.id) && getFriendFromId(currentChat.id).name}}
+							Conversation <span class="glyphicon glyphicon-chevron-right uninett-glyphicon-sm"></span> {{getFriendFromId(currentChat.id) && getFriendFromId(currentChat.id).name}}
 						</p>
 						<p ng-show="currentChat.isRoom">
-							Group conversation
+							Conversation <span class="glyphicon glyphicon-chevron-right uninett-glyphicon-sm"></span> Group conversation
 						</p>
 						<p ng-hide="currentChat">
 							Click a contact on the right to start a new conversation.
