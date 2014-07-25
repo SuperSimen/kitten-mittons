@@ -115,21 +115,20 @@
 				if ($state.current.name !== "file") {
 					this.unseen ++;
 				}
-				console.log(user);
-				model.chat.get(user).addFileMessage(this.list[id]);
+				model.chat.get(utility.getIdFromJid(user)).addFileMessage(id);
 			},
 			remove: function(id, failed) {
-				this.log.push({
+				this.log[id] = {
 					filename: this.list[id].filename,
 					user: this.list[id].user,
 					sent: this.list[id].sending,
 					size: this.list[id].size,
 					failed: failed
-				});
+				};
 				delete this.list[id];
 			},
 			unseen: 0,
-			log: []
+			log: {}
 		};
 		model.video = {
 			active: null,
@@ -189,18 +188,16 @@
 						};
 						this.addObjectToList(temp);
 					},
-					addFileMessage: function(file) {
-						console.log(file);
+					addFileMessage: function(fileId) {
 						var temp = {
 							arrived: true,
 							message: 'File',
 							type: 'file',
 							from: 'System',
 							hidden: true,
-							file: file
+							fileId: fileId
 						};
 						this.addObjectToList(temp);
-
 					},
 					ping: function() {
 						var temp = {

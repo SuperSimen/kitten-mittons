@@ -1,4 +1,3 @@
-
 app.controller( 'chatController', function($state, $scope, main, model, utility, fileDialog) {
 	
 	$scope.call = model.call;
@@ -124,8 +123,15 @@ app.controller( 'chatController', function($state, $scope, main, model, utility,
 		return false;
 	};
 
+	$scope.getFile = function(fileId) {
+		return model.file.list[fileId];
+	};
+	$scope.getFileLog = function(fileId) {
+		return model.file.log[fileId];
+	};
+
 	$scope.showInfoBar = function() {
-		return $scope.hasIncomingCall() || $scope.hasTranferringFile();
+		return $scope.hasIncomingCall();
 	};
 
 	$scope.isSystemMessage = function(message) {

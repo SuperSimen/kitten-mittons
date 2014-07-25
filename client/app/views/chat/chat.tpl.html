@@ -26,15 +26,33 @@
 				</div>
 			</div>
 			<div class="row fill-under-name-tag">
-				<div class="col-md-12 fill-height">
-					<div class="auto-overflow" ng-auto-scroll ng-class="{'fill-height': !showInfoBar(), 'fill-under-name-tag': showInfoBar()}">
-						<div ng-repeat="message in currentChat.messages" ng-hide="message.hidden">
-							<div class="uninett-chatbox-entry" ng-class="isSystemMessage(message) ? 'uninett-chatbox-entry-system' : isMyMessage(message) ? 'uninett-chatbox-entry-sent' : 'uninett-chatbox-entry-recv'" >
-								<div ng-hide="isMyMessage(message) || isSystemMessage(message)"><b>{{getDisplayName(message)}} says:</b></div>
-								<span class="right" ng-class="{'visible': !message.arrived, 'invisible': message.arrived}">
-									<i class="fa fa-spinner fa-spin"></i>
-								</span>
-								<div style="word-wrap: break-word;" class="width-95">{{message.message}}</div>
+				<div class="col-md-12 fill-height auto-overflow" ng-auto-scroll >
+					<div ng-class="{'fill-height': !showInfoBar(), 'fill-under-name-tag': showInfoBar()}">
+						<div ng-repeat="message in currentChat.messages">
+							<div class="row">
+								<div class="col-md-12">
+									<div ng-hide="message.hidden">
+										<div class="uninett-chatbox-entry" ng-class="isSystemMessage(message) ? 'uninett-chatbox-entry-system' : isMyMessage(message) ? 'uninett-chatbox-entry-sent' : 'uninett-chatbox-entry-recv'" >
+											<div ng-hide="isMyMessage(message) || isSystemMessage(message)"><b>{{getDisplayName(message)}} says:</b></div>
+											<span class="right" ng-class="{'visible': !message.arrived, 'invisible': message.arrived}">
+												<i class="fa fa-spinner fa-spin"></i>
+											</span>
+											<div style="word-wrap: break-word;" class="width-95">{{message.message}}</div>
+										</div>
+									</div>
+									<div ng-show="message.fileId">
+										<div ng-show="getFile(message.fileId)" ng-init="file = getFile(message.fileId)">
+											<div>{{file.sending && "Sending " + file.filename + " to " || "Receiving " + file.filename + " from "}} {{getFriendFromId(file.user).name}}<span class="tab">{{bytesToSize(file.size)}}</span>{{file.failed && " - Failed"}}</div>
+											<div class="progress" >
+												<div class="progress-bar" ng-class="{'progress-bar-danger': file.failed}" ba-progress-bar progress="file.progress">
+												</div>
+											</div>
+										</div>
+										<div ng-show="getFileLog(message.fileId)">
+											{{getFileLog(message.fileId).failed && failed || getFileLog(message.fileId).filename + (getFileLog(message.fileId).sent && ' was sent to ' || ' was downloaded from ') + getFriendFromId(getFileLog(message.fileId).user).name}}
+										</div>
+									</div>
+								</div>
 							</div>
 						</div>
 						<div ng-show="currentChat && isInCall()">
@@ -52,14 +70,6 @@
 							<div class="btn-group">
 								<button type="button" ng-click="acceptCall()" class="btn btn-success">Accept</button>
 								<button type="button" ng-click="rejectCall()" class="btn btn-danger">Reject</button>
-							</div>
-						</div>
-
-						<div ng-repeat="f in file.list">
-							<div>{{f.sending && "Sending " + f.filename + " to " || "Receiving " + f.filename + " from "}} {{getFriendFromId(f.user).name}}<span class="tab">{{bytesToSize(f.size)}}</span>{{f.failed && " - Failed"}}</div>
-							<div class="progress">
-								<div class="progress-bar" ng-class="{'progress-bar-danger': f.failed}" ba-progress-bar progress="f.progress">
-								</div>
 							</div>
 						</div>
 					</div>
