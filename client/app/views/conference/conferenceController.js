@@ -1,5 +1,6 @@
 app.controller( 'conferenceController', function($scope, model, $window, constants) {
 	$scope.conference = model.conference;
+	$scope.friends = model.friends;
 
 	$scope.create = function() {
 		if ($scope.conferenceName) {
@@ -13,23 +14,21 @@ app.controller( 'conferenceController', function($scope, model, $window, constan
 		}
 	};
 
-	$scope.isInviting = function(id) {
-		if (id && model.conference.invitingid && id === model.conference.invitingid) {
-			return true;
-		}
-		else {
-			return false;
-		}
+	$scope.isAdministrator = function() {
+		return $scope.conference.current.invitedBy != false;
 	};
 
-	$scope.toggleInvite = function(id) {
-		if (id) {
-			if (model.conference.invitingid === id) {
-				model.conference.invitingid = null;
-			}
-			else {
-				model.conference.invitingid = id;
-			}
-		}
+	$scope.isInvited = function(friend) {
+		var ret = $scope.conference.current.isInvited(friend);;
+		console.log('isInvitied', ret);
+		return ret;
 	};
+
+	$scope.toggleInvite = function(friend) {
+		console.log('toggleInvite');
+		return !$scope.isInvited(friend) 
+			? $scope.conference.current.addInvite(friend)
+			: $scope.conference.current.removeInvite(friend);
+	};
+	
 });

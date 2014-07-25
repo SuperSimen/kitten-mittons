@@ -11,7 +11,27 @@
 			</div>
 			<div class="row fill-under-name-tag">
 				
+				<div class="uninett-padded">
 				
+					<div class="pull-right">
+						<button class="btn btn-primary">Open Conference</button>
+					</div>
+					
+					<h1>{{conference.current.name}}</h1>
+
+					<p ng-hide="isAdministrator()">You were invited to this conference by {{conference.current.invitedBy}}.</p>
+					<p ng-show="isAdministrator()">You are the administrator of this conference.</p>
+					
+					<h3>Participants</h3>
+
+					<ul class="list-group">
+						<li class="list-group-item" ng-repeat="friend in friends.list">
+							<span class=""><input type="checkbox" ng-disabled="!isAdministrator()" ng-checked="isInvited(friend)" ng-click="toggleInvite(friend)"></span>
+							<span>{{friend.name}}</span>
+						</li>
+					</ul>
+				
+				</div>
 				
 			</div>
 		</div>
