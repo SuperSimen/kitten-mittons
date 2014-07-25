@@ -1,5 +1,5 @@
 
-app.controller( 'chatController', function($state, $scope, main, model, utility) {
+app.controller( 'chatController', function($state, $scope, main, model, utility, fileDialog) {
 	
 	$scope.call = model.call;
 	$scope.video = model.video;
@@ -21,6 +21,11 @@ app.controller( 'chatController', function($state, $scope, main, model, utility)
 				cancelCall();
 			}
 		}
+		else if ($scope.hasIncomingCall()) {
+			if (!model.call.getCurrent().video) {
+				$scope.acceptCall();
+			}
+		}
 		else {
 			audioCall();
 		}
@@ -35,6 +40,11 @@ app.controller( 'chatController', function($state, $scope, main, model, utility)
 		else if ($scope.isCalling()){
 			if (model.call.getCurrent().video) {
 				cancelCall();
+			}
+		}
+		else if ($scope.hasIncomingCall()) {
+			if (model.call.getCurrent().video) {
+				$scope.acceptCall();
 			}
 		}
 		else {
@@ -60,6 +70,10 @@ app.controller( 'chatController', function($state, $scope, main, model, utility)
 	};
 
 	$scope.getVideoControlMsg = function() {
+		if($scope.hasIncomingCall()) {
+			return "Accept video";
+		}
+
 		if($scope.isInCall() || $scope.isCalling()) {
 			if (model.call.getCurrent().video) {
 				return "Stop Video";
@@ -79,6 +93,8 @@ app.controller( 'chatController', function($state, $scope, main, model, utility)
 	};
 
 	$scope.hasTranferringFile = function() {
+		if(!$scope.currentChat)
+			return false;
 		for(var file in $scope.file.list) {
 			if(utility.getIdFromJid($scope.file.list[file].user) == $scope.currentChat.id) {
 				return true;
@@ -119,8 +135,10 @@ app.controller( 'chatController', function($state, $scope, main, model, utility)
 		$scope.currentChat.addSystemMessage(message);
 	}
 	
-	$scope.onVideoUpdateAction = function() {
-		
+	$scope.sendFileRequest = function() {
+		fileDialog.open().then(function(file) {
+			main.sendFiles($scope.currentChat.id, [file]);
+		});
 	};
 	
 	

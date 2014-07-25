@@ -405,3 +405,7 @@ span[ng-click][disabled] {
 .uninett-section-header {
 	font-family: colfaxLight;
 }
+
+.uninett-friend-list-entry {
+	padding: 5px 0 5px 0;
+}

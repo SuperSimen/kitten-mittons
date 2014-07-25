@@ -17,6 +17,7 @@ app.controller( 'videoActiveController', function(model, main, $scope) {
 	};
 	$scope.hangup = function() {
 		main.hangup();
+		$scope.returnToChat();
 	};
 	$scope.toggleVideo = function() {
 		main.toggleVideo();
@@ -24,4 +25,9 @@ app.controller( 'videoActiveController', function(model, main, $scope) {
 	$scope.toggleAudio = function() {
 		main.toggleAudio();
 	};
+	
+	$scope.returnToChat = function() {
+		$scope.gotoState("chat");
+	};
+	
 });

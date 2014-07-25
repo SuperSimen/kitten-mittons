@@ -6,6 +6,9 @@
 				<div class="col-md-12 fill-height">
 					<div class="align-center">
 						<div ng-show="currentChat" class="btn-group" style="position: absolute; right: 10px; top: 12px;" >
+							<button type="button" class="btn btn-default" ng-click="sendFileRequest()">
+								<span class="glyphicon glyphicon-file"></span> Send File
+							</button>
 							<button type="button" class="btn btn-default" ng-click="clickAudioButton()" ng-disabled="isVideoButtonActive()">
 								<span class="glyphicon glyphicon-earphone"></span> {{getAudioControlMsg()}}
 							</button>
@@ -31,12 +34,12 @@
 								<span class="right" ng-class="{'visible': !message.arrived, 'invisible': message.arrived}">
 									<i class="fa fa-spinner fa-spin"></i>
 								</span>
-								<div style="word-wrap: break-word;">{{message.message}}</div>
+								<div style="word-wrap: break-word;" class="width-95">{{message.message}}</div>
 							</div>
 						</div>
 						<div ng-show="currentChat && isInCall()">
 							<div class="uninett-chatbox-entry uninett-chatbox-entry-video">
-								<video ng-show="call.getCurrent().video" ng-dblclick="enterVideoFull()" autoplay="true" ba-auto-update="{{video.remote.src}}" src="{{video.remote.src}}"></video>
+								<video title="Tip: Double click to enter full screen" ng-show="call.getCurrent().video" ng-dblclick="enterVideoFull()" autoplay="true" ba-auto-update="{{video.remote.src}}" src="{{video.remote.src}}"></video>
 								<div class="uninett-chatbox-entry-audio align-center uninett-fontColor-white">
 									<i ng-hide="call.getCurrent().video" class="fa fa-volume-up fa-5x"></i>
 								</div>
