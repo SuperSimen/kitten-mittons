@@ -384,7 +384,18 @@ span[ng-click][disabled] {
 	border-radius: 5px;
 }
 
+.uninett-chatbox-entry-file {
+	color: #fff;
+	background: #f58220;
+}
 
+.uninett-chatbox-entry-file-send {
+	float: right;
+}
+
+.uninett-chatbox-entry-file-recv {
+	
+};
 .uninett-fix-top {
 	
 }
@@ -410,4 +421,10 @@ span[ng-click][disabled] {
 .uninett-friend-list-entry {
 	padding: 5px 0 5px 0;
 	cursor: pointer;
+}
+
+.uninett-chat-body {
+	background: #f0ece8;
+	margin: 15px 0 -15px 0;
+	border-radius: 5px;
 }

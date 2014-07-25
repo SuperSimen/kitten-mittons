@@ -1,5 +1,7 @@
 app.controller( 'chatHistoryController', function($scope, main, model) {
 
+	$scope.file = model.file;
+
 	$scope.$watch(function () {return model.chat.currentId;}, function() {
 		$scope.history = model.chat.sortableArray;
 

@@ -41,14 +41,14 @@
 										</div>
 									</div>
 									<div ng-show="message.fileId">
-										<div ng-show="getFile(message.fileId)" ng-init="file = getFile(message.fileId)">
+										<div class="uninett-chatbox-entry uninett-chatbox-entry-file" ng-class="file.sending ? 'uninett-chatbox-entry-file-send' : 'uninett-chatbox-entry-file-recv'" ng-show="getFile(message.fileId)" ng-init="file = getFile(message.fileId)">
 											<div>{{file.sending && "Sending " + file.filename + " to " || "Receiving " + file.filename + " from "}} {{getFriendFromId(file.user).name}}<span class="tab">{{bytesToSize(file.size)}}</span>{{file.failed && " - Failed"}}</div>
 											<div class="progress" >
 												<div class="progress-bar" ng-class="{'progress-bar-danger': file.failed}" ba-progress-bar progress="file.progress">
 												</div>
 											</div>
 										</div>
-										<div ng-show="getFileLog(message.fileId)">
+										<div class="uninett-chatbox-entry uninett-chatbox-entry-file" ng-class="file.sending ? 'uninett-chatbox-entry-file-send' : 'uninett-chatbox-entry-file-recv'" ng-show="getFileLog(message.fileId)">
 											{{getFileLog(message.fileId).failed && failed || getFileLog(message.fileId).filename + (getFileLog(message.fileId).sent && ' was sent to ' || ' was downloaded from ') + getFriendFromId(getFileLog(message.fileId).user).name}}
 										</div>
 									</div>
@@ -57,7 +57,7 @@
 						</div>
 						<div ng-show="currentChat && isInCall()">
 							<div class="uninett-chatbox-entry uninett-chatbox-entry-video">
-								<video title="Tip: Double click to enter full screen" ng-show="call.getCurrent().video" ng-dblclick="enterVideoFull()" autoplay="true" ba-auto-update="{{video.remote.src}}" src="{{video.remote.src}}"></video>
+								<video class="pointer" title="Tip: Double click to enter full screen" ng-show="call.getCurrent().video" ng-click="enterVideoFull()" autoplay="true" ba-auto-update="{{video.remote.src}}" src="{{video.remote.src}}"></video>
 								<div class="uninett-chatbox-entry-audio align-center uninett-fontColor-white">
 									<i ng-hide="call.getCurrent().video" class="fa fa-volume-up fa-5x"></i>
 								</div>
