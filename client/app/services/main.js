@@ -84,6 +84,9 @@
 			if (utility.getIdFromJid(id) === model.user.info.xmpp.jid) {
 				return true;
 			}
+			if (utility.getIdFromJid(id) === model.user.info.nickname) {
+				return true;
+			}
 			return false;
 		};
 		
@@ -181,7 +184,7 @@
 
 			gatherInfoPart2();
 
-			model.conference.create(model.user.info.name + "'s conference");
+			model.conference.create();
 		}
 
 		main.sendMessage = function(to, message) {
@@ -196,8 +199,8 @@
 		};
 
 		main.sendGroupMessage = function(to, message) {
-			var jid = utility.getRoomJidFromId(to);
-			xmpp.sendGroupMessage(jid, message);
+			console.log(to);
+			xmpp.sendGroupMessage(to, message);
 		};
 
 		main.addBestFriend = function(friend) {
@@ -248,7 +251,8 @@
 
 		main.createRoom = function() {
 			var id = model.chat.createRoom();
-			xmpp.joinRoom(id);
+			console.log(id);
+			xmpp.joinRoom(utility.getRoomIdFromJid(id));
 		};
 
 		var xmppHandlers = {
@@ -330,7 +334,7 @@
 					$rootScope.$apply(function() {
 						model.chat.createRoom(roomId);
 					});
-					xmpp.joinRoom(roomId);
+					xmpp.joinRoom(utility.getRoomIdFromJid(roomId));
 				} 
 			},
 			roster: function(data) {
@@ -402,12 +406,16 @@
 				});
 			},
 			mucMessage: function(data) {
-				var message = data.getChildrenByTagName("body")[0].children[0].data;
-				var id = utility.getIdFromJid(data.from);
+				var body = data.getChildrenByTagName("body")[0];
+				if (body) {
+					var message = body.children[0].data;
+					var id = utility.getIdFromJid(data.from);
+					var from = utility.getNicknameFromRoomJid(data.from);
 
-				$rootScope.$apply(function() {
-					model.chat.get(id).addMessage(id, message);
-				});
+					$rootScope.$apply(function() {
+						model.chat.get(id).addMessage(from, message);
+					});
+				}
 			},
 			mucPresence: function(data) {
 				var from = data.from;
@@ -522,8 +530,6 @@
 		}
 
 		main.sendRoomInvite = function(friend, roomId) {
-			console.log("Sendgin " + roomId + " to " + friend.id );
-			
 			xmpp.sendMessage(friend.id, roomId, "roomInvite", function() {
 				$rootScope.$apply(function() {
 

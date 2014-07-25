@@ -82,6 +82,10 @@
 				};
 			},
 			create: function(name) {
+				if (!name) {
+					name = model.user.info.name + "'s conference";
+				}
+
 				var id = utility.randomString() + name.toLowerCase().replace(/[^a-z]+/g, '') + this.idCounter++;
 				if (this.list[id]) {
 					return console.error("id not unique");
@@ -250,8 +254,8 @@
 				if (!id) {
 					id = utility.getNicknameFromJid(model.user.info.userid);
 					id += utility.randomString() + this.roomCounter++;
+					id = utility.getRoomJidFromId(id);
 				}
-				console.log(id);
 				this.create(id, true);
 				return id;
 			},
@@ -315,6 +319,13 @@
 				for (var i = 0; i < this.bestFriends.length; i++) {
 					if (this.list[this.bestFriends[i]].userid === userid) {
 						return this.list[this.bestFriends[i]];
+					}
+				}
+			},
+			getWithNickname: function(nickname) {
+				for (var i in this.list) {
+					if (this.list[i].nickname === nickname) {
+						return this.list[i];
 					}
 				}
 			}

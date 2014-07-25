@@ -432,3 +432,9 @@ span[ng-click][disabled] {
 .uninett-glyphicon-sm {
 	font-size: 0.8em;
 }
+
+.button-group {
+	position: absolute;
+	right: 10px;
+	top: 12px;
+}
