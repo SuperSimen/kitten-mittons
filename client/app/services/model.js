@@ -272,6 +272,7 @@
 					if (id === this.currentId) {
 						this.setCurrent("");
 					}
+					this.sort();
 				}
 			}
 		};

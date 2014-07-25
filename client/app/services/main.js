@@ -251,7 +251,6 @@
 
 		main.createRoom = function() {
 			var id = model.chat.createRoom();
-			console.log(id);
 			xmpp.joinRoom(utility.getRoomIdFromJid(id));
 		};
 
@@ -270,7 +269,6 @@
 						if (model.call.status === "free") {
 							$rootScope.$apply(function() {
 								model.chat.get(from).ping();
-								console.log(callMessage);
 								model.call.add(from, false, callMessage.audio, callMessage.video);
 							});
 						}
@@ -388,7 +386,6 @@
 					var from = utility.getIdFromJid(data.from);
 					var friend = model.friends.get(from);
 					if (!friend) {
-						console.log(data);
 						friend = addFriend(from);
 					}
 					$rootScope.$apply(function() {
