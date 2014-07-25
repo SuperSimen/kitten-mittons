@@ -115,6 +115,8 @@
 				if ($state.current.name !== "file") {
 					this.unseen ++;
 				}
+				console.log(user);
+				model.chat.get(user).addFileMessage(this.list[id]);
 			},
 			remove: function(id, failed) {
 				this.log.push({
@@ -186,6 +188,19 @@
 							hidden: false
 						};
 						this.addObjectToList(temp);
+					},
+					addFileMessage: function(file) {
+						console.log(file);
+						var temp = {
+							arrived: true,
+							message: 'File',
+							type: 'file',
+							from: 'System',
+							hidden: true,
+							file: file
+						};
+						this.addObjectToList(temp);
+
 					},
 					ping: function() {
 						var temp = {
