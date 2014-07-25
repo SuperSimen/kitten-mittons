@@ -1,5 +1,5 @@
 
-app.controller( 'chatController', function($state, $scope, main, model, utility) {
+app.controller( 'chatController', function($state, $scope, main, model, utility, fileDialog) {
 	
 	$scope.call = model.call;
 	$scope.video = model.video;
@@ -53,8 +53,10 @@ app.controller( 'chatController', function($state, $scope, main, model, utility)
 		$scope.currentChat.addSystemMessage(message);
 	}
 	
-	$scope.onVideoUpdateAction = function() {
-		
+	$scope.sendFileRequest = function() {
+		fileDialog.open().then(function(file) {
+			main.sendFiles($scope.currentChat.id, [file]);
+		});
 	};
 	
 	$scope.getVideoControlMsg = function() {
