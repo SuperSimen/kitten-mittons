@@ -60,6 +60,7 @@ app.controller( 'chatController', function($state, $scope, main, model, utility,
 		}
 		return false;
 	};
+
 	$scope.isAudioButtonActive = function() {
 		if($scope.isInCall() || $scope.isCalling()) {
 			if (!model.call.getCurrent().video) {
