@@ -531,9 +531,7 @@
 			});
 		};
 
-		main.sendInvite = function(friend) {
-			var conference = model.conference.getCurrent();
-			console.log(conference);
+		main.sendInvite = function(friend, conference) {
 			if (conference.isInvited(friend)) {
 				return console.log("already invited");
 			}

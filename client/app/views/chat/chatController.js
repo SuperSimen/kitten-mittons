@@ -84,16 +84,16 @@ app.controller( 'chatController', function($state, $scope, main, model, utility,
 	$scope.getVideoControlMsg = function() {
 		if ($scope.hasIncomingCall()) {
 			if (model.call.list[$scope.currentChat.id].video) {
-				return "Accept Video";
+				return "Accept Video Call";
 			}
 		}
 
 		if($scope.isInCall() || $scope.isCalling()) {
 			if (model.call.getCurrent().video) {
-				return "Stop Video";
+				return "Stop Video Call";
 			}
 		}
-		return "Start Video";
+		return "Video Call";
 		
 	};
 
@@ -109,7 +109,7 @@ app.controller( 'chatController', function($state, $scope, main, model, utility,
 				return "Stop Audio";
 			}
 		}
-		return "Start Audio";
+		return "Audio call";
 	};
 
 	$scope.hasTranferringFile = function() {
