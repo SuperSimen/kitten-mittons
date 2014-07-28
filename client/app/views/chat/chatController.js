@@ -270,6 +270,21 @@ app.controller( 'chatController', function($state, $scope, main, model, utility,
 		return $scope.isMe(message.from);
 	};
 
+	$scope.getColorId = function(message) {
+		if($scope.currentChat.isRoom || !message) {
+			
+			var friend = $scope.getFriendFromId(message.from);
+			
+			if(!friend)
+				return 0;
+			
+			var colorId = Object.keys($scope.currentChat.participants).indexOf(friend.id);
+			return colorId == -1 ? 0 : colorId % 9;
+		} else {
+			return 0;
+		}
+	};
+
 	/**
 	 * Generates a display name from the message
 	 * @param {type} message

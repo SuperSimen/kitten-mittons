@@ -327,10 +327,23 @@ span[ng-click][disabled] {
 }
 
 .uninett-chatbox-entry-recv {
-    background: #252379;
     color: #fff;
     float: left;
 }
+
+.uninett-chatbox-entry-recv-color0 {
+	background: #252379 !important;
+}
+
+.uninett-chatbox-entry-recv-color1 { background: red; }
+.uninett-chatbox-entry-recv-color2 { background: blue; }
+.uninett-chatbox-entry-recv-color3 { background: purple; }
+.uninett-chatbox-entry-recv-color4 { background: yellow; }
+.uninett-chatbox-entry-recv-color5 { background: orange; }
+.uninett-chatbox-entry-recv-color6 { background: pink; }
+.uninett-chatbox-entry-recv-color7 { background: green; }
+.uninett-chatbox-entry-recv-color8 { background: black; }
+
 
 .uninett-chatbox-entry-system {
 	width: auto;
