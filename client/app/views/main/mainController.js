@@ -43,7 +43,16 @@ app.controller( 'mainController', function($scope, model, $state, utility) {
 			return;
 		}
 		id = utility.getBareJid(id);
-		return model.friends.get(id);
+
+		var friend = model.friends.get(id);
+		if (friend) {
+			return friend;
+		}
+
+		friend = model.friends.getWithNickname(id);
+		if (friend) {
+			return friend;
+		}
 	};
 	
 	/**
