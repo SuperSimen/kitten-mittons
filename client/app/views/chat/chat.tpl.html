@@ -1,6 +1,5 @@
 <div class="row color-grey fill-height" ng-class="border">
 	<div class="col-md-12 fill-height">
-            
 		<div class="fill-top"> 
 			<div class="row name-tag border-bottom uninett-section-header-bar">
 				<div class="col-md-12 fill-height">
@@ -27,20 +26,21 @@
 							</div>
 						</div>
 						<p ng-show="currentChat && !currentChat.isRoom">
-							Conversation <span class="glyphicon glyphicon-chevron-right uninett-glyphicon-sm"></span> {{getFriendFromId(currentChat.id) && getFriendFromId(currentChat.id).name}}
+						Conversation <span class="glyphicon glyphicon-chevron-right uninett-glyphicon-sm"></span> {{getFriendFromId(currentChat.id) && getFriendFromId(currentChat.id).name}}
 						</p>
 						<p ng-show="currentChat.isRoom">
-							Conversation <span class="glyphicon glyphicon-chevron-right uninett-glyphicon-sm"></span>
-							Group conversation
-							<span ng-show="getObjectLength(currentChat.participants)"> 
-								with <span ng-repeat="friend in currentChat.participants"> 
+						Conversation <span class="glyphicon glyphicon-chevron-right uninett-glyphicon-sm"></span>
+						Group conversation
+						<span ng-show="getObjectLength(currentChat.participants)"> 
+							with <span ng-repeat="friend in currentChat.participants"> 
 								<span ng-hide="isMe(friend.id) || !friend.isOnline()">
 									{{friend.name}}{{($index !== getObjectLength(currentChat.participants) - 1) && ", " || ""}}
 								</span>
 							</span>
+						</span>
 						</p>
 						<p ng-hide="currentChat">
-							Click on a contact to start a new conversation
+						Click on a contact to start a new conversation
 						</p>
 					</div>
 				</div>
@@ -54,7 +54,7 @@
 							<p>Click on a contact to start a new conversation</p>
 						</div>
 						-->
-	  
+
 						<div ng-repeat="message in currentChat.messages">
 							<div class="row">
 								<div class="col-md-12">
