@@ -109,7 +109,8 @@ body {
 }
 
 .auto-overflow {
-	overflow: auto;
+	overflow-y: scroll;
+	overflow-x: hidden;
 }
 
 .fill-under-name-tag {
