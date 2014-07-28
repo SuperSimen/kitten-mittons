@@ -150,9 +150,9 @@
 			send(msg);
 		};
 
-		function logOff() {
+		factory.logOff = function() {
 			send($pres({type: "unavailable"}));
-		}
+		};
 
 
 		function logOn() {

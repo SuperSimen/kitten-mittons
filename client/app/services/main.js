@@ -582,6 +582,10 @@
 			}
 		};
 
+		main.logOff = function() {
+			xmpp.logOff();
+		};
+
 
 		return main;
 	});
