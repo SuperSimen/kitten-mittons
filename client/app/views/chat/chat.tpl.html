@@ -35,7 +35,7 @@
 							<span ng-show="getObjectLength(currentChat.participants)"> 
 								with <span ng-repeat="friend in currentChat.participants"> 
 								<span ng-hide="isMe(friend.id) || !friend.isOnline()">
-									{{friend.name}} {{($index !== getObjectLength(currentChat.participants) - 1) && ", " || ""}}
+									{{friend.name}}{{($index !== getObjectLength(currentChat.participants) - 1) && ", " || ""}}
 								</span>
 							</span>
 						</p>
