@@ -10,17 +10,16 @@
 				fileReceiver.init();
 				$rootScope.$watch(function () {return model.video.active;}, function(newValue) {
 					if (!newValue) {
-						if ($state.current.name === "video.active") {
+						if ($state.current.name === "call") {
 							$rootScope.gotoState("chat");
 						}
 					}
 				});
 				$rootScope.$watch(function () {return model.conference.active;}, function(newValue) {
 					if (!newValue) {
-						if ($state.current.name === "conference.active") {
+						if ($state.current.name === "conference") {
 							$rootScope.gotoState("chat");
 						}
-
 					}
 				});
 
@@ -45,35 +44,7 @@
 		};
 
 		$rootScope.gotoState = function(state) {
-			if (state === "chat") {
-				model.chat.unread = 0;
-			}
-			if (state === "file") {
-				model.file.unseen = 0;
-			}
-			if (state === "conference") {
-				model.conference.unseen = 0;
-			}
-
-			if (state === "video") {
-				if (model.video.active) {
-					$state.go("video.active");
-				}
-				else {
-					$state.go("video");
-				}
-			}
-			else if (state === "conference") {
-				if (model.conference.active) {
-					$state.go("conference.active");
-				}
-				else {
-					$state.go("conference");
-				}
-			}
-			else {
-				$state.go(state);
-			}
+			$state.go(state);
 		};
 
 		$rootScope.getObjectLength = function(obj) {

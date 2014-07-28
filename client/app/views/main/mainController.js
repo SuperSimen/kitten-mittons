@@ -1,32 +1,17 @@
 app.controller( 'mainController', function($scope, model, $state, utility) {
 
 	var stateViewCols = {
-		file: [
-			"hidden",
-			"col-xs-10",
-			"col-xs-2",
-		],
-		conference: [
-			"col-xs-2",
-			"col-xs-8",
-			"col-xs-2",
-		],
-		"conference.active": [
-			"hidden",
-			"hidden",
-			"hidden",
-		],
 		chat: [
 			"col-xs-2",
 			"col-xs-8",
 			"col-xs-2",
 		],
-		video: [
-			"hidden",
-			"col-xs-10",
+		"conference": [
+			"col-xs-2",
+			"col-xs-8",
 			"col-xs-2",
 		],
-		"video.active": [
+		"call": [
 			"hidden",
 			"col-xs-12",
 			"hidden"
@@ -34,12 +19,11 @@ app.controller( 'mainController', function($scope, model, $state, utility) {
 	};
 	$scope.conference = model.conference;
 	$scope.showConference = function() {
-		return $state.current.name === "conference.active";
+		return $state.current.name === "conference";
 	};
 	$scope.closeConference = function() {
 		model.conference.closeActive();
 	};
-
 
 	$scope.getCol = function(viewNumber) {
 		var state = $state.current.name;

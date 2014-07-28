@@ -183,13 +183,14 @@
 						if (!this.isRoom) {
 							console.error("Is not conference");
 						}
-
+						this.conferenceOpen = true;
+						model.conference.setActive(utility.getRoomIdFromJid(this.id));
 					},
 					closeConference: function() {
 						if (!this.isRoom) {
 							console.error("Is not conference");
 						}
-
+						this.conferenceOpen = false;
 					},
 					addParticipant: function(friend) {
 						if (!this.isRoom) {

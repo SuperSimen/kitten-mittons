@@ -9,8 +9,9 @@ app.controller( 'chatController', function($state, $scope, main, model, utility,
 		$scope.currentChat = model.chat.getCurrent();
 	});
 
-	$scope.createConference = function() {
-		model.conference.create();
+	$scope.openConference = function() {
+		$scope.currentChat.openConference();
+		$scope.gotoState("conference");
 	};
 
 

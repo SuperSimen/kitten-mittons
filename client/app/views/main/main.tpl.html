@@ -28,16 +28,16 @@
 </div>
 -->
 <div class="row hide-overflow fill-height">
-	<div ng-show="showConference()" class="fill-height">
-		<div class="conference-menu">
-			<i class="pointer fa fa-phone-square uninett-fontColor-red fa-2x tab" ng-click="closeConference()"></i>
-		</div>
-		<iframe src={{conference.src}} class="fill-height fill-width"></iframe>
-	</div>
 	<div ng-class="getCol(1)" class="fill-height">
 		<div ui-view="view1" class="fill-height" ng-class="{'animate-view': isViewAnimated(1)}"> </div>
 	</div>
 	<div ng-class="getCol(2)" class="fill-height">
+		<div ng-show="showConference()" class="row fill-height">
+			<div class="conference-menu">
+				<i class="pointer fa fa-phone-square uninett-fontColor-red fa-2x tab" ng-click="closeConference()"></i>
+			</div>
+			<iframe src={{conference.src}} class="fill-height fill-width"></iframe>
+		</div>
 		<div ui-view="view2" class="fill-height" ng-class="{'animate-view': isViewAnimated(2)}"></div>
 	</div>
 	<div ng-class="getCol(3)" class="fill-height">
