@@ -225,10 +225,10 @@ body {
 }
 
 .presence-icon.online {
-	color: #999999;
+	color: #343434;
 }
 .presence-icon.offline {
-	color: #eb212e;
+	color: #999999;
 }
 
 .badge {
