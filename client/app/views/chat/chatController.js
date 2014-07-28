@@ -181,6 +181,12 @@ app.controller( 'chatController', function($state, $scope, main, model, utility,
 		$scope.currentChat.addSystemMessage(message);
 	}
 	
+	$scope.onDropFileCallback = function(file) {
+		if($scope.currentChat) {
+			main.sendFiles($scope.currentChat.id, [file]);
+		}
+	};
+	
 	$scope.sendFileRequest = function() {
 		fileDialog.open().then(function(file) {
 			main.sendFiles($scope.currentChat.id, [file]);

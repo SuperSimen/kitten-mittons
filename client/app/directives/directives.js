@@ -1,5 +1,34 @@
 (function () {
     
+	app.directive("ngDropFile", function() {
+		return function(scope, element, attrs) {
+			
+			console.log('aa', scope, element, attrs);
+			
+			var e = element[0];
+			
+			e.ondragover = function (event) { 
+				event.preventDefault();
+				return false; 
+			};
+			
+			e.ondragend = function (event) { 
+				event.preventDefault();
+				return false; 
+			};
+			
+			e.ondrop = function (event) {
+				event.preventDefault();
+				var file = event.dataTransfer.files[0];
+				if(file && typeof scope.onDropFileCallback == 'function') {
+					scope.onDropFileCallback(file);
+				}
+				return false;
+			};
+			
+		};
+	});
+	
 	app.directive("ngAutoScroll", function() { 
 		return function(scope, element, attrs) {
 			scope.$watch(function() {return element[0].scrollHeight;}, function() {

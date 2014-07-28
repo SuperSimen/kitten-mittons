@@ -33,19 +33,21 @@
 							Conversation <span class="glyphicon glyphicon-chevron-right uninett-glyphicon-sm"></span> Group conversation
 						</p>
 						<p ng-hide="currentChat">
-							Click a contact on the right to start a new conversation.
+							Click on a contact to start a new conversation
 						</p>
 					</div>
 				</div>
 			</div>
 			<div class="row fill-under-name-tag">
-				<div class="col-md-12 fill-height auto-overflow" ng-auto-scroll>
+				<div class="col-md-12 fill-height auto-overflow" ng-auto-scroll ng-drop-file>
 					<div ng-class="{'fill-height': !showInfoBar(), 'fill-under-name-tag': showInfoBar()}">
 						
+						<!--
 						<div ng-show="!currentChat" class="well-lg align-center uninett-info-message">
 							<p>Click on a contact to start a new conversation</p>
 						</div>
-						
+						-->
+	  
 						<div ng-repeat="message in currentChat.messages">
 							<div class="row">
 								<div class="col-md-12">
