@@ -1,14 +1,10 @@
 (function () {
 
-	app.factory('model', function($state, constants, $sce, utility) {
+	app.factory('model', function(constants, $sce, utility) {
 		
 		var model = {};
 		
 		model.conference = {
-			list: {},
-			idCounter: 0,
-			unseen: 0,
-
 			src: "",
 			active: false,
 			
@@ -28,72 +24,6 @@
 				this.src = "";
 				this.active = false;
 			},
-
-			addInvitedTo: function(conference) {
-				var id = conference.id;
-				if (this.list[id]) {
-					return console.error("id not unique");
-				}
-
-				this.list[id] = this.createNew(conference.name, id, conference.owner, conference.invitedBy);
-
-				if ($state.current.name !== "conference") {
-					this.unseen ++;
-				}
-			},
-			createNew: function(name, id, owner, invitedBy) {
-				return {
-					name: name,
-					id: id,
-					invites: [],
-					owner: owner,
-					invitedBy: invitedBy,
-					open: function() {
-						model.conference.setActive(this.id);
-					},
-					isInvited: function(friend) {
-						if (friend) {
-							for (var i in this.invites) {
-								if (this.invites[i] === friend) {
-									return true;
-								}
-							}
-						}
-						return false;
-
-					},
-					addInvite: function(friend) {
-							for (var i in this.invites) {
-								if (this.invites[i] === friend) {
-									return console.log("already invited");
-								}
-							}
-							this.invites.push(friend);
-					},
-					removeInvite: function(friend) {
-						for (var i in this.invites) {
-							if (this.invites[i] === friend) {
-								this.invites.splice(i,1);
-								return;
-							}
-						}
-						console.log("could not find invite");
-					}
-				};
-			},
-			create: function(name) {
-				if (!name) {
-					name = model.user.info.name + "'s conference";
-				}
-
-				var id = utility.randomString() + name.toLowerCase().replace(/[^a-z]+/g, '') + this.idCounter++;
-				if (this.list[id]) {
-					return console.error("id not unique");
-				}
-
-				this.list[id] = this.createNew(name, id, model.user.info.xmpp.jid);
-				return id;
-			},
 		};
 
 		model.file = {
@@ -112,9 +42,6 @@
 					size: size
 				};
 
-				if ($state.current.name !== "file") {
-					this.unseen ++;
-				}
 				model.chat.get(utility.getIdFromJid(user)).addFileMessage(id);
 			},
 			remove: function(id, failed) {
@@ -258,14 +185,7 @@
 						var time = Date.now();
 						this.mostRecentTime = time;
 						object.time = time;
-						if ($state.current.name !== "chat") {
-							if (model.chat.currentId !== id) {
-								this.unread ++;
-							}
-
-							model.chat.unread ++;
-						}
-						else if (model.chat.currentId !== id) {
+						if (model.chat.currentId !== id) {
 							this.unread ++;
 						}
 
