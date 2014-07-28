@@ -225,7 +225,7 @@ body {
 }
 
 .presence-icon.online {
-	color: #006b49;
+	color: #999999;
 }
 .presence-icon.offline {
 	color: #eb212e;
@@ -309,7 +309,7 @@ span[ng-click][disabled] {
 
 .uninett-chat-active {
     color: #fff;
-    background: #eb212e !important;
+    background: #454545 !important;
 }
 
 .uninett-chatbox-entry {
