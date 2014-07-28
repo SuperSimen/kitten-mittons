@@ -44,10 +44,6 @@ app.controller( 'friendsController', function(main, $state, $scope, model, fileD
 			else if (currentState === "video") {
 				main.setupCall(friend.id);
 			}
-			else if (currentState === "conference") {
-				main.sendInvite(friend);
-			}
-
 		}
 	};
 
