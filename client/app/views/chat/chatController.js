@@ -295,10 +295,6 @@ app.controller( 'chatController', function($state, $scope, main, model, utility,
 		if (friend) {
 			return friend.name;
 		}
-		friend = model.friends.getWithNickname(message.from);
-		if (friend) {
-			return friend.name;
-		}
 
 		return "Unknown";
 	};
