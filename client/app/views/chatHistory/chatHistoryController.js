@@ -43,7 +43,7 @@ app.controller( 'chatHistoryController', function($scope, main, model, dialogs) 
 	};
 
 	$scope.close = function(id) {
-		model.chat.close(id);
+		main.closeChat(id);
 	};
 	
 	$scope.clickConference = function(conference) {

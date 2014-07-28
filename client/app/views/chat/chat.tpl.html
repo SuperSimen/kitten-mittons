@@ -30,7 +30,14 @@
 							Conversation <span class="glyphicon glyphicon-chevron-right uninett-glyphicon-sm"></span> {{getFriendFromId(currentChat.id) && getFriendFromId(currentChat.id).name}}
 						</p>
 						<p ng-show="currentChat.isRoom">
-							Conversation <span class="glyphicon glyphicon-chevron-right uninett-glyphicon-sm"></span> Group conversation
+							Conversation <span class="glyphicon glyphicon-chevron-right uninett-glyphicon-sm"></span>
+							Group conversation
+							<span ng-show="getObjectLength(currentChat.participants) > 1"> 
+								with <span ng-repeat="friend in currentChat.participants"> 
+								<span ng-hide="isMe(friend.id) || !friend.isOnline()">
+									{{friend.name}} {{($index !== getObjectLength(currentChat.participants) - 1) && ", " || ""}}
+								</span>
+							</span>
 						</p>
 						<p ng-hide="currentChat">
 							Click on a contact to start a new conversation

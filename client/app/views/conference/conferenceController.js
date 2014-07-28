@@ -15,7 +15,7 @@ app.controller( 'conferenceController', function($scope, model, $window, constan
 	};
 
 	$scope.isAdministrator = function() {
-		return $scope.conference.current.invitedBy != false;
+		return $scope.conference.current.invitedBy !== false;
 	};
 
 	$scope.isInvited = function(friend) {
@@ -25,9 +25,9 @@ app.controller( 'conferenceController', function($scope, model, $window, constan
 
 	$scope.toggleInvite = function(friend) {
 		console.log('toggleInvite');
-		return !$scope.isInvited(friend) 
-			? $scope.conference.current.addInvite(friend)
-			: $scope.conference.current.removeInvite(friend);
+		return !$scope.isInvited(friend) ?
+			$scope.conference.current.addInvite(friend) :
+			$scope.conference.current.removeInvite(friend);
 	};
 	
 });

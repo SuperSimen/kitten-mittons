@@ -173,6 +173,15 @@
 			send(pres);
 		};
 
+		factory.leaveRoom = function (roomJid) {
+			var to = roomJid + "/" + model.user.info.nickname;
+
+			var pres = $pres({to: to, type: "unavailable"}).c("x", {xmlns: constants.xmpp.muc});
+			console.log(to);
+
+			send(pres);
+		};
+
 		factory.sendRoomConfig = function(to) {
 			var iq = $iq({to: to, type: 'set'}).c('query', {xmlns: constants.xmpp.mucOwner}).
 				c('x', {xmlns: constants.xmpp.data, type: 'submit'});

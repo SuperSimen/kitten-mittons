@@ -178,6 +178,27 @@
 					messages: [],
 					unread: 0,
 					isRoom: isRoom,
+					participants: {},
+					addParticipant: function(friend) {
+						if (!this.isRoom) {
+							console.error("Cannot add participant to a normal conversation");
+						}
+						if (this.participants[friend.id]) {
+							return;
+						}
+						this.addSystemMessage(friend.name + " joined room");
+						this.participants[friend.id] = friend;
+					},
+					removeParticipant: function(friend) {
+						if (!this.isRoom) {
+							console.error("Cannot remove participant from a normal conversation");
+						}
+						if (!this.participants[friend.id]) {
+							return;
+						}
+						this.addSystemMessage(friend.name + " left room");
+						delete this.participants[friend.id];
+					},
 				  	addSystemMessage: function(message) {
 						var temp = {
 							arrived: true,
@@ -242,12 +263,21 @@
 				});
 				this.sort();
 			},
-			get: function(id) {
+			get: function(id, doNotCreate) {
 				if (!id) {
 					return;
 				}
-				this.create(id);
+				if (!doNotCreate) {
+					this.create(id);
+				}
 				return this.sortableArray[this.listOfIndices[id]];
+			},
+			getWithGroupId: function(groupId) {
+				if (!groupId) {
+					return;
+				}
+				return this.get(utility.getRoomJidFromId(groupId), true);
+
 			},
 			roomCounter: 0,
 			createRoom: function(id) {
@@ -284,7 +314,10 @@
 			create: function(id) {
 				if (!this.list[id]) {
 					this.list[id] = {
-						id: id
+						id: id,
+						isOnline: function() {
+							return (this.mucOnline || this.online);
+						}
 					};
 				}
 				return this.list[id];

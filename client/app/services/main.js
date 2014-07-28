@@ -77,7 +77,9 @@
 		};
 
 		$rootScope.getObjectLength = function(obj) {
-			return Object.keys(obj).length;
+			if (obj) {
+				return Object.keys(obj).length;
+			}
 		};
 
 		$rootScope.isMe = function(id) {
@@ -254,6 +256,16 @@
 			xmpp.joinRoom(utility.getRoomIdFromJid(id));
 		};
 
+		main.closeChat = function(id) {
+			console.log("closing chat");
+			if (model.chat.get(id).isRoom) {
+				console.log("is room");
+				xmpp.leaveRoom(id);
+			}
+			model.chat.close(id);
+		};
+
+
 		var xmppHandlers = {
 			basicHandler: function(data) {
 				//console.log(data);
@@ -419,6 +431,7 @@
 				}
 			},
 			mucPresence: function(data) {
+									console.log(data);
 				var from = data.from;
 				var groupId = utility.getRoomIdFromJid(from);
 
@@ -442,9 +455,10 @@
 						var jid = item[0].jid;
 						if (jid) {
 							$rootScope.$apply(function() {
+								var userName, friend;
 								if (model.groups.list[groupId] && data.to) {
-									var userName = utility.getIdFromJid(jid);
-									var friend = model.friends.get(userName);
+									userName = utility.getIdFromJid(jid);
+									friend = model.friends.get(userName);
 									if (!friend) {
 										friend = addFriend(userName);
 									}
@@ -454,6 +468,23 @@
 									}
 									else {
 										friend.mucOnline = true;
+									}
+								}
+								else if (model.chat.getWithGroupId(groupId)){
+									userName = utility.getIdFromJid(jid);
+									friend = model.friends.get(userName);
+									if (!friend) {
+										friend = addFriend(userName);
+									}
+									if (!codes["110"]) {
+										if (data.type === "unavailable") {
+											friend.mucOnline = false;
+											model.chat.getWithGroupId(groupId).removeParticipant(friend);
+										}
+										else {
+											friend.mucOnline = true;
+											model.chat.getWithGroupId(groupId).addParticipant(friend);
+										}
 									}
 								}
 							});
