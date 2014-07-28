@@ -13,10 +13,10 @@
 					<span class="uninett-group-heading">
 						<span class="uninett-group-name">My friends</span>
 					</span>
-					<div ng-repeat="bestFriendId in friends.bestFriends" class="row hover-white uninett-friend-list-entry">
-						<div context-menu data-target="contextMenu{{$index}}" ng-click="clickOnFriend(friend)" class="col-md-12 visible-on-hover" ng-init="friend = getFriendFromId(bestFriendId)">
+					<div ng-repeat="bestFriendId in friends.bestFriends" context-menu data-target="contextMenu{{$index}}" ng-click="clickOnFriend(friend)" class="row hover-white uninett-friend-list-entry">
+						<div class="col-md-12 visible-on-hover" ng-init="friend = getFriendFromId(bestFriendId)">
 							<i class="fa fa-circle icon presence-icon" ng-class="{'online': friend.online || friend.mucOnline, 'offline': !(friend.online || friend.mucOnline)}"></i>
-							<span class="tab" title="{{friend.name}} is {{ friend.online ? 'online' : 'offline' }}">{{friend.name}}</span>
+							<span class="tab" title="{{friend.name}} is {{ friend.online || friend.mucOnline ? 'online' : 'offline' }}">{{friend.name}}</span>
 							<span class="right visible-span pointer" ><i class="fa fa-times" ba-click ng-click="removeBestFriend(friend)"></i></span>
 						</div>
 						
@@ -50,7 +50,7 @@
 								<div ng-show="showMembers && (getObjectLength(group.friends) === 1)">
 									<p><i>No members are online</i></p>
 								</div>
-								<div ng-show="showMembers" ng-repeat="friend in group.friends" class="row hover-white">
+								<div ng-show="showMembers" ng-repeat="friend in group.friends" class="row hover-white pointer uninett-friend-list-entry">
 									
 									<!-- Context menu -->
 									<div class="dropdown" id="g_contextMenu{{$index}}" style="position: fixed; z-index: 100;">
@@ -66,7 +66,7 @@
 									<div context-menu data-target="g_contextMenu{{$index}}" ng-hide="isMe(friend.id)" ng-click="clickOnFriend(friend)" class="col-md-12 visible-on-hover">
 										<div class="width-95">
 											<i class="fa fa-circle icon presence-icon" ng-class="{'online': friend.online || friend.mucOnline, 'offline': !(friend.online || friend.mucOnline)}"></i>
-											<span class="tab">{{friend.name}}</span>
+											<span class="tab" title="{{friend.name}} is {{ friend.online || friend.mucOnline ? 'online' : 'offline' }}">{{friend.name}}</span>
 										</div>
 										<span class="right visible-span pointer" ><i class="fa fa-plus" ba-click ng-click="addBestFriend(friend)"></i></span>
 									</div>
