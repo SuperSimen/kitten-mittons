@@ -46,3 +46,11 @@
 </div>
 
 <audio src="resource/telephone.wav" ng-audio ng-bind="playAudio(receivingCall())"></audio>
+
+<script>
+	window.onbeforeunload = function() {
+		console.log("Signing out");
+		angular.element(document.body).injector().get('main').logOff();
+		return null;
+	};
+</script>

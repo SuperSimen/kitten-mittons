@@ -151,7 +151,9 @@
 		};
 
 		factory.logOff = function() {
+			connection.options.sync = true;
 			send($pres({type: "unavailable"}));
+			connection.disconnect();
 		};
 
 
