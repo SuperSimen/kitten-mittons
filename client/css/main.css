@@ -450,3 +450,11 @@ span[ng-click][disabled] {
 	font-size: 20pt;
 	font-family: colfax, arial;
 }
+
+.uninett-btn-signout {
+	width: 100%;
+	font-family: colfaxLight, arial;
+	font-size: 1em;
+	padding: 5px;
+	margin: 0;
+}

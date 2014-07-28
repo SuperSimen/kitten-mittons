@@ -78,7 +78,10 @@ app.controller( 'friendsController', function(main, $state, $scope, model, fileD
 		return model.friends.getWithUserid(friend.userid); 
 	};
 
-
+	$scope.signOff = function() {
+		console.log("Signing off");
+		main.logOff();
+	};
 
 });
 
