@@ -1,5 +1,5 @@
 <div class="row color-grey fill-height border-right default-cursor auto-overflow">
-	<div class="col-md-12 fill-half">
+	<div class="col-md-12 fill-height">
 		<div class="fill-top">
 			<div class="row border-bottom name-tag uninett-section-header-bar">
 				<div class="col-md-12 fill-height">
@@ -20,63 +20,6 @@
 		</div>
 		<div class="fill-bottom align-center fill-width"> 
 			<i class="fa fa-plus-circle uninett-fontColor-white icon large pointer" ng-click="clickOnPlus()"></i>
-		</div>
-	</div>
-	<div class="col-md-12 fill-half">
-		<div class="fill-top">
-			<div class="row border-bottom name-tag uninett-section-header-bar">
-				<h3 class="uninett-section-header align-center name-tag">Conferences</h3>
-			</div>
-			<div style="margin: 10px 0 10px 0">
-				<button class="form-control btn btn-primary" ng-click="createConference()">New Conference</button>
-			</div>
-			
-			<div ng-repeat="conference in conference.list">
-				<div ng-click="clickConference(conference)" class="row hide-overflow hover-white chat-entry">
-					<div class="col-md-12 visible-on-hover">
-						<div class="width-95">
-							<span class="glyphicon glyphicon-user"></span> {{conference.name}}
-						</div>
-					</div>
-				</div>
-			</div>
-			
-					<!--
-			<div>
-				<div ng-repeat="conference in conference.list" >
-					
-					{{conference.name}} 
-					<ul>
-						<li ng-repeat="invitee in conference.invites">
-							{{invitee.name}}
-						</li>
-					</ul>
-					<div class="row">
-						<div ng-class="{'col-md-7': conference.invitedBy, 'col-md-10': !conference.invitedBy}" class="height-50 hide-overflow">
-							{{conference.name}} 
-						</div>
-						<div ng-show="conference.invitedBy"class="col-md-3 height-50 hide-overflow">
-							<div >Invited by: {{getFriendFromId(conference.invitedBy).name}}</div>
-						</div>
-						<div class="col-md-2 align-left height-50">
-							<button ng-click="gotoConference(conference)" class="btn btn-info width-70">Go to</button>
-							<button class="btn btn-info width-70" ng-click="toggleInvite(conference.id)" ng-bind="isInviting(conference.id) && 'Close' || 'Invite'"></button>
-						</div>
-					</div>
-					<div ng-show="isInviting(conference.id)" class="border-bottom border-top">
-						<div ng-hide="conference.invites.length">
-							Click on contacts to invite them
-						</div>
-						<div ng-show="conference.invites.length">
-							Invites sent to:
-						</div>
-						<div ng-repeat="invitee in conference.invites">
-							{{invitee.name}}
-						</div>
-					</div>
-				</div>
-			</div>
-					-->
 		</div>
 	</div>
 </div>

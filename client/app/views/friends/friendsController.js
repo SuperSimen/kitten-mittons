@@ -35,7 +35,8 @@ app.controller( 'friendsController', function(main, $state, $scope, model, fileD
 	$scope.clickOnFriend = function(friend) {
 		var currentState = $state.current.name;
 		if (friend.online || friend.mucOnline) {
-			if (currentState === "chat") {
+			if (currentState === "chat" || currentState == "conference") {
+				$scope.gotoState("chat");
 				model.chat.setCurrent(friend.id);
 			}
 			else if (currentState === "file") {

@@ -19,8 +19,7 @@ app.controller( 'conferenceController', function($scope, model, $window, constan
 	};
 
 	$scope.isInvited = function(friend) {
-		var ret = $scope.conference.current.isInvited(friend);;
-		console.log('isInvitied', ret);
+		var ret = $scope.conference.current.isInvited(friend);
 		return ret;
 	};
 
@@ -32,3 +31,9 @@ app.controller( 'conferenceController', function($scope, model, $window, constan
 	};
 	
 });
+/*
+app.filter('friendonline', function() {
+  return function(arr, start, end) {
+    return (arr || []).slice(start, end);
+  };
+})*/

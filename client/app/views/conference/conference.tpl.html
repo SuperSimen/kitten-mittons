@@ -25,7 +25,7 @@
 					<h3>Participants</h3>
 
 					<ul class="list-group">
-						<li class="list-group-item" ng-repeat="friend in friends.list">
+						<li class="list-group-item" ng-repeat="friend in friends.list | filter: (friend.online || friend.mucOnline) && !isMe(friend.id)">
 							<span class=""><input type="checkbox" ng-disabled="!isAdministrator()" ng-checked="isInvited(friend)" ng-click="toggleInvite(friend)"></span>
 							<span>{{friend.name}}</span>
 						</li>
