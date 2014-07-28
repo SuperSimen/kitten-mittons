@@ -82,10 +82,15 @@
 
 		</div>
 
-		<div ng-show="showSearch" class="fill-height-minus-gutter gutter">
+		<div ng-show="showSearch" class="fill-height">
 			<div class="row scroll-y fill-top">
+				<div class="row border-bottom name-tag uninett-section-header-bar"> 
+					<div class="col-md-12 fill-height hide-overflow">
+						<h3 class="name-tag align-center uninett-section-header">Find</h3>
+					</div>
+				</div>
 				<div class="col-md-12 small-font">
-					<div ng-repeat="person in search.list" ng-mouseenter="showHidden = true" ng-mouseleave="showHidden = false" ng-init="showHidden = false" class="row hover-white">
+					<div ng-repeat="person in search.list" ng-mouseenter="showHidden = true" ng-mouseleave="showHidden = false" ng-init="showHidden = false" class="row hover-white uninett-friend-list-entry">
 						<div ng-show="showHidden && person.hasImage()" class="col-md-4 inline-block">
 							<img class="small-image" ng-src="{{person.getImage()}}">
 						</div>
