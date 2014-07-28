@@ -179,6 +179,18 @@
 					unread: 0,
 					isRoom: isRoom,
 					participants: {},
+					openConference: function() {
+						if (!this.isRoom) {
+							console.error("Is not conference");
+						}
+
+					},
+					closeConference: function() {
+						if (!this.isRoom) {
+							console.error("Is not conference");
+						}
+
+					},
 					addParticipant: function(friend) {
 						if (!this.isRoom) {
 							console.error("Cannot add participant to a normal conversation");

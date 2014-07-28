@@ -159,7 +159,6 @@
 			send($pres());
 		}
 
-
 		function setStatus(show) {
 			send($pres().c("show", show));
 		}
