@@ -327,9 +327,9 @@
 			systemNotification: function(data) {
 				var body = data.getChildrenByTagName("body");
 				if (body) {
-					var message = body[0].children[0].data;
+					var req = JSON.parse(body[0].children[0].data);
 					$rootScope.$apply(function() {
-						model.chat.get(model.call.currentId).addSystemMessage(message);
+						model.chat.get(req.chatId).addSystemMessage(req.message);
 					});
 				} 
 			},
@@ -638,8 +638,14 @@
 		 * @param {type} message
 		 * @returns {undefined}
 		 */
-		main.sendSystemNotification = function(id, message) {
-			xmpp.sendMessage(id, message, "systemNotification", function() {
+		main.sendSystemNotification = function(to_id, group_id, message) {
+			
+			var data = {
+				chatId: group_id,
+				message: message
+			};
+			
+			xmpp.sendMessage(to_id, JSON.stringify(data), "systemNotification", function() {
 				$rootScope.$apply();
 			});
 		};
