@@ -1,12 +1,12 @@
 (function () {
 
-	app.factory('init', function(fileTransfer, UWAP, xmpp, model, $rootScope, $http, constants, webrtc, utility) {
+	app.factory('init', function(fileTransfer, UWAP, chat, xmpp, model, $rootScope, $http, constants, webrtc, utility, presence, call) {
 		var init = {
 			init: function() {
 				globalModel = model;
+				console.log("this should not be undefined: " + $rootScope.gotoState);
 				$rootScope.gotoState("chat");
 				gatherInfoPart1();
-				fileTransfer.init();
 			}
 		};
 		
@@ -30,8 +30,12 @@
 				return null;
 			};
 
-			main.setVCard();
 			webrtc.init();
+			presence.init();
+			chat.init();
+			call.init();
+			fileTransfer.init();
+
 			gatherInfoPart2();
 		}
 
@@ -50,7 +54,6 @@
 			UWAP.getRealms(model.user.token, function (data) {
 				model.user.realms = data;
 			}); 
-			xmpp.getRoster();
 		}
 
 		return init;

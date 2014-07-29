@@ -28,11 +28,27 @@
 								</button>
 							</div>
 						</div>
+<<<<<<< Updated upstream
 						<p ng-show="currentChat && !currentChat.isRoom" class="uninett-breadcrumbs-ellipsis">
 						Conversation <span class="glyphicon glyphicon-chevron-right uninett-glyphicon-sm"></span> {{getFriendFromId(currentChat.id) && getFriendFromId(currentChat.id).name}}
 						</p>
 						<p ng-show="currentChat.isRoom" class="uninett-breadcrumbs-ellipsis" title="{{ getGroupRoomName() }}">
 							Conversation <span class="glyphicon glyphicon-chevron-right uninett-glyphicon-sm"></span> {{ getGroupRoomName() }}
+=======
+						<p ng-show="currentChat && !currentChat.isRoom">
+						Conversation <span class="glyphicon glyphicon-chevron-right uninett-glyphicon-sm"></span> {{getFriendFromId(currentChat.id) && getFriendFromId(currentChat.id).name}}
+						</p>
+						<p ng-show="currentChat.isRoom">
+						Conversation <span class="glyphicon glyphicon-chevron-right uninett-glyphicon-sm"></span>
+						Group conversation
+						<span ng-show="getObjectLength(currentChat.participants)"> 
+							with <span ng-repeat="friend in currentChat.participants"> 
+								<span ng-hide="isMe(friend.id) || !friend.isOnline()">
+									{{friend.name}}{{($index !== getObjectLength(currentChat.participants) - 1) && ", " || ""}}
+								</span>
+							</span>
+						</span>
+>>>>>>> Stashed changes
 						</p>
 						<p ng-hide="currentChat">
 						Click on a contact to start a new conversation
@@ -41,9 +57,15 @@
 				</div>
 			</div>
 			<div class="row fill-under-name-tag">
+<<<<<<< Updated upstream
 				<div class="col-md-12 fill-height" ng-drop-file>
 					<div ng-auto-scroll class="auto-overflow" ng-class="{'fill-height': !showInfoBar(), 'fill-under-name-tag': showInfoBar()}">
 						
+=======
+				<div class="col-md-12 fill-height auto-overflow" ng-auto-scroll ng-drop-file>
+					<div ng-class="{'fill-height': !showInfoBar(), 'fill-under-name-tag': showInfoBar()}">
+
+>>>>>>> Stashed changes
 						<!--
 						<div ng-show="!currentChat" class="well-lg align-center uninett-info-message">
 							<p>Click on a contact to start a new conversation</p>

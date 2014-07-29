@@ -3,7 +3,6 @@
 node_modules/
 users/
 bower_components/
-secret.js
 start.command
 .DS_store
 client/index.html
@@ -13,5 +12,6 @@ server/basic_server.js
 report/
 server/auth/server.crt
 server/auth/server.key
+server/auth/secret.js
 server/*.txt
 /nbproject

@@ -5,7 +5,6 @@
   "authors": [
     "Simen Owesen-Lein <simen.owesenlein@gmail.com>"
   ],
-  "license": "MIT",
   "private": true,
   "ignore": [
     "**/.*",
