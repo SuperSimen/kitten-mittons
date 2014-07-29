@@ -41,6 +41,10 @@
 					progress: 0,
 					accepted: false,
 					finished: false,
+					cancel: null,
+					accept: function() {
+						this.accepted = true;
+					},
 					size: size,
 				};
 
