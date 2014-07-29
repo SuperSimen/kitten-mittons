@@ -105,7 +105,7 @@
 				else if (data.status === "eof_ack") {
 					sender.finished();
 					$rootScope.$apply(function() {
-						model.file.remove(id);
+						model.file.list[id].finished = true;
 					});
 					dataHandlers.remove(id);
 				}

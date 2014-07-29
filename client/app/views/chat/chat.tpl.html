@@ -36,7 +36,7 @@
 						Group conversation
 						<span ng-show="getObjectLength(currentChat.participants)"> 
 							with <span ng-repeat="friend in currentChat.participants"> 
-								<span ng-hide="isMe(friend.id) || !friend.isOnline()">
+								<span ng-hide="friend.isMe() || !friend.isOnline()">
 									{{friend.name}}{{($index !== getObjectLength(currentChat.participants) - 1) && ", " || ""}}
 								</span>
 							</span>
@@ -82,16 +82,23 @@
 										</div>
 										</div>
 									</div>
-									<div ng-show="message.fileId">
-										<div class="uninett-chatbox-entry uninett-chatbox-entry-file" ng-class="file.sending ? 'uninett-chatbox-entry-file-send' : 'uninett-chatbox-entry-file-recv'" ng-show="getFile(message.fileId)" ng-init="file = getFile(message.fileId)">
-											<div>{{file.sending && "Sending " + file.filename + " to " || "Receiving " + file.filename + " from "}} {{getFriendFromId(file.user).name}}<span class="tab">{{bytesToSize(file.size)}}</span>{{file.failed && " - Failed"}}</div>
-											<div class="progress" >
-												<div class="progress-bar" ng-class="{'progress-bar-danger': file.failed}" ba-progress-bar progress="file.progress">
+									<div ng-show="message.fileId" ng-init="file = getFile(message.fileId)">
+										<div class="uninett-chatbox-entry uninett-chatbox-entry-file" ng-class="file.sending ? 'uninett-chatbox-entry-file-send' : 'uninett-chatbox-entry-file-recv'">
+
+											<div ng-hide="file.finished">
+												<div>{{file.sending && "Sending " + file.filename + " to " || "Receiving " + file.filename + " from "}} {{getFriendFromId(file.user).name}}<span class="tab">{{bytesToSize(file.size)}}</span>{{file.failed && " - Failed"}}</div>
+												<div class="progress" >
+													<div class="progress-bar" ng-class="{'progress-bar-danger': file.failed}" ba-progress-bar progress="file.progress">
+													</div>
 												</div>
 											</div>
+											<div ng-show="file.finished">
+												{{file.failed && failed || file.filename + (file.sending && ' was sent to ' || ' was received from ') + getFriendFromId(file.user).name}}
+											</div>
+
+											<button class="btn btn-info" ng-show="file.acceptPossible()" ng-click="file.accept()"> Accept </button>
+											<button class="btn btn-info" ng-show="file.cancelPossible()" ng-click="file.cancel()"> Cancel </button>
 										</div>
-										<div class="uninett-chatbox-entry uninett-chatbox-entry-file" ng-class="file.sending ? 'uninett-chatbox-entry-file-send' : 'uninett-chatbox-entry-file-recv'" ng-show="getFileLog(message.fileId)">
-											{{getFileLog(message.fileId).failed && failed || getFileLog(message.fileId).filename + (getFileLog(message.fileId).sent && ' was sent to ' || ' was downloaded from ') + getFriendFromId(getFileLog(message.fileId).user).name}}
 										</div>
 									</div>
 								</div>

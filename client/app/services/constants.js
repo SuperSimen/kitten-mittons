@@ -2,6 +2,7 @@
 
 	app.factory('constants', function() {
 		var constants = {
+			thisUrl: "http://webrtc.akademia.no",
 			iceServers: [
 				{"url":"stun:stun.akademia.no:3478"},
 				{

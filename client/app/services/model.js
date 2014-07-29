@@ -83,32 +83,38 @@
 			list: {},
 			selectedFiles: [],
 			add: function(id, filename, user, sending, size) {
-
 				if (this.list[id]) {
 					return console.error("not unique file id");
 				}
 				this.list[id] = {
+					id: id,
 					filename: filename,
 					user: user,
 					sending: sending,
 					progress: 0,
-					size: size
+					finished: false,
+					accepted: false,
+					cancelled: false,
+					acceptPossible: function() {
+						return !this.accepted && !this.cancelled && !this.sending;
+					},
+					cancelPossible: function() {
+						return !this.accepted && !this.cancelled;
+					},
+					accept: function() {
+						this.accepted = true;
+					},
+					cancel: function() {
+						this.cancelled = true;
+					},
+					size: size,
 				};
 
 				model.chat.get(utility.getIdFromJid(user)).addFileMessage(id);
 			},
-			remove: function(id, failed) {
-				this.log[id] = {
-					filename: this.list[id].filename,
-					user: this.list[id].user,
-					sent: this.list[id].sending,
-					size: this.list[id].size,
-					failed: failed
-				};
-				delete this.list[id];
+			get: function(id) {
+				return this.list[id];
 			},
-			unseen: 0,
-			log: {}
 		};
 		model.video = {
 			active: null,
@@ -314,6 +320,12 @@
 						id: id,
 						isOnline: function() {
 							return (this.mucOnline || this.online);
+						},
+						isMe: function() {
+							if (model.user.info.xmpp && this.id === model.user.info.xmpp.jid) {
+								return true;
+							}
+							return false;
 						}
 					};
 				}
