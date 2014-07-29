@@ -1,24 +1,36 @@
 app.controller( 'mainController', function($scope, model, $state, utility) {
 
-		$scope.gotoState = function(state) {
-			$state.go(state);
-		};
+	$scope.$watch(function () {return model.video.active;}, function(newValue) {
+		if (!newValue) {
+			if ($state.current.name === "call") {
+				$rootScope.gotoState("chat");
+			}
+		}
+	});
 
-		$scope.getObjectLength = function(obj) {
-			if (obj) {
-				return Object.keys(obj).length;
+	$scope.$watch(function () {return model.conference.active;}, function(newValue) {
+		if (!newValue) {
+			if ($state.current.name === "conference") {
+				$rootScope.gotoState("chat");
 			}
-		};
+		}
+	});
 
-		$scope.isMe = function(id) {
-			if (utility.getIdFromJid(id) === model.user.info.xmpp.jid) {
-				return true;
-			}
-			if (utility.getIdFromJid(id) === model.user.info.nickname) {
-				return true;
-			}
-			return false;
-		};
+	$scope.getObjectLength = function(obj) {
+		if (obj) {
+			return Object.keys(obj).length;
+		}
+	};
+
+	$scope.isMe = function(id) {
+		if (utility.getIdFromJid(id) === model.user.info.xmpp.jid) {
+			return true;
+		}
+		if (utility.getIdFromJid(id) === model.user.info.nickname) {
+			return true;
+		}
+		return false;
+	};
 
 
 	var stateViewCols = {
@@ -79,7 +91,7 @@ app.controller( 'mainController', function($scope, model, $state, utility) {
 	$scope.getMe = function() {
 		return model.friends.get(model.user.info.xmpp.jid);
 	};
-	
+
 	/**
 	 * Checks if there's an incoming call request
 	 * @returns {Boolean}
@@ -92,7 +104,7 @@ app.controller( 'mainController', function($scope, model, $state, utility) {
 		}
 		return false;
 	};
-	
+
 
 });
 

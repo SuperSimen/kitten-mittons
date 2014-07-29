@@ -1,11 +1,14 @@
 (function () {
 
-	app.factory('init', function(fileTransfer, UWAP, chat, xmpp, model, $rootScope, $http, constants, webrtc, utility, presence, call) {
+	app.factory('init', function(fileTransfer, UWAP, chat, xmpp, model, $rootScope, $state, $http, constants, webrtc, utility, presence, call, search) {
 		var init = {
 			init: function() {
 				globalModel = model;
-				console.log("this should not be undefined: " + $rootScope.gotoState);
+				$rootScope.gotoState = function(state) {
+					$state.go(state);
+				};
 				$rootScope.gotoState("chat");
+
 				gatherInfoPart1();
 			}
 		};
@@ -35,6 +38,7 @@
 			chat.init();
 			call.init();
 			fileTransfer.init();
+			search.init();
 
 			gatherInfoPart2();
 		}
