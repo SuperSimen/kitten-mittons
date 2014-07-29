@@ -1,9 +1,9 @@
 (function () {
 
-	app.factory('fileReceiver', function($rootScope, webrtc, model, utility) {
+	app.factory('fileReceiver', function($rootScope, dataSender, model, utility) {
 		var fileReceiver = {
 			init: function() {
-				webrtc.addMessageHandler(fileHandler, "fileSender");
+				dataSender.addMessageHandler(fileHandler, "fileSender");
 				prepareSandbox();
 			}
 		};
@@ -38,7 +38,7 @@
 						},
 						slices: []
 					};
-					storage[data.id].sender = webrtc.getFileSender(from, "fileReceiver");
+					storage[data.id].sender = dataSender.getSender(from, "fileReceiver");
 
 					$rootScope.$apply(function() {
 						storage[data.id].fileObject = model.file.add(data.id, data.filename, from, false, data.size);

@@ -54,7 +54,7 @@ app.controller( 'chatHistoryController', function($scope, main, model, dialogs) 
 	
 	$scope.createConference = function() {
 		
-		var dlg = dialogs.create('/dialogs/create.conference.html','conferenceDialogCtrl', {}, 'lg');
+		var dlg = dialogs.create('app/dialogs/create.conference.html','conferenceDialogCtrl', {}, 'lg');
 		
 		dlg.result.then(function(name){
 			model.conference.create(name);
