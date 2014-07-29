@@ -17,7 +17,20 @@ var constants = {
 	xmppServer: "meet-test.akademia.no"
 };
 
-function registerNewXmppUser (user) {
+function xmppError (error) {
+	console.log(error);	
+	if (error == "Error: Registration error") {
+		console.log("Registration error");
+	}
+	else if (error == "XMPP authentication failure") {
+		console.log("XMPP authentication failure");
+	}
+	else {
+		console.log(error);	
+	}
+}
+
+function registerNewXmppUser (user, callback) {
 	var client = new Client({
 		jid: user.xmpp.jid,
 		password: user.xmpp.password,
@@ -27,19 +40,51 @@ function registerNewXmppUser (user) {
 		user.xmpp.registered = true;
 		writeUserToFile(user);
 		client.end();
-	});
-	client.on('error', function(error) {
-		console.log(error);	
-		if (error == "Error: Registration error") {
-			console.log("Registration error");
-		}
-		else if (error == "XMPP authentication failure") {
-			console.log("XMPP authentication failure");
-		}
-		else {
-			console.log(error);	
+
+		if (callback) {
+			callback();
 		}
 	});
+	client.on('error', xmppError);
+}
+
+function inviteUninettPerson (person, sender) {
+	if (person.o.toLowerCase() !== "uninett") {
+		console.log("not uninett user");
+		return;
+	}
+
+	var invitor;
+	try {
+		invitor = JSON.parse(fileSystem.readFileSync("users/invitor.txt", {encoding: 'utf8'}));
+		continueInvite();
+	}
+	catch (e) {
+		invitor = {
+			id: "invitor",
+			xmpp: {
+				jid: "invite" + "@" + constants.xmppServer,
+				password: randomString(),
+			}
+		};
+		registerNewXmppUser(invitor, continueInvite);
+	}
+	function continueInvite() {
+		var client = new Client({
+			jid: invitor.xmpp.jid,
+			password: invitor.xmpp.password,
+		});
+		client.on('online', function() {
+			var inviteMessage = "Hei. " + sender.name + " har invitert det til å besøke http://webrtc.akademia.no";
+			var stanza = new ltx.Element('message', { type: 'chat' }).
+				c('body').t(inviteMessage);
+			client.send(stanza);
+			client.end();
+		});
+		client.on('error', xmppError);
+
+	}
+
 }
 
 function writeUserToFile(user) {
@@ -149,7 +194,7 @@ var userList = {
 				password: this.xmpp.password
 			});
 
-			var randomId = Math.random().toString(32).substring(2);
+			var randomId = randomString();
 			client.on('online', function() {
 				var stanza = new ltx.Element('iq', { type: 'set', id: randomId }).
 					c('query', {xmlns: "jabber:iq:roster"}).
@@ -163,18 +208,7 @@ var userList = {
 					client.send(pres);
 				}
 			});
-			client.on('error', function(error) {
-				console.log(error);	
-				if (error == "Error: Registration error") {
-					console.log("Registration error");
-				}
-				else if (error == "XMPP authentication failure") {
-					console.log("XMPP authentication failure");
-				}
-				else {
-					console.log(error);	
-				}
-			});
+			client.on('error', xmppError);
 			
 			writeUserToFile(userList.list[id]);
 		};
@@ -276,6 +310,15 @@ function init() {
 			res.status(401).send();
 		}
 	});
+	app.post('/api/inviteUninettPerson', function(req, res) {
+		if (req.user) {
+			inviteUninettPerson(req.body, req.user);
+			res.send(JSON.stringify({type: "ok"}));
+		}
+		else {
+			res.status(401).send();
+		}
+	});
 
 	passport.use('uwap', new OAuth2Strategy({
 		authorizationURL: secret.uwapAuthorizationURL,
@@ -284,7 +327,9 @@ function init() {
 		clientSecret: secret.uwapClientSecret
 	},
 	function(accessToken, refreshToken, profile, done) {
+		console.log("getting info for " + accessToken);
 		getUserInfo(accessToken, done);
+		console.log("finished getting info for " + accessToken);
 	}));
 
 	function getUserInfo(token, done) {

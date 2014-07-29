@@ -507,7 +507,7 @@
 						}, priority);
 					},
 					addToQueue: function(data, priority) {
-						if (false) {
+						if (priority) {
 							this.queue.unshift(data);
 						}
 						else {

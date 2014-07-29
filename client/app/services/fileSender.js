@@ -36,10 +36,10 @@
 		fileSender.sendFile = function(file, to) {
 			sendFile(file,to);
 		};
-
 		
 
 		function sendFile (file, to) {
+
 			if (!file || !to) {
 				return console.log("wrong input to sendFile");
 			}
@@ -78,14 +78,25 @@
 			var id = generateRandomFileId();
 			
 			progress.totalSlices = totalSlices;
-			model.file.add(id, file.name, to, true, size);
+			var fileObject = model.file.add(id, file.name, to, true, size);
+
+			function isCancelled() {
+				return fileObject.cancelled;
+			}
+
+			var watcher = $rootScope.$watch(function() {return fileObject.cancelled;}, function (newValue) {
+				if (newValue) {
+					signalCancel(id);
+	
+					watcher();
+				}
+			});
 
 			dataHandlers.add(fileHandler, id);
 			var listOfCallbacks = [];
 
 			function fileHandler(data) {
 				if (data.status === "sof_ack") {
-					console.log("sof_ack");
 					if (continueFileSending) {
 						continueFileSending();
 					}
@@ -109,6 +120,9 @@
 					});
 					dataHandlers.remove(id);
 				}
+				else if (data.status === "cancel") {
+					fileObject.cancel();
+				}
 			}
 
 			signalFile(id, "sof", totalSlices, file.name, size);
@@ -126,7 +140,6 @@
 
 			function senderLoop(i) {
 				return function () {
-					console.log("looping");
 					var blob;
 					if (i + maxSize > size) {
 						blob = file.slice(i, size);
@@ -187,6 +200,12 @@
 				sender.send(tempFile);
 			}
 
+			function signalCancel(id) {
+				sender.send({
+					id: id,
+					status: "cancel",
+				}, true);
+			}
 
 			function signalFile(id, status, totalSlices, filename, size) {
 				var tempFile = {
