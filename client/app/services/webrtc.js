@@ -25,8 +25,6 @@
 
 			try {
 				var currentCall = model.call.getCurrent();
-				console.log("current call");
-				console.log(currentCall);
 				navigator.webkitGetUserMedia({
 					video: currentCall.video,
 					audio: currentCall.audio
@@ -87,7 +85,6 @@
 		var video = {
 			stream: null,
 			setPeerConnection: function(peerConnection) {
-				console.log("setting peer connection");
 				peerConnection.oniceconnectionstatechange = this.onIceChange;
 				this.stream = peerConnection.getLocalStreams()[0];
 				this.peerConnection = peerConnection;
@@ -123,7 +120,6 @@
 
 
 		function videoCall (to) {
-			console.log("video call");
 			getUserMedia(continueCall);
 
 			function continueCall (stream) {
@@ -336,7 +332,6 @@
 			$rootScope.$apply(function() {
 				model.video.active = true;
 				model.call.status = "in-call";
-				console.log(e.stream);
 				model.video.remote.src = $sce.trustAsResourceUrl(URL.createObjectURL(e.stream));
 				model.video.remote.stream = e.stream;
 			});
