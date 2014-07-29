@@ -8,7 +8,7 @@ app.controller( 'chatController', function($state, $scope, main, model, utility,
 	$scope.$watch(function () {return model.chat.currentId;}, function() {
 		$scope.currentChat = model.chat.getCurrent();
 		if($scope.currentChat && $scope.currentChat.conferenceOpen && model.conference.mediaActive) {
-			$scope.openConference();
+			$scope.gotoState("conference");
 		}
 	});
 
