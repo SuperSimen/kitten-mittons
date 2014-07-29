@@ -54,6 +54,9 @@ app.controller( 'mainController', function($scope, model, $state, utility) {
 			return friend;
 		}
 	};
+	$scope.getMe = function() {
+		return model.friends.get(model.user.info.xmpp.jid);
+	};
 	
 	/**
 	 * Checks if there's an incoming call request

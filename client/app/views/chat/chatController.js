@@ -360,7 +360,7 @@ app.controller( 'chatController', function($state, $scope, main, model, utility,
 			return friend.name;
 		}
 
-		return "Unknown";
+		return message.from;
 	};
 
 	/**
