@@ -52,6 +52,6 @@ app.config( function ( $stateProvider) {
 	});
 });
 
-app.run( function (main) {
-	main.init();
+app.run( function (init) {
+	init.init();
 });
