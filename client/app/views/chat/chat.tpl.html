@@ -23,7 +23,7 @@
 								<button type="button" class="btn btn-default" ng-click="openFriendSelector()">
 									<i class="fa fa-user"></i> Invite 
 								</button>
-								<button type="button" class="btn btn-default" ng-click="openConference()">
+								<button ng-disabled="conference.mediaActive" type="button" class="btn btn-default" ng-click="openConference()">
 									<i class="fa fa-users"></i> Open conference
 								</button>
 							</div>

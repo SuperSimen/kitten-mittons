@@ -5,6 +5,17 @@
 		var model = {};
 		
 		model.conference = {
+			
+			/**
+			 * Set to true if meetme conference is open for some conference
+			 */
+			mediaOpen: false,
+			
+			/**
+			 * Set to true if meetme conference media is active
+			 */
+			mediaActive: false,
+			
 			src: "",
 			active: false,
 			
@@ -21,6 +32,8 @@
 				this.active = true;
 			},
 			closeActive: function() {
+				model.conference.mediaActive = false;
+				model.chat.getCurrent().conferenceOpen = false;
 				this.src = "";
 				this.active = false;
 			},
@@ -187,6 +200,7 @@
 							console.error("Is not conference");
 						}
 						this.conferenceOpen = true;
+						model.conference.mediaOpen = true;
 						model.conference.setActive(utility.getRoomIdFromJid(this.id));
 					},
 					closeConference: function() {
@@ -194,6 +208,7 @@
 							console.error("Is not conference");
 						}
 						this.conferenceOpen = false;
+						model.conference.mediaOpen = false;
 					},
 					addParticipant: function(friend) {
 						if (!this.isRoom) {
