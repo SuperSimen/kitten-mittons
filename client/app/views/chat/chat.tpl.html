@@ -77,15 +77,18 @@
 									<div ng-show="message.fileId" ng-init="file = getFile(message.fileId)">
 										<div class="uninett-chatbox-entry uninett-chatbox-entry-file" ng-class="file.sending ? 'uninett-chatbox-entry-file-send' : 'uninett-chatbox-entry-file-recv'">
 
-											<div ng-hide="file.finished">
+											<div ng-hide="file.finished || file.cancelled">
 												<div>{{file.sending && "Sending " + file.filename + " to " || "Receiving " + file.filename + " from "}} {{getFriendFromId(file.user).name}}<span class="tab">{{bytesToSize(file.size)}}</span>{{file.failed && " - Failed"}}</div>
 												<div class="progress" >
 													<div class="progress-bar" ng-class="{'progress-bar-danger': file.failed}" ba-progress-bar progress="file.progress">
 													</div>
 												</div>
 											</div>
-											<div ng-show="file.finished">
+											<div ng-show="file.finished && !file.cancelled">
 												{{file.failed && failed || file.filename + (file.sending && ' was sent to ' || ' was received from ') + getFriendFromId(file.user).name}}
+											</div>
+											<div ng-show="file.cancelled">
+												{{file.filename + " was cancelled"}}
 											</div>
 
 											<button class="btn btn-info" ng-show="file.acceptPossible()" ng-click="file.accept()"> Accept </button>

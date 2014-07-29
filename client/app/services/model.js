@@ -99,7 +99,22 @@
 						return !this.accepted && !this.cancelled && !this.sending;
 					},
 					cancelPossible: function() {
-						return !this.accepted && !this.cancelled;
+						if (!this.cancelled) {
+							if (this.sending) {
+								if (!this.finished) {
+									return true;
+								}
+							}
+							else {
+								if (this.accepted) {
+									return !this.finished;
+								}
+								else {
+									return true;
+								}
+							}
+						}
+						return false;
 					},
 					accept: function() {
 						this.accepted = true;
@@ -111,6 +126,8 @@
 				};
 
 				model.chat.get(utility.getIdFromJid(user)).addFileMessage(id);
+
+				return this.list[id];
 			},
 			get: function(id) {
 				return this.list[id];

@@ -18,9 +18,6 @@
 		function fileHandler(data, from) {
 
 			if (data.status === "sof") {
-				$rootScope.$apply(function() {
-					model.file.add(data.id, data.filename, from, false, data.size);
-				});
 
 				initiateFileSystem(data.id, data.filename, data.size, data.totalSlices, function() {
 					if (storage[data.id]) {
@@ -43,107 +40,134 @@
 					};
 					storage[data.id].sender = webrtc.getFileSender(from, "fileReceiver");
 
-					signalFile(from, data.id, "sof_ack", data.totalSlices, data.filename);
-				});
-			}
-			else if (data.status === "sos") {
-				storage[data.id].slices[data.slice] = {
-					totalChunks: data.totalNumber,
-					counter: 0,
-					eos: false,
-					chunks: [],
-					getByteArray: function() {
-						var byteArrays = [];
-						for (var i in this.chunks) {
-							for (var j in this.chunks[i]) {
-								var temp = this.chunks[i][j];
-								if (!temp) {
-									return console.error("Panic! missing chunk");
-								}
-								byteArrays.push(this.chunks[i][j]);
-							}
-						}
-						return byteArrays;
-					}
-				};
-
-				storage[data.id].totalNumbers[data.slice] = data.totalNumber;
-				signalSlice(from, data.id, "sos_ack", data.slice, data.totalSlices, data.totalNumber, data.filename);
-			}
-			else if (data.status === "ongoing") {
-				if (!storage[data.id].sliceSize) storage[data.id].sliceSize = data.totalNumber;
-
-				if (data.number % 25 === 0) {
-					var progress = (storage[data.id].counter / (storage[data.id].totalSlices * storage[data.id].sliceSize)) * 100;
-
 					$rootScope.$apply(function() {
-						model.file.list[data.id].progress = progress;
+						storage[data.id].fileObject = model.file.add(data.id, data.filename, from, false, data.size);
+
+						var watcher = $rootScope.$watch(function() {return storage[data.id].fileObject.cancelled;}, function (newValue) {
+							if (newValue) {
+								signalFile(data.id, "cancel");
+								delete storage[data.id];
+
+								watcher();
+							}
+						});
+					});
+
+
+					signalFile(data.id, "sof_ack", data.totalSlices, data.filename);
+				});
+				
+			}
+			else if (storage[data.id]) {
+				if (data.status === "sos") {
+					storage[data.id].slices[data.slice] = {
+						totalChunks: data.totalNumber,
+						counter: 0,
+						eos: false,
+						chunks: [],
+						getByteArray: function() {
+							var byteArrays = [];
+							for (var i in this.chunks) {
+								for (var j in this.chunks[i]) {
+									var temp = this.chunks[i][j];
+									if (!temp) {
+										return console.error("Panic! missing chunk");
+									}
+									byteArrays.push(this.chunks[i][j]);
+								}
+							}
+							return byteArrays;
+						}
+					};
+
+					storage[data.id].totalNumbers[data.slice] = data.totalNumber;
+					signalSlice(data.id, "sos_ack", data.slice, data.totalSlices, data.totalNumber, data.filename);
+				}
+				else if (data.status === "ongoing") {
+					if (!storage[data.id].sliceSize) storage[data.id].sliceSize = data.totalNumber;
+
+					if (data.number % 25 === 0) {
+						var progress = (storage[data.id].counter / (storage[data.id].totalSlices * storage[data.id].sliceSize)) * 100;
+
+						$rootScope.$apply(function() {
+							model.file.list[data.id].progress = progress;
+						});
+					}
+
+					storage[data.id].counter++;
+					storage[data.id].slices[data.slice].counter++;
+					var byteArrays = base64toByteArrays(data.base64);
+
+					if (storage[data.id].slices[data.slice].chunks[data.number]) {
+						console.error("same chunk twice");
+					}
+					storage[data.id].slices[data.slice].chunks[data.number] = byteArrays;
+				}
+				else if (data.status === "eos") {
+					if (storage[data.id].slices) {
+						storage[data.id].slices[data.slice].eos = true;
+					}
+					else {
+						console.error("This should not have happened. Deleted data before completing");
+						console.log(storage);
+						console.log(data);
+					}
+				}
+				else if (data.status === "eof") {
+					storage[data.id].eof = true;
+				}
+				else if (data.status === "cancel") {
+					$rootScope.$apply(function() {
+						storage[data.id].fileObject.cancel();
+						return;
 					});
 				}
-
-				storage[data.id].counter++;
-				storage[data.id].slices[data.slice].counter++;
-				var byteArrays = base64toByteArrays(data.base64);
-
-				if (storage[data.id].slices[data.slice].chunks[data.number]) {
-					console.error("same chunk twice");
-				}
-				storage[data.id].slices[data.slice].chunks[data.number] = byteArrays;
-			}
-			else if (data.status === "eos") {
-				if (storage[data.id].slices) {
-					storage[data.id].slices[data.slice].eos = true;
-				}
 				else {
-					console.error("This should not have happened. Deleted data before completing");
-					console.log(storage);
-					console.log(data);
+					console.log("You should not see this. Status: " + data.status);
 				}
-			}
-			else if (data.status === "eof") {
-				storage[data.id].eof = true;
+
+				if (storage[data.id].slices[data.slice] &&
+					storage[data.id].slices[data.slice].eos &&
+						storage[data.id].slices[data.slice].counter ===
+							storage[data.id].slices[data.slice].totalChunks) {
+
+
+					var byteArraysForCompleteSlice = storage[data.id].slices[data.slice].getByteArray();
+					var blob = new Blob(byteArraysForCompleteSlice, {type: "application/octet-stream"});
+
+					delete storage[data.id].slices[data.slice];
+
+					if (data.slice === data.totalSlices) {
+						sandbox[data.id].appendBlob(blob, true);
+						storage[data.id].receivedEntireFile = true;
+					}
+					else {
+						sandbox[data.id].appendBlob(blob, false);
+					}
+					signalSlice(data.id, "eos_ack", data.slice, data.totalSlices, data.totalNumber, data.filename);
+				}
+
+				if (storage[data.id].eof &&
+					storage[data.id].counter === storage[data.id].getTotalNumber() &&
+						storage[data.id].receivedEntireFile) {
+
+					$rootScope.$apply(function() {
+						console.log("received entire file");
+					});
+					signalFile(data.id, "eof_ack", data.totalSlices, data.filename);
+
+
+					cleanUp(data.id);
+				}
 			}
 			else {
-				console.log("You should not see this. Status: " + data.status);
+				console.log("received file data without a home");
 			}
 
-			if (storage[data.id] && storage[data.id].slices[data.slice] &&
-				storage[data.id].slices[data.slice].eos &&
-				storage[data.id].slices[data.slice].counter ===
-				storage[data.id].slices[data.slice].totalChunks) {
-
-
-				var byteArraysForCompleteSlice = storage[data.id].slices[data.slice].getByteArray();
-				var blob = new Blob(byteArraysForCompleteSlice, {type: "application/octet-stream"});
-
-				delete storage[data.id].slices[data.slice];
-
-				if (data.slice === data.totalSlices) {
-					sandbox[data.id].appendBlob(blob, true);
-					storage[data.id].receivedEntireFile = true;
-				}
-				else {
-					sandbox[data.id].appendBlob(blob, false);
-				}
-				signalSlice(from, data.id, "eos_ack", data.slice, data.totalSlices, data.totalNumber, data.filename);
-			}
-			
-			if (storage[data.id] && storage[data.id].eof &&
-				storage[data.id].counter === storage[data.id].getTotalNumber() &&
-				storage[data.id].receivedEntireFile) {
-
-				$rootScope.$apply(function() {
-					console.log("received entire file");
-				});
-				signalFile(from, data.id, "eof_ack", data.totalSlices, data.filename);
-
-
-				cleanUp(data.id);
-			}
 		}
 
 
-		function signalFile(to, id, status, totalSlices, filename) {
+		function signalFile(id, status, totalSlices, filename) {
 			var tempFile = {
 				id: id,
 				status: status,
@@ -158,7 +182,7 @@
 			}
 		}
 
-		function signalSlice(to, id, status, slice, totalSlices, totalNumber, filename) {
+		function signalSlice(id, status, slice, totalSlices, totalNumber, filename) {
 			var tempFile = {
 				id: id,
 				slice: slice,
@@ -277,13 +301,17 @@
 									fileEntry.createWriter(function(fileWriter) {
 										fileWriter.onwriteend = function(e) {
 											if (lastBlob) {
+
 												var watcher = $rootScope.$watch(function() {return model.file.list[id].accepted;}, function(newValue) {
 													if (newValue) {
 														sandbox[id].downloadFile();
 														watcher();
 													}
 												});
-												model.file.list[id].finished = true;
+
+												$rootScope.$apply(function() {
+													model.file.list[id].finished = true;
+												});
 											}
 										};
 										fileWriter.onerror = function(e) {

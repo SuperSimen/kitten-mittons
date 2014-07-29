@@ -187,8 +187,7 @@
 					userid: person.userid
 				};
 				$http.post('/api/inviteUninettPerson', JSON.stringify(temp)).success(function(data, status) {
-					model.user.info = data;
-
+					console.log(data);
 				}).error(utility.handleHttpError);
 			}
 		};
@@ -415,7 +414,6 @@
 					}
 					$rootScope.$apply(function() {
 						if (data.type === "unavailable") {
-							console.log(friend.name + " went offline");
 							friend.online = false;
 						}
 						else {
@@ -477,7 +475,6 @@
 									}
 									model.groups.list[groupId].addFriend(friend);
 									if (data.type === "unavailable") {
-							console.log(friend.name + " went offline");
 										friend.mucOnline = false;
 									}
 									else {
@@ -492,7 +489,6 @@
 									}
 									if (!codes["110"]) {
 										if (data.type === "unavailable") {
-							console.log(friend.name + " went offline");
 											friend.mucOnline = false;
 											model.chat.getWithGroupId(groupId).removeParticipant(friend);
 										}
