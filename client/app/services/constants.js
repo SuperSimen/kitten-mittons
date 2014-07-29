@@ -24,6 +24,7 @@
 				boshUrl: "https://meet-test.akademia.no/http-bind",
 				serverUrl: "meet-test.akademia.no",
 				mucServerUrl: "conference.meet-test.akademia.no",
+				uninettJabber: "jabber.uninett.no",
 				mucUser: "http://jabber.org/protocol/muc#user",
 				mucOwner: "http://jabber.org/protocol/muc#owner",
 				discoInfo: "http://jabber.org/protocol/disco#info",
@@ -79,6 +80,12 @@
 		};
 		utility.getRoomJidFromId = function(id) {
 			return id + "@" + constants.xmpp.mucServerUrl;
+		};
+
+		utility.getJabberJidFromId = function(id) {
+			id = utility.getNicknameFromJid(id);
+			id += "@" + constants.xmpp.uninettJabber;
+			return id;
 		};
 
 		utility.getBareJid = function(jid) {

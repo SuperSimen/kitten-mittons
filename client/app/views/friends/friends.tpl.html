@@ -1,79 +1,118 @@
-<div class="row color-grey fill-height border-left scroll-y default-cursor">
-		
+<div class="row color-grey fill-height border-left default-cursor">
 	<div class="col-md-12 fill-height">
-		<div ng-hide="showSearch" class="fill-height" ng-init="showSearch = false">
+		<div class="fill-height">
+			<div class="row border-bottom name-tag uninett-section-header-bar"> 
+				<div class="col-md-12 fill-height hide-overflow">
+					<h3 class="name-tag align-center uninett-section-header">{{user.info.name}}</h3>
+				</div>
+			</div>
+			<div class="fill-under-name-tag uninett-group">
+				<div class="input-group">	
+					<div class="input-group-btn">
+						<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" tabindex="-1">
+							<span class="caret"></span>
+							<span class="sr-only">Toggle Dropdown</span>
+						</button>
+						<ul class="dropdown-menu" role="menu">
+							<li><a href ng-click="setLocalSearch()"> Contacts </a></li>
+							<li class="divider"></li>
+							<li ng-repeat="realm in user.realms">
+							<a href ng-click="setRealmSearch(realm)">{{realm.name}}</a>
+							</li>
+						</ul>
+					</div>
+					<input type="text" class="form-control" ng-model="search.query">
+				</div>
+				<div ng-show="search.isRealmSearch && search.query" class="fill-height">
+					<div class="row scroll-y fill-height">
+						<div class="col-md-12 small-font">
+							<div ng-repeat="person in search.list" ng-mouseenter="showHidden = true" ng-mouseleave="showHidden = false" ng-init="showHidden = false" class="row hover-white uninett-friend-list-entry">
+								<div ng-show="showHidden && person.hasImage()" class="col-md-4 inline-block">
+									<img class="small-image" ng-src="{{person.getImage()}}">
+								</div>
+								<div ng-class="{'col-md-8': showHidden && person.hasImage(), 'col-md-12': !(showHidden && person.hasImage()), 'small-image': showHidden}" class="vertical-align inline-block no-wrap">
+									<div class="">{{person.name}}</div>
+									<span ng-show="showHidden">
+										{{person.userid}}
+										<br>
+										{{person.mail}}
+										<br>
+										<div class="align-center">
+											<i ng-click="addBestFriendUWAP(person)" class="pointer fa fa-plus fa-inverse fa-2x"></i>
+											<i ng-click="sendInvite(person)" class="pointer fa fa-paperclip fa-inverse fa-2x"></i>
+										</div>
+									</span>
+								</div>
 
-			<div class="fill-top">
-				<div class="row border-bottom name-tag uninett-section-header-bar"> 
-					<div class="col-md-12 fill-height hide-overflow">
-						<h3 class="name-tag align-center uninett-section-header">{{user.info.name}}</h3>
+							</div>
+						</div>
 					</div>
 				</div>
-				<div class="fill-under-name-tag uninett-group">
-					
-					<div style="padding: 10px 0 10px 0">
-						<button class="btn btn-primary uninett-btn-signout" ng-click="signOff()">Sign Out</button>
-					</div>
-					
-					<span class="uninett-group-heading">
-						<span class="uninett-group-name">My friends</span>
-					</span>
-					<div ng-repeat="bestFriendId in friends.bestFriends" context-menu data-target="contextMenu{{$index}}" ng-click="clickOnFriend(friend)" class="row hover-white uninett-friend-list-entry">
-						<div class="col-md-12 visible-on-hover" ng-init="friend = getFriendFromId(bestFriendId)">
-							<i class="fa fa-circle icon presence-icon" ng-class="{'online': friend.online || friend.mucOnline, 'offline': !(friend.online || friend.mucOnline)}"></i>
-							<span class="tab" title="{{friend.name}} is {{ friend.online || friend.mucOnline ? 'online' : 'offline' }}">{{friend.name}}</span>
-							<span class="right visible-span pointer" ><i class="fa fa-times" ba-click ng-click="removeBestFriend(friend)"></i></span>
-						</div>
-						
-						<!-- Context menu -->
-						<div class="dropdown" id="contextMenu{{$index}}" style="position: fixed; z-index: 100;">
-							<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu2">
-								<li><a class="pointer ng-binding" role="menuitem" tabindex="1" ng-disabled="!friend.online" ng-click="actionCallSelected(friend)">Call</a></li>
-								<li><a class="pointer ng-binding" role="menuitem" tabindex="2" ng-disabled="!friend.online" ng-click="clickOnFriend(friend)">Open chat</a></li>
-								<li><a class="pointer ng-binding" role="menuitem" tabindex="2" ng-disabled="!friend.online" ng-click="actionSendFileSelected(friend)">Send file</a></li>
-								<li><a class="pointer ng-binding" role="menuitem" tabindex="3" ng-click="removeBestFriend(friend)">Remove as friend</a></li>
-							</ul>
-						</div>
-						
-					</div>
-					<div ng-repeat="tempFriend in user.info.tempFriends" class="row hover-white uninett-friend-list-entry">
-						<div ng-click="clickOnFriend(friend)" class="col-md-12 visible-on-hover" ng-hide="tempFriendExists(tempFriend)">
-							<i class="fa fa-circle icon presence-icon offline"></i>
-							<span class="tab">{{tempFriend.name}}</span>
-							<span class="right visible-span pointer"><i class="fa fa-times" ba-click ng-click="removeTempFriend(tempFriend)"></i></span>
-						</div>
-					</div>
-					<div ng-show="getNumGroups() > 0" class="row" ng-class="{'border-top': friends.bestFriends.length}">
+				<div ng-hide="search.isRealmSearch && search.query" class="fill-height">
+					<div class="row scroll-y fill-height">
+
 						<div class="col-md-12">
-							<div class="uninett-group" ng-repeat="group in groups.list">
-								<div class="uninett-group-heading row hover-white" ng-click="showMembers = !showMembers" ng-init="showMembers = 1">
-									<div class="col-md-12">
-										<span class="btn btn-sm pull-right glyphicon" ng-class="showMembers ? 'glyphicon-chevron-up' : 'glyphicon-chevron-down'"></span>
-										<span class="uninett-group-name">{{group.displayName}}</span> <span class="uninett-group-membercount" ng-show="!showMembers">({{groupMembersCount(group.friends)}})</span>
-									</div>
+							<span class="uninett-group-heading">
+								<span class="uninett-group-name">My friends</span>
+							</span>
+							<div ng-repeat="bestFriendId in friends.bestFriends" context-menu data-target="contextMenu{{$index}}" ng-click="clickOnFriend(friend)" class="row hover-white uninett-friend-list-entry">
+								<div class="col-md-12 visible-on-hover" ng-init="friend = getFriendFromId(bestFriendId)">
+									<i class="fa fa-circle icon presence-icon" ng-class="{'online': friend.online || friend.mucOnline, 'offline': !(friend.online || friend.mucOnline)}"></i>
+									<span class="tab" title="{{friend.name}} is {{ friend.online || friend.mucOnline ? 'online' : 'offline' }}">{{friend.name}}</span>
+									<span class="right visible-span pointer" ><i class="fa fa-times" ba-click ng-click="removeBestFriend(friend)"></i></span>
 								</div>
-								<div ng-show="showMembers && (getObjectLength(group.friends) === 1)">
-									<p><i>No members are online</i></p>
+
+								<!-- Context menu -->
+								<div class="dropdown" id="contextMenu{{$index}}" style="position: fixed; z-index: 100;">
+									<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu2">
+										<li><a class="pointer ng-binding" role="menuitem" tabindex="1" ng-disabled="!friend.online" ng-click="actionCallSelected(friend)">Call</a></li>
+										<li><a class="pointer ng-binding" role="menuitem" tabindex="2" ng-disabled="!friend.online" ng-click="clickOnFriend(friend)">Open chat</a></li>
+										<li><a class="pointer ng-binding" role="menuitem" tabindex="2" ng-disabled="!friend.online" ng-click="actionSendFileSelected(friend)">Send file</a></li>
+										<li><a class="pointer ng-binding" role="menuitem" tabindex="3" ng-click="removeBestFriend(friend)">Remove as friend</a></li>
+									</ul>
 								</div>
-								<div ng-show="showMembers" ng-repeat="friend in group.friends" class="row hover-white pointer uninett-friend-list-entry">
-									
-									<!-- Context menu -->
-									<div class="dropdown" id="g_contextMenu{{$index}}" style="position: fixed; z-index: 100;">
-										<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu2">
-											<li><a class="pointer ng-binding" role="menuitem" tabindex="1" ng-disabled="!friend.online" ng-click="actionCallSelected(friend)">Call</a></li>
-											<li><a class="pointer ng-binding" role="menuitem" tabindex="2" ng-disabled="!friend.online" ng-click="clickOnFriend(friend)">Open chat</a></li>
-											<li><a class="pointer ng-binding" role="menuitem" tabindex="2" ng-disabled="!friend.online" ng-click="actionSendFileSelected(friend)">Send file</a></li>
-											<li ng-show="!isBestFriend(friend)"><a class="pointer ng-binding" role="menuitem" tabindex="3" ng-click="addBestFriend(friend)">Add as friend</a></li>
-											<li ng-show="isBestFriend(friend)"><a class="pointer ng-binding" role="menuitem" tabindex="4" ng-click="removeBestFriend(friend)">Remove as friend</a></li>
-										</ul>
-									</div>
-									
-									<div context-menu data-target="g_contextMenu{{$index}}" ng-hide="isMe(friend.id)" ng-click="clickOnFriend(friend)" class="col-md-12 visible-on-hover">
-										<div class="width-95">
-											<i class="fa fa-circle icon presence-icon" ng-class="{'online': friend.online || friend.mucOnline, 'offline': !(friend.online || friend.mucOnline)}"></i>
-											<span class="tab" title="{{friend.name}} is {{ friend.online || friend.mucOnline ? 'online' : 'offline' }}">{{friend.name}}</span>
+
+							</div>
+							<div ng-repeat="tempFriend in user.info.tempFriends" class="row hover-white uninett-friend-list-entry">
+								<div ng-click="clickOnFriend(friend)" class="col-md-12 visible-on-hover" ng-hide="tempFriendExists(tempFriend)">
+									<i class="fa fa-circle icon presence-icon offline"></i>
+									<span class="tab">{{tempFriend.name}}</span>
+									<span class="right visible-span pointer"><i class="fa fa-times" ba-click ng-click="removeTempFriend(tempFriend)"></i></span>
+								</div>
+							</div>
+							<div ng-show="getNumGroups() > 0" class="row" ng-class="{'border-top': friends.bestFriends.length}">
+								<div class="col-md-12">
+									<div class="uninett-group" ng-repeat="group in groups.list">
+										<div class="uninett-group-heading row hover-white" ng-click="showMembers = !showMembers" ng-init="showMembers = 1">
+											<div class="col-md-12">
+												<span class="btn btn-sm pull-right glyphicon" ng-class="showMembers ? 'glyphicon-chevron-up' : 'glyphicon-chevron-down'"></span>
+												<span class="uninett-group-name">{{group.displayName}}</span> <span class="uninett-group-membercount" ng-show="!showMembers">({{groupMembersCount(group.friends)}})</span>
+											</div>
 										</div>
-										<span class="right visible-span pointer" ><i class="fa fa-plus" ba-click ng-click="addBestFriend(friend)"></i></span>
+										<div ng-show="showMembers && (getObjectLength(group.friends) === 1)">
+											<p><i>No members are online</i></p>
+										</div>
+										<div ng-show="showMembers" ng-repeat="friend in group.friends" class="row hover-white pointer uninett-friend-list-entry">
+
+											<!-- Context menu -->
+											<div class="dropdown" id="g_contextMenu{{$index}}" style="position: fixed; z-index: 100;">
+												<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu2">
+													<li><a class="pointer ng-binding" role="menuitem" tabindex="1" ng-disabled="!friend.online" ng-click="actionCallSelected(friend)">Call</a></li>
+													<li><a class="pointer ng-binding" role="menuitem" tabindex="2" ng-disabled="!friend.online" ng-click="clickOnFriend(friend)">Open chat</a></li>
+													<li><a class="pointer ng-binding" role="menuitem" tabindex="2" ng-disabled="!friend.online" ng-click="actionSendFileSelected(friend)">Send file</a></li>
+													<li ng-show="!isBestFriend(friend)"><a class="pointer ng-binding" role="menuitem" tabindex="3" ng-click="addBestFriend(friend)">Add as friend</a></li>
+													<li ng-show="isBestFriend(friend)"><a class="pointer ng-binding" role="menuitem" tabindex="4" ng-click="removeBestFriend(friend)">Remove as friend</a></li>
+												</ul>
+											</div>
+
+											<div context-menu data-target="g_contextMenu{{$index}}" ng-hide="isMe(friend.id)" ng-click="clickOnFriend(friend)" class="col-md-12 visible-on-hover">
+												<div class="width-95">
+													<i class="fa fa-circle icon presence-icon" ng-class="{'online': friend.online || friend.mucOnline, 'offline': !(friend.online || friend.mucOnline)}"></i>
+													<span class="tab" title="{{friend.name}} is {{ friend.online || friend.mucOnline ? 'online' : 'offline' }}">{{friend.name}}</span>
+												</div>
+												<span class="right visible-span pointer" ><i class="fa fa-plus" ba-click ng-click="addBestFriend(friend)"></i></span>
+											</div>
+										</div>
 									</div>
 								</div>
 							</div>
@@ -81,49 +120,9 @@
 					</div>
 				</div>
 			</div>
-			<div class="fill-bottom align-center fill-width">
-				<i ng-click="showSearch = true" class="pointer fa fa-search fa-inverse fa-2x"></i>
-			</div>
 
 		</div>
 
-		<div ng-show="showSearch" class="fill-height">
-			<div class="row scroll-y fill-top">
-				<div class="row border-bottom name-tag uninett-section-header-bar"> 
-					<div class="col-md-12 fill-height hide-overflow">
-						<h3 class="name-tag align-center uninett-section-header">Find</h3>
-					</div>
-				</div>
-				<div class="col-md-12 small-font">
-					<div ng-repeat="person in search.list" ng-mouseenter="showHidden = true" ng-mouseleave="showHidden = false" ng-init="showHidden = false" class="row hover-white uninett-friend-list-entry">
-						<div ng-show="showHidden && person.hasImage()" class="col-md-4 inline-block">
-							<img class="small-image" ng-src="{{person.getImage()}}">
-						</div>
-						<div ng-class="{'col-md-8': showHidden && person.hasImage(), 'col-md-12': !(showHidden && person.hasImage()), 'small-image': showHidden}" class="vertical-align inline-block no-wrap">
-							<div class="">{{person.name}}</div>
-							<span ng-show="showHidden">
-								{{person.userid}}
-								<br>
-								{{person.mail}}
-								<br>
-								<div class="align-center">
-									<i ng-click="addBestFriendUWAP(person)" class="pointer fa fa-plus fa-inverse fa-2x"></i>
-								</div>
-							</span>
-						</div>
-
-					</div>
-				</div>
-			</div>
-			<div class="fill-bottom">
-				<div style="width:calc(100% - 34px);" class="inline-block">
-					<input type="text" class="fill-width" ng-model="search.query">
-				</div>
-				<div class="right">
-					<i ng-click="showSearch = false" class="pointer fa fa-times-circle fa-inverse fa-2x"></i>
-				</div>
-			</div>
-		</div>
 
 	</div>
 </div>

@@ -365,8 +365,23 @@
 			query: "",
 			searchId: 0,
 			unsettable: false,
-			currentRealm: "uninett.no",
-
+			currentRealm: null,
+			setRealmSearch: function(realm) {
+				console.log("setRealm search");
+				console.log(realm);
+				if (realm) {
+					this.currentRealm = realm;
+					this.isRealmSearch = true;
+					this.isLocalSearch = false;
+				}
+			},
+			setLocalSearch: function() {
+				this.currentRealm = null;
+				this.isRealmSearch = false;
+				this.isLocalSearch = true;
+			},
+			isLocalSearch: true,
+			isRealmSearch: false,
 			list: [],
 			addPeopleToResults: function(people, searchId) {
 				if (this.searchId !== searchId) {

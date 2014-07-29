@@ -21,6 +21,14 @@ app.controller( 'friendsController', function(main, $state, $scope, model, fileD
 	$scope.getNumGroups = function() {
 		return Object.keys($scope.groups.list).length;
 	};
+
+	$scope.setLocalSearch = function() {
+		model.search.setLocalSearch();
+	};
+
+	$scope.setRealmSearch = function(realm) {
+		model.search.setRealmSearch(realm);
+	};
 	
 	$scope.actionCallSelected = function(friend) {
 		console.log(friend);
@@ -65,6 +73,9 @@ app.controller( 'friendsController', function(main, $state, $scope, model, fileD
 	$scope.addBestFriendUWAP = function(friend) {
 		$scope.showSearch = false;
 		main.addBestFriendUWAP(friend);
+	};
+	$scope.sendInvite = function(friend) {
+		main.sendInviteToSearchPerson(friend);
 	};
 	
 	$scope.isBestFriend = function(friend) {

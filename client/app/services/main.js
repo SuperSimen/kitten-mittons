@@ -24,7 +24,10 @@
 				});
 
 				var timeoutPromise;
-				$rootScope.$watch(function() {return model.search.query;}, function(newValue) {
+				$rootScope.$watch(function() {return model.search.query;}, search);
+				$rootScope.$watch(function() {return model.search.currentRealm;}, search);
+
+				function search(newValue) {
 					if (newValue) {
 						if (timeoutPromise) {
 							$timeout.cancel(timeoutPromise);
@@ -38,7 +41,8 @@
 						model.search.unsettable = true;
 						model.search.clearResults();
 					}
-				});
+
+				}
 
 			}
 		};
@@ -169,6 +173,12 @@
 					messageObject.arrived = true;
 				});
 			});
+		};
+
+		main.sendInviteToSearchPerson = function(person) {
+			var jid = utility.getJabberJidFromId(person.userid);
+			var message = "Hei. " + model.user.info.name + " har invitert deg til http://webrtc.akademia.no";
+			xmpp.sendMessage(jid, message, "chat");
 		};
 
 		main.sendGroupMessage = function(to, message) {
@@ -561,8 +571,7 @@
 
 
 		main.search = function() {
-			if (!model.search.query) {return;}
-
+			if (!model.search.query || !model.search.currentRealm) {return;}
 
 			UWAP.getPeople(model.user.token, (function(searchId) {
 				return function (data) {
@@ -570,7 +579,7 @@
 						model.search.addPeopleToResults(data.people, searchId);
 					}
 				};
-			})(model.search.getId()), model.search.currentRealm , model.search.query);
+			})(model.search.getId()), model.search.currentRealm.realm , model.search.query);
 		};
 
 		main.sendFiles = function(to, files) {
