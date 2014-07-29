@@ -187,7 +187,6 @@
 					userid: person.userid
 				};
 				$http.post('/api/inviteUninettPerson', JSON.stringify(temp)).success(function(data, status) {
-					console.log(data);
 				}).error(utility.handleHttpError);
 			}
 		};
