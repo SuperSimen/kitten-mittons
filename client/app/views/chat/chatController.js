@@ -318,6 +318,33 @@ app.controller( 'chatController', function($state, $scope, main, model, utility,
 		}
 	};
 
+	$scope.getGroupRoomName = function() {
+		
+		if($scope.currentChat && $scope.currentChat.isRoom) {
+			
+			var arr = (function(obj) {
+				var arr = [];
+				for(var i in obj) {
+					arr.push(obj[i]);
+				}
+				return arr;
+			})($scope.currentChat.participants);
+			
+			var names = arr.filter(function(friend) {
+				return !friend.isMe() && friend.isOnline();
+			}).map(function(friend) {
+				return friend.name;
+			});
+
+			if(names.length > 0) {
+				return "Group room" + " with " + names.join(", ");			
+			}
+		}
+		
+		return "Empty group room";
+		
+	};
+
 	/**
 	 * Generates a display name from the message
 	 * @param {type} message
