@@ -18,7 +18,7 @@
     "angular": "~1.2.19",
     "angular-ui-router": "~0.2.10",
     "angular-bootstrap": "~0.11.0",
-    "strophejs": "~1.1.1",
+    "strophejs": "~1.1.3",
     "bootstrap": "~3.2.0",
     "uninett-bootstrap-theme": "*",
     "angular-animate": "~1.2.19",
