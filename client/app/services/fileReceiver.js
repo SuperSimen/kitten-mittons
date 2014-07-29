@@ -277,10 +277,13 @@
 									fileEntry.createWriter(function(fileWriter) {
 										fileWriter.onwriteend = function(e) {
 											if (lastBlob) {
+												var watcher = $rootScope.$watch(function() {return model.file.list[id].accepted;}, function(newValue) {
+													if (newValue) {
+														sandbox[id].downloadFile();
+														watcher();
+													}
+												});
 												model.file.list[id].finished = true;
-												model.file.list[id].download = function() {
-													sandbox[id].downloadFile();
-												};
 											}
 										};
 										fileWriter.onerror = function(e) {

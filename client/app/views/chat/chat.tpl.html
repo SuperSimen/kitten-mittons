@@ -78,8 +78,8 @@
 												</div>
 											</div>
 											<div ng-show="file.finished">
-												{{file.failed && failed || file.filename + (file.sent && ' was sent to ' || ' was received from ') + getFriendFromId(file.user).name}}
-												<button class="btn btn-info" ng-show="file.download" ng-click="file.download()"> Download </button>
+												{{file.failed && failed || file.filename + (file.sending && ' was sent to ' || ' was received from ') + getFriendFromId(file.user).name}}
+												<button class="btn btn-info" ng-show="!file.sending && file.finished && !file.accepted" ng-click="file.accepted = true"> Download </button>
 											</div>
 										</div>
 										</div>

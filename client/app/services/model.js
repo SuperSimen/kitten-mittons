@@ -41,14 +41,14 @@
 					progress: 0,
 					accepted: false,
 					finished: false,
-					size: size
+					size: size,
 				};
 
 				model.chat.get(utility.getIdFromJid(user)).addFileMessage(id);
 			},
 			get: function(id) {
 				return this.list[id];
-			}
+			},
 		};
 		model.video = {
 			active: null,
