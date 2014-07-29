@@ -26,6 +26,11 @@ app.config( function ($stateProvider) {
 		views: {
 
 		}
+	}).state('conference.fullscreen', {
+		parent: 'standard',
+		views: {
+
+		}
 	}).state('call', {
 		views: {
 			"view2@base": {

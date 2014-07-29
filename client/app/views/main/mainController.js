@@ -11,6 +11,11 @@ app.controller( 'mainController', function($scope, model, $state, utility) {
 			"col-xs-8",
 			"col-xs-2",
 		],
+		"conference.fullscreen": [
+			"hidden",
+			"col-xs-12",
+			"hidden"
+		],
 		"call": [
 			"hidden",
 			"col-xs-12",
