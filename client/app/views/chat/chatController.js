@@ -36,7 +36,7 @@ app.controller( 'chatController', function($state, $scope, main, model, utility,
 
 
 	$scope.openFriendSelector = function() {
-		var dlg = dialogs.create('/dialogs/friendSelector.html','friendSelectorController', {}, 'lg');
+		var dlg = dialogs.create('app/dialogs/friendSelector.html','friendSelectorController', {}, 'lg');
 		
 		dlg.result.then(function(selectedFriends){
 			for (var i in selectedFriends) {
