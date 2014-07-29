@@ -2,14 +2,18 @@ app.controller( 'chatController', function($state, $scope, main, model, utility,
 	
 	$scope.call = model.call;
 	$scope.video = model.video;
-
+	$scope.conference = model.conference;
 	$scope.file = model.file;
 		
 	$scope.$watch(function () {return model.chat.currentId;}, function() {
 		$scope.currentChat = model.chat.getCurrent();
+		if($scope.currentChat && $scope.currentChat.conferenceOpen && model.conference.mediaActive) {
+			$scope.openConference();
+		}
 	});
 
 	$scope.openConference = function() {
+		model.conference.mediaActive = true;
 		$scope.currentChat.openConference();
 		$scope.gotoState("conference");
 	};
@@ -388,4 +392,5 @@ app.controller( 'chatController', function($state, $scope, main, model, utility,
 	$scope.clickVideo = function() {
 		main.call($scope.currentChat.id);
 	};
+		
 });
