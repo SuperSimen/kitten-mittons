@@ -75,11 +75,11 @@
 											<p>You accepted {{message.message}} from {{getFriendFromId(message.from).name}}</p>
 										</div>
 										<div ng-hide="message.responded">
-										<div>{{getFriendFromId(message.from).name}} wants to share {{message.message}}</div>
-										<div class="btn-group" ng-click="message.responded = true">
-											<button type="button" ng-click="respondFileInvite(message.from, message.requestId, true)" class="btn btn-success">Accept</button>
-											<button type="button" ng-click="respondFileInvite(message.from, message.requestId, false)" class="btn btn-danger">Reject</button>
-										</div>
+											<div class="btn-group pull-right" ng-click="message.responded = true">
+												<button type="button" ng-click="respondFileInvite(message.from, message.requestId, true)" class="btn btn-success">Accept</button>
+												<button type="button" ng-click="respondFileInvite(message.from, message.requestId, false)" class="btn btn-danger">Reject</button>
+											</div>
+											<div>{{getFriendFromId(message.from).name}} wants to share {{message.message}}</div>
 										</div>
 									</div>
 									<div ng-show="message.fileId" ng-init="file = getFile(message.fileId)">
