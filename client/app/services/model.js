@@ -39,11 +39,20 @@
 					user: user,
 					sending: sending,
 					progress: 0,
-					accepted: false,
 					finished: false,
-					cancel: null,
+					accepted: false,
+					cancelled: false,
+					acceptPossible: function() {
+						return !this.accepted && !this.cancelled && !this.sending;
+					},
+					cancelPossible: function() {
+						return !this.accepted && !this.cancelled;
+					},
 					accept: function() {
 						this.accepted = true;
+					},
+					cancel: function() {
+						this.cancelled = true;
 					},
 					size: size,
 				};

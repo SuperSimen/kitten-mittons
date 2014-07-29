@@ -76,12 +76,13 @@
 													<div class="progress-bar" ng-class="{'progress-bar-danger': file.failed}" ba-progress-bar progress="file.progress">
 													</div>
 												</div>
-												<button class="btn btn-info" ng-show="file.cancel" ng-click="file.cancel()"> Cancel </button>
 											</div>
 											<div ng-show="file.finished">
 												{{file.failed && failed || file.filename + (file.sending && ' was sent to ' || ' was received from ') + getFriendFromId(file.user).name}}
-												<button class="btn btn-info" ng-show="!file.sending && file.finished && !file.accepted" ng-click="file.accept()"> Download </button>
 											</div>
+
+											<button class="btn btn-info" ng-show="file.acceptPossible()" ng-click="file.accept()"> Accept </button>
+											<button class="btn btn-info" ng-show="file.cancelPossible()" ng-click="file.cancel()"> Cancel </button>
 										</div>
 										</div>
 									</div>
