@@ -328,9 +328,7 @@ function init() {
 		clientSecret: secret.uwapClientSecret
 	},
 	function(accessToken, refreshToken, profile, done) {
-		console.log("getting info for " + accessToken);
 		getUserInfo(accessToken, done);
-		console.log("finished getting info for " + accessToken);
 	}));
 
 	function getUserInfo(token, done) {
