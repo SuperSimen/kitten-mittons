@@ -6,7 +6,7 @@
 
 <div class="modal-body">
 	<div ng-repeat="friend in friends">
-		<div ng-show="!isMe(friend.id) && (friend.online || friend.mucOnline)">
+		<div ng-show="!friend.isMe() && (friend.online || friend.mucOnline)">
 			<input type="checkbox" ng-checked="isFriendSelected(friend)" ng-click="toggleFriend(friend)"/>
 			<span class="tab">{{friend.name}}</span>
 		</div>

@@ -176,9 +176,19 @@
 		};
 
 		main.sendInviteToSearchPerson = function(person) {
-			var jid = utility.getJabberJidFromId(person.userid);
-			var message = "Hei. " + model.user.info.name + " har invitert deg til http://webrtc.akademia.no";
-			xmpp.sendMessage(jid, message, "chat");
+			if (person.o.toLowerCase() === "uninett") {
+				var temp = {
+					name: person.name,
+					mail: person.mail,
+					o: person.o,
+					source: person.source,
+					userid: person.userid
+				};
+				$http.post('/api/inviteUninettPerson', JSON.stringify(temp)).success(function(data, status) {
+					model.user.info = data;
+
+				}).error(utility.handleHttpError);
+			}
 		};
 
 		main.sendGroupMessage = function(to, message) {
@@ -307,15 +317,6 @@
 					}
 
 
-				} 
-			},
-			conferenceInvite: function(data) {
-				var body = data.getChildrenByTagName("body");
-				if (body) {
-					var conference = JSON.parse(body[0].children[0].data);
-					$rootScope.$apply(function() {
-						model.conference.addInvitedTo(conference);
-					});
 				} 
 			},
 			roomInvite: function(data) {

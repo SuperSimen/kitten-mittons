@@ -115,8 +115,8 @@ app.controller( 'friendsController', function(main, $state, $scope, model, fileD
 	 */
 	$scope.filterByQuery = function(friend) {
 		var exp = new RegExp($scope.search.query, 'i');
-		var ret = !$scope.isFiltering()
-			|| exp.test(friend.name);
+		var ret = !$scope.isFiltering() ||
+			exp.test(friend.name);
 		return ret;
 	};
 
@@ -142,11 +142,6 @@ app.controller('friendSelectorController', function($scope,$modalInstance,data, 
 	$scope.friends = model.friends.list;
 	var selectedFriends = {};
 
-	console.log($scope);
-
-	$scope.isMe = $rootScope.isMe;
-
-
 	$scope.toggleFriend = function(friend) {
 		selectedFriends[friend.id] = !selectedFriends[friend.id];
 	};
@@ -155,6 +150,11 @@ app.controller('friendSelectorController', function($scope,$modalInstance,data, 
 	};
 
 	$scope.accept = function(){
+		for (var i in selectedFriends) {
+			if (!selectedFriends[i]) {
+				delete selectedFriends[i];
+			}
+		}
 		$modalInstance.close(selectedFriends);
 	};
 

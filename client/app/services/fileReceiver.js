@@ -133,7 +133,7 @@
 				storage[data.id].receivedEntireFile) {
 
 				$rootScope.$apply(function() {
-					model.file.remove(data.id);
+					console.log("received entire file");
 				});
 				signalFile(from, data.id, "eof_ack", data.totalSlices, data.filename);
 
@@ -277,7 +277,10 @@
 									fileEntry.createWriter(function(fileWriter) {
 										fileWriter.onwriteend = function(e) {
 											if (lastBlob) {
-												sandbox[id].downloadFile();
+												model.file.list[id].finished = true;
+												model.file.list[id].download = function() {
+													sandbox[id].downloadFile();
+												};
 											}
 										};
 										fileWriter.onerror = function(e) {

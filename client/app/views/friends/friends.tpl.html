@@ -49,9 +49,9 @@
 					</div>
 				</div>
 				<div ng-hide="search.isRealmSearch && search.query" class="fill-height">
-					<div class="row scroll-y fill-height">
+					<div class="row fill-height">
 
-						<div class="col-md-12">
+						<div class="col-md-12 fill-height scroll-y">
 							<span class="uninett-group-heading">
 								<span class="uninett-group-name">My friends</span>
 							</span>
@@ -105,7 +105,7 @@
 												</ul>
 											</div>
 
-											<div context-menu data-target="g_contextMenu{{$index}}" ng-hide="isMe(friend.id)" ng-click="clickOnFriend(friend)" class="col-md-12 visible-on-hover">
+											<div context-menu data-target="g_contextMenu{{$index}}" ng-hide="friend.isMe()" ng-click="clickOnFriend(friend)" class="col-md-12 visible-on-hover">
 												<div class="width-95">
 													<i class="fa fa-circle icon presence-icon" ng-class="{'online': friend.online || friend.mucOnline, 'offline': !(friend.online || friend.mucOnline)}"></i>
 													<span class="tab" title="{{friend.name}} is {{ friend.online || friend.mucOnline ? 'online' : 'offline' }}">{{friend.name}}</span>

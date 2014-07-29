@@ -146,9 +146,6 @@ app.controller( 'chatController', function($state, $scope, main, model, utility,
 	$scope.getFile = function(fileId) {
 		return model.file.list[fileId];
 	};
-	$scope.getFileLog = function(fileId) {
-		return model.file.log[fileId];
-	};
 
 	$scope.showInfoBar = function() {
 		return $scope.hasIncomingCall();
