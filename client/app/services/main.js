@@ -155,6 +155,8 @@
 			xmpp.addHandler(xmppHandlers.message, null, "message", "chat");
 			xmpp.addHandler(xmppHandlers.conferenceInvite, null, "message", "conferenceInvite");
 			xmpp.addHandler(xmppHandlers.roomInvite, null, "message", "roomInvite");
+			xmpp.addHandler(xmppHandlers.fileInvite, null, "message", "fileInvite");
+			xmpp.addHandler(xmppHandlers.fileInviteResponse, null, "message", "fileInviteResponse");
 			xmpp.addHandler(xmppHandlers.call, null, "message", "call");
 			xmpp.addHandler(xmppHandlers.presence, constants.xmpp.client, "presence");
 			xmpp.addHandler(xmppHandlers.roster, constants.xmpp.roster, "iq");
@@ -317,6 +319,35 @@
 					}
 
 
+				} 
+			},
+			conferenceInvite: function(data) {
+				var body = data.getChildrenByTagName("body");
+				if (body) {
+					var conference = JSON.parse(body[0].children[0].data);
+					$rootScope.$apply(function() {
+						model.conference.addInvitedTo(conference);
+					});
+				} 
+			},
+			fileInvite: function(data) {
+				var body = data.getChildrenByTagName("body");
+				if (body) {
+					
+					var request = JSON.parse(body[0].children[0].data);
+					
+					$rootScope.$apply(function() {
+						model.chat.get(request.roomId).addFileInviteMessage(request);
+					});
+				} 
+			},
+			fileInviteResponse: function(data) {
+				
+				var body = data.getChildrenByTagName("body");
+				
+				if (body) {
+					var response = JSON.parse(body[0].children[0].data); // response.roomId
+					model.file.resolveRequest(response.id, response.isAccepted);
 				} 
 			},
 			roomInvite: function(data) {
@@ -541,6 +572,44 @@
 			}
 			return friend;
 		}
+
+		/**
+		 * 
+		 * @param {type} participants
+		 * @param {type} roomId
+		 */
+		main.sendFileInvite = function(friend_id, room_id, file) {
+			
+			var request = model.file.createRequest(friend_id, room_id, file);
+			
+			var request_data = {
+				name: file.name,
+				size: file.size,
+				id: request.id,
+				roomId: room_id,
+				from: model.user.info.xmpp.jid
+			};
+			
+			xmpp.sendMessage(friend_id, JSON.stringify(request_data), "fileInvite", function() {
+				$rootScope.$apply(function() {});
+			});
+			
+			return request.task.promise;
+		};
+		
+		main.respondFileInvite = function(from_id, room_id, request_id, is_accepted) {
+						
+			var response_data = {
+				roomId: room_id,
+				id: request_id,
+				isAccepted: is_accepted
+			};
+			
+			xmpp.sendMessage(from_id, JSON.stringify(response_data), "fileInviteResponse", function() {
+				$rootScope.$apply(function() {});
+			});
+			
+		};
 
 		main.sendRoomInvite = function(friend, roomId) {
 			xmpp.sendMessage(friend.id, roomId, "roomInvite", function() {

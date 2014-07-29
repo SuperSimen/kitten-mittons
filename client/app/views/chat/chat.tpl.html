@@ -17,6 +17,9 @@
 								</button>
 							</div>
 							<div ng-show="currentChat.isRoom" class="btn-group button-group">
+								<button type="button" class="btn btn-default" ng-click="sendFileRequest()">
+									<span class="glyphicon glyphicon-file"></span> Send File
+								</button>
 								<button type="button" class="btn btn-default" ng-click="openFriendSelector()">
 									<i class="fa fa-user"></i> Invite 
 								</button>
@@ -65,6 +68,18 @@
 												<i class="fa fa-spinner fa-spin"></i>
 											</span>
 											<div style="word-wrap: break-word;" class="width-95">{{message.message}}</div>
+										</div>
+									</div>
+									<div ng-show="message.requestId" class="uninett-chatbox-entry uninett-chatbox-entry-filerequest">
+										<div ng-show="message.responded">
+											<p>You accepted {{message.message}} from {{getFriendFromId(message.from).name}}</p>
+										</div>
+										<div ng-hide="message.responded">
+										<div>{{getFriendFromId(message.from).name}} wants to share {{message.message}}</div>
+										<div class="btn-group" ng-click="message.responded = true">
+											<button type="button" ng-click="respondFileInvite(message.from, message.requestId, true)" class="btn btn-success">Accept</button>
+											<button type="button" ng-click="respondFileInvite(message.from, message.requestId, false)" class="btn btn-danger">Reject</button>
+										</div>
 										</div>
 									</div>
 									<div ng-show="message.fileId" ng-init="file = getFile(message.fileId)">

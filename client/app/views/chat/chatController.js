@@ -179,19 +179,55 @@ app.controller( 'chatController', function($state, $scope, main, model, utility,
 		$scope.currentChat.addSystemMessage(message);
 	}
 	
+	$scope.sendFileToParticipants = function(file) {
+		
+		if(!$scope.currentChat) {
+			return;
+		}
+		
+		if(!$scope.currentChat.isRoom) {
+			main.sendFiles($scope.currentChat.id, [file]);
+		} else {
+			
+			for(var i in $scope.currentChat.participants) {
+				
+				var p = $scope.currentChat.participants[i];
+				
+				main.sendFileInvite($scope.currentChat.participants[i].id, $scope.currentChat.id, file).then(function() {
+					main.sendFiles(p.id, [file]);
+				});
+			}
+			
+			/*
+			for(var i in $scope.currentChat.participants) {
+				var p = $scope.currentChat.participants[i];
+				main.sendFiles(p.id, [file]);
+			}
+			*/
+		}
+	};
+	
+	$scope.respondFileInvite = function(from_id, request_id, is_accepted) {
+		main.respondFileInvite(
+			from_id, 
+			$scope.currentChat.id, 
+			request_id, 
+			is_accepted
+		);
+	};
+	
 	$scope.onDropFileCallback = function(file) {
 		if($scope.currentChat) {
-			main.sendFiles($scope.currentChat.id, [file]);
+			$scope.sendFileToParticipants(file);
 		}
 	};
 	
 	$scope.sendFileRequest = function() {
 		fileDialog.open().then(function(file) {
-			main.sendFiles($scope.currentChat.id, [file]);
+			$scope.sendFileToParticipants(file);
 		});
 	};
-	
-	
+		
 	/**
 	 * Check if we're currently calling
 	 * @param {type} to

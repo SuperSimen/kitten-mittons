@@ -1,6 +1,6 @@
 (function () {
 
-	app.factory('model', function(constants, $sce, utility) {
+	app.factory('model', function(constants, $sce, utility, $q) {
 		
 		var model = {};
 		
@@ -27,6 +27,59 @@
 		};
 
 		model.file = {
+			
+			/**
+			 * List of promise objects for file send requests
+			 */
+			requests: [],
+			
+			generateRequestId: (function() {
+				var _last = 1000;
+				return function() {
+					return _last++;
+				}
+			})(),
+			
+			createRequest: function(friend_id, room_id, file) {
+				
+				var request = {
+					friendId: friend_id,
+					roomId: room_id,
+					id: model.file.generateRequestId(),
+					task: $q.defer()
+				}
+				
+				model.file.requests.push(request);
+				
+				return request;
+			},
+			
+			resolveRequest: function(request_id, is_accepted) {
+				
+				console.log("resolving request");
+				var requests = model.file.requests;
+				
+				for(var i = 0; i < requests.length; i++) {
+					if(requests[i].id == request_id) {
+						
+						var request = requests.splice(i, 1)[0];
+						
+						console.log('request', request);
+						
+						if(is_accepted) {
+							console.log("found request, resolved");
+							request.task.resolve();
+						} else {
+							console.log("found request, rejected");
+							request.task.reject();
+						}
+						
+						break;
+					}
+				}
+				
+			},
+			
 			list: {},
 			selectedFiles: [],
 			add: function(id, filename, user, sending, size) {
@@ -171,6 +224,17 @@
 							hidden: false
 						};
 						this.addObjectToList(temp);
+					},
+					addFileInviteMessage: function(request) {
+						this.addObjectToList({
+							arrived: true,
+							message: request.name + " (" + request.size + " bytes)",
+							type: 'file_invite',
+							from: request.from,
+							hidden: true,
+							requestId: request.id,
+							responded: false
+						});
 					},
 					addFileMessage: function(fileId) {
 						var temp = {
