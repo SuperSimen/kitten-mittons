@@ -586,11 +586,6 @@
 			return friend;
 		}
 
-		/**
-		 * 
-		 * @param {type} participants
-		 * @param {type} roomId
-		 */
 		main.sendFileInvite = function(friend_id, room_id, file) {
 			
 			var request = model.file.createRequest(friend_id, room_id, file);
