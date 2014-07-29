@@ -7,9 +7,10 @@
 				</div>
 			</div>
 			<div class="fill-under-name-tag uninett-group">
-				<div class="input-group">	
+				<div class="input-group uninett-search-box">	
+					<input type="text" class="form-control" ng-model="search.query">
 					<div class="input-group-btn">
-						<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" tabindex="-1">
+						<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" tabindex="-1">
 							<span class="caret"></span>
 							<span class="sr-only">Toggle Dropdown</span>
 						</button>
@@ -21,7 +22,6 @@
 							</li>
 						</ul>
 					</div>
-					<input type="text" class="form-control" ng-model="search.query">
 				</div>
 				<div ng-show="search.isRealmSearch && search.query" class="fill-height">
 					<div class="row scroll-y fill-height">

@@ -381,6 +381,10 @@ span[ng-click][disabled] {
 	white-space: nowrap;
 }
 
+.uninett-search-box {
+	margin: 10px 0 10px 0;
+}
+
 .uninett-info-bar {
     clear: both;
     margin: 5px;
