@@ -30,6 +30,10 @@ app.controller( 'mainController', function($scope, model, $state, utility) {
 		model.conference.closeActive();
 	};
 
+	$scope.bytesToSize = function(bytes) {
+		return utility.bytesToSize(bytes, 2);
+	};
+
 	$scope.getCol = function(viewNumber) {
 		var state = $state.current.name;
 		return stateViewCols[state][viewNumber - 1];

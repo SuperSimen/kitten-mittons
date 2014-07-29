@@ -1,4 +1,4 @@
-app.controller( 'videoActiveController', function(model, main, $scope) {
+app.controller( 'callController', function(model, main, $scope) {
 	$scope.smallVideo = model.video.local;
 	$scope.largeVideo = model.video.remote;
 	$scope.video = model.video;
@@ -17,7 +17,7 @@ app.controller( 'videoActiveController', function(model, main, $scope) {
 	};
 	$scope.hangup = function() {
 		main.hangup();
-		$scope.returnToChat();
+		//$scope.returnToChat();
 	};
 	$scope.toggleVideo = function() {
 		main.toggleVideo();
