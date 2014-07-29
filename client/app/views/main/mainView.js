@@ -27,6 +27,7 @@ app.config( function ($stateProvider) {
 
 		}
 	}).state('call', {
+		parent: "base",
 		views: {
 			"view2@base": {
 				controller: "videoActiveController",
