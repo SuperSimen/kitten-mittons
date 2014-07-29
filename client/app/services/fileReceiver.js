@@ -18,10 +18,6 @@
 		function fileHandler(data, from) {
 
 			if (data.status === "sof") {
-				var fileObject;
-				$rootScope.$apply(function() {
-					fileObject = model.file.add(data.id, data.filename, from, false, data.size);
-				});
 
 				initiateFileSystem(data.id, data.filename, data.size, data.totalSlices, function() {
 					if (storage[data.id]) {
@@ -44,17 +40,23 @@
 					};
 					storage[data.id].sender = webrtc.getFileSender(from, "fileReceiver");
 
+					$rootScope.$apply(function() {
+						storage[data.id].fileObject = model.file.add(data.id, data.filename, from, false, data.size);
+
+						var watcher = $rootScope.$watch(function() {return storage[data.id].fileObject.cancelled;}, function (newValue) {
+							if (newValue) {
+								signalFile(data.id, "cancel");
+								delete storage[data.id];
+
+								watcher();
+							}
+						});
+					});
+
+
 					signalFile(data.id, "sof_ack", data.totalSlices, data.filename);
 				});
-
-				var watcher = $rootScope.$watch(function() {return fileObject.cancelled;}, function (newValue) {
-					if (newValue) {
-						signalFile(data.id, "cancel");
-						delete storage[data.id];
-
-						watcher();
-					}
-				});
+				
 			}
 			else if (storage[data.id]) {
 				if (data.status === "sos") {
@@ -115,7 +117,10 @@
 					storage[data.id].eof = true;
 				}
 				else if (data.status === "cancel") {
-					console.log("received cancel");
+					$rootScope.$apply(function() {
+						storage[data.id].fileObject.cancel();
+						return;
+					});
 				}
 				else {
 					console.log("You should not see this. Status: " + data.status);

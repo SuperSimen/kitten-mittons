@@ -140,6 +140,10 @@
 
 			function senderLoop(i) {
 				return function () {
+					if (isCancelled()) {
+						return;
+					}
+
 					var blob;
 					if (i + maxSize > size) {
 						blob = file.slice(i, size);
@@ -175,6 +179,10 @@
 
 					listOfCallbacks[slice] = function() {
 						for (var i in array) {
+							if (isCancelled()) {
+								return;
+							}
+
 							sendFileChunk(id, array[i], "ongoing", slice, totalSlices, i, array.length, file.name);
 						}
 						signalSlice(id, "eos", slice, totalSlices, array.length, file.name);

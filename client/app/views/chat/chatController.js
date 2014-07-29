@@ -193,7 +193,7 @@ app.controller( 'chatController', function($state, $scope, main, model, utility,
 				
 				var p = $scope.currentChat.participants[i];
 				
-				main.sendFileInvite($scope.currentChat.participants[i].id, $scope.currentChat.id, file).then(function() {
+				main.sendFileInvite(p.id, $scope.currentChat.id, file).then(function() {
 					main.sendFiles(p.id, [file]);
 				});
 			}
