@@ -315,7 +315,7 @@ app.controller( 'chatController', function($state, $scope, main, model, utility,
 	};
 
 	$scope.enterVideoFull = function() {
-		$scope.gotoState("video");
+		$scope.gotoState("call");
 	};
 
 	/**
