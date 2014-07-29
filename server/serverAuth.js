@@ -76,7 +76,8 @@ function inviteUninettPerson (person, sender) {
 		});
 		client.on('online', function() {
 			var inviteMessage = "Hei. " + sender.name + " har invitert det til å besøke http://webrtc.akademia.no";
-			var stanza = new ltx.Element('message', { type: 'chat' }).
+			var jid = person.userid.substring(0,person.userid.indexOf("@") + 1) + "jabber.uninett.no";
+			var stanza = new ltx.Element('message', { to: jid, type: 'chat' }).
 				c('body').t(inviteMessage);
 			client.send(stanza);
 			client.end();
