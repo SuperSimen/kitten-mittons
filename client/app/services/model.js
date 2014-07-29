@@ -95,6 +95,7 @@
 			
 			list: {},
 			selectedFiles: [],
+			pendingRoomFiles: {},
 			add: function(id, filename, user, sending, size) {
 				if (this.list[id]) {
 					return console.error("not unique file id");
