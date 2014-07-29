@@ -1,7 +1,8 @@
 (function () {
 
 	app.factory('UWAP', function ( $location, $http, utility) {
-		var factory = {};
+		var UWAP = {};
+
 		var api = {
 			userInfo: "https://core.uwap.org/api/userinfo",
 			groups: "https://core.uwap.org/api/groups",
@@ -30,28 +31,28 @@
 		
 		}
 
-		factory.getUserInfo = function(token, callback) {
+		UWAP.getUserInfo = function(token, callback) {
 			sendRequest(token, api.userInfo, callback);
 		};
-		factory.getPeople = function(token, callback, realm, query) {
+		UWAP.getPeople = function(token, callback, realm, query) {
 			sendRequest(token, api.people(realm, query), callback);
 		};
 		
-		factory.getGroups = function(token, callback) {
+		UWAP.getGroups = function(token, callback) {
 			sendRequest(token, api.groups, callback);
 		};
 
-		factory.getGroupMembers = function(token, groupId, callback) {
+		UWAP.getGroupMembers = function(token, groupId, callback) {
 			sendRequest(token, api.groupMembers(groupId), callback);
 		};
 
-		factory.getRealms = function(token, callback) {
+		UWAP.getRealms = function(token, callback) {
 			sendRequest(token, api.realms, callback);
 		};
 
 		var failedHTTP = utility.handleHttpError;
 
-		return factory;
+		return UWAP;
 	});
 	
 

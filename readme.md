@@ -1,26 +1,30 @@
 ## Install
 
-Install `node` and `npm`
+First you need to install `node.js`
 
-Install `bower`:
+Then install `bower`
 ```shell
 npm -g install bower
 ```
 
-Install bower components in `client/` folder
+Install bower components from `client/`
 ```shell
 bower install
 cd bower_components/strophejs-temp && make
 ```
 
-Install node modules in `server/` folder
+Add specially licensed fonts to `client/bower_components/uninett-bootstrap-theme-temp/uninett-theme/fonts/`
+
+Install node modules from `server/`
 ```shell
 npm install
 ```
 
 Copy `server/auth/temp/secret.js` to `server/auth/secret.js` and fill in your UWAP credentials.
 
-Run your server from `server/` folder
+Add `server.crt` and `server.key` to `server/auth/` to use `HTTPS`
+
+Run your server from `server/`
 ```shell
 npm start
 ```

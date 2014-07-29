@@ -1,14 +1,15 @@
 (function () {
 
 	app.factory('webrtc', function(constants, model, $rootScope, $sce, xmpp, $timeout, utility) {
-		var webrtc = {};
-		var config = {
-			iceServers: constants.iceServers
+		var webrtc = {
+			init: function() {
+				xmpp.addHandler(handleOffer, constants.xmpp.webrtc, "message", "offer");
+				xmpp.addHandler(handleWebrtc, constants.xmpp.webrtc, "message");
+			}
 		};
 
-		webrtc.init = function() {
-			xmpp.addHandler(handleOffer, constants.xmpp.webrtc, "message", "offer");
-			xmpp.addHandler(handleWebrtc, constants.xmpp.webrtc, "message");
+		var config = {
+			iceServers: constants.iceServers
 		};
 
 		function handleWebrtc(stanza) {
@@ -116,7 +117,6 @@
 
 		};
 
-
 		function videoCall (to) {
 			getUserMedia(continueCall);
 
@@ -137,7 +137,6 @@
 				}));
 			}
 		}
-
 
 		var peerConnections = {
 			list: {},
@@ -179,7 +178,6 @@
 
 				xmpp.addHandler(this.createAnswerHandler(peerConnection, answerHandlerCallback), constants.xmpp.webrtc, "message", "answer", id);
 				xmpp.addHandler(this.createIceHandler(peerConnection), constants.xmpp.webrtc, "message", "iceCandidate", id);
-
 
 				return id;
 			},
