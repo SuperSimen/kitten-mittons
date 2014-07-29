@@ -180,6 +180,11 @@ app.controller( 'chatController', function($state, $scope, main, model, utility,
 	}
 	
 	$scope.sendFileToParticipants = function(file) {
+		function sendFiles(p, file) {
+			return function() {
+				main.sendFiles(p.id, [file]);
+			};
+		}
 		
 		if(!$scope.currentChat) {
 			return;
@@ -193,10 +198,9 @@ app.controller( 'chatController', function($state, $scope, main, model, utility,
 				
 				var p = $scope.currentChat.participants[i];
 				
-				main.sendFileInvite(p.id, $scope.currentChat.id, file).then(function() {
-					main.sendFiles(p.id, [file]);
-				});
+				main.sendFileInvite(p.id, $scope.currentChat.id, file).then(sendFiles(p, file));
 			}
+
 			
 			/*
 			for(var i in $scope.currentChat.participants) {

@@ -37,7 +37,7 @@
 				var _last = 1000;
 				return function() {
 					return _last++;
-				}
+				};
 			})(),
 			
 			createRequest: function(friend_id, room_id, file) {
@@ -47,7 +47,7 @@
 					roomId: room_id,
 					id: model.file.generateRequestId(),
 					task: $q.defer()
-				}
+				};
 				
 				model.file.requests.push(request);
 				

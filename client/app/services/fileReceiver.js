@@ -42,8 +42,13 @@
 
 					$rootScope.$apply(function() {
 						storage[data.id].fileObject = model.file.add(data.id, data.filename, from, false, data.size);
+						console.log(storage[data.id]);
 
-						var watcher = $rootScope.$watch(function() {return storage[data.id].fileObject.cancelled;}, function (newValue) {
+						var watcher = $rootScope.$watch(function() {
+							if (storage[data.id]) {
+								return storage[data.id].fileObject.cancelled;
+							}
+						}, function (newValue) {
 							if (newValue) {
 								signalFile(data.id, "cancel");
 								delete storage[data.id];
