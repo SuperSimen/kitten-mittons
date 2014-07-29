@@ -160,6 +160,7 @@
 			xmpp.addHandler(xmppHandlers.call, null, "message", "call");
 			xmpp.addHandler(xmppHandlers.presence, constants.xmpp.client, "presence");
 			xmpp.addHandler(xmppHandlers.roster, constants.xmpp.roster, "iq");
+			xmpp.addHandler(xmppHandlers.systemNotification, null, "message", "systemNotification");
 
 			gatherInfoPart2();
 
@@ -319,6 +320,20 @@
 
 				} 
 			},
+			
+			/**
+			 * Receive a system notification
+			 */
+			systemNotification: function(data) {
+				var body = data.getChildrenByTagName("body");
+				if (body) {
+					var message = body[0].children[0].data;
+					$rootScope.$apply(function() {
+						model.chat.get(model.call.currentId).addSystemMessage(message);
+					});
+				} 
+			},
+			
 			conferenceInvite: function(data) {
 				var body = data.getChildrenByTagName("body");
 				if (body) {
@@ -614,6 +629,18 @@
 				$rootScope.$apply(function() {
 
 				});
+			});
+		};
+
+		/**
+		 * Send system notification message
+		 * @param {type} friend
+		 * @param {type} message
+		 * @returns {undefined}
+		 */
+		main.sendSystemNotification = function(id, message) {
+			xmpp.sendMessage(id, message, "systemNotification", function() {
+				$rootScope.$apply();
 			});
 		};
 

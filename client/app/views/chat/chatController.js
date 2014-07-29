@@ -15,6 +15,7 @@ app.controller( 'chatController', function($state, $scope, main, model, utility,
 	$scope.openConference = function() {
 		model.conference.mediaActive = true;
 		$scope.currentChat.openConference();
+		main.sendSystemNotification($scope.currentChat.id, $scope.getFriendFromId($scope.getMe()).name + " went into video conference");
 		$scope.gotoState("conference");
 	};
 
