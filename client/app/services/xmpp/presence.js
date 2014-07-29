@@ -176,6 +176,18 @@
 			});
 		};
 
+		function addFriend(id) {
+			var friend;
+			if (!model.friends.get(id)) {
+				friend = model.friends.create(id);
+				presence.getVCard(utility.getJidFromId(id));
+			}
+			else {
+				friend = model.friends.get(id);
+			}
+			return friend;
+		}
+
 		return presence;
 	});
 
