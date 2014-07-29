@@ -47,18 +47,7 @@ app.controller( 'friendsController', function(main, $state, $scope, model, fileD
 				$scope.gotoState("chat");
 				model.chat.setCurrent(friend.id);
 			}
-			else if (currentState === "file") {
-				main.sendFiles(friend.id);
-			}
-			else if (currentState === "video") {
-				main.setupCall(friend.id);
-			}
 		}
-	};
-
-	$scope.openConference = function(conference) {
-		conference.open();
-		$scope.gotoState("conference");
 	};
 
 	$scope.addBestFriend = function(friend) {

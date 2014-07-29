@@ -3,6 +3,7 @@
 	app.factory('main', function(UWAP, xmpp, model, $state, $rootScope, $http, constants, webrtc, fileSender, fileReceiver, $timeout, utility, $sce) {
 		var main = {
 			init: function() {
+
 				globalModel = model;
 				$rootScope.gotoState("chat");
 				gatherInfoPart1();
@@ -46,26 +47,6 @@
 
 			}
 		};
-
-		$rootScope.gotoState = function(state) {
-			$state.go(state);
-		};
-
-		$rootScope.getObjectLength = function(obj) {
-			if (obj) {
-				return Object.keys(obj).length;
-			}
-		};
-
-		$rootScope.isMe = function(id) {
-			if (utility.getIdFromJid(id) === model.user.info.xmpp.jid) {
-				return true;
-			}
-			if (utility.getIdFromJid(id) === model.user.info.nickname) {
-				return true;
-			}
-			return false;
-		};
 		
 
 		function gatherInfoPart1 () { 
@@ -78,6 +59,33 @@
 				}
 
 			}).error(utility.handleHttpError);
+		}
+
+		function connectedCallback() {
+			window.onbeforeunload = function() {
+				console.log("Signing out");
+				xmpp.logOff();
+				return null;
+			};
+
+			main.setVCard();
+			webrtc.init();
+			xmpp.addHandler(xmppHandlers.mucMessage, null, "message", "groupchat" );
+			xmpp.addHandler(xmppHandlers.mucPresence, constants.xmpp.mucUser, "presence");
+			xmpp.addHandler(xmppHandlers.basicHandler);
+			xmpp.addHandler(xmppHandlers.message, null, "message", "chat");
+			xmpp.addHandler(xmppHandlers.conferenceInvite, null, "message", "conferenceInvite");
+			xmpp.addHandler(xmppHandlers.roomInvite, null, "message", "roomInvite");
+			xmpp.addHandler(xmppHandlers.fileInvite, null, "message", "fileInvite");
+			xmpp.addHandler(xmppHandlers.fileInviteResponse, null, "message", "fileInviteResponse");
+			xmpp.addHandler(xmppHandlers.call, null, "message", "call");
+			xmpp.addHandler(xmppHandlers.presence, constants.xmpp.client, "presence");
+			xmpp.addHandler(xmppHandlers.roster, constants.xmpp.roster, "iq");
+			xmpp.addHandler(xmppHandlers.systemNotification, null, "message", "systemNotification");
+
+			gatherInfoPart2();
+
+			model.conference.create();
 		}
 
 		main.videoCall = function(to) {
@@ -146,26 +154,6 @@
 			webrtc.enableAudio(audio);
 		};
 
-		function connectedCallback() {
-			main.setVCard();
-			webrtc.init();
-			xmpp.addHandler(xmppHandlers.mucMessage, null, "message", "groupchat" );
-			xmpp.addHandler(xmppHandlers.mucPresence, constants.xmpp.mucUser, "presence");
-			xmpp.addHandler(xmppHandlers.basicHandler);
-			xmpp.addHandler(xmppHandlers.message, null, "message", "chat");
-			xmpp.addHandler(xmppHandlers.conferenceInvite, null, "message", "conferenceInvite");
-			xmpp.addHandler(xmppHandlers.roomInvite, null, "message", "roomInvite");
-			xmpp.addHandler(xmppHandlers.fileInvite, null, "message", "fileInvite");
-			xmpp.addHandler(xmppHandlers.fileInviteResponse, null, "message", "fileInviteResponse");
-			xmpp.addHandler(xmppHandlers.call, null, "message", "call");
-			xmpp.addHandler(xmppHandlers.presence, constants.xmpp.client, "presence");
-			xmpp.addHandler(xmppHandlers.roster, constants.xmpp.roster, "iq");
-			xmpp.addHandler(xmppHandlers.systemNotification, null, "message", "systemNotification");
-
-			gatherInfoPart2();
-
-			model.conference.create();
-		}
 
 		main.sendMessage = function(to, message) {
 			var jid = utility.getJidFromId(to);
@@ -690,10 +678,6 @@
 					fileSender.sendFile(files[i], jid);
 				}
 			}
-		};
-
-		main.logOff = function() {
-			xmpp.logOff();
 		};
 
 

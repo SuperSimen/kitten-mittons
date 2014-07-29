@@ -1,7 +1,7 @@
 var app = angular.module( 'app', [
 	'ui.router',
 	'ngAnimate',
-	'mainView',
+	'mainModule',
 	'ng-context-menu',
 	'dialogs.main'
 ]);
@@ -12,7 +12,7 @@ app.config( function ( $stateProvider) {
 	});
 });
 
-app.run( function (main, $http) {
+app.run( function (main) {
 	main.init();
 });
 

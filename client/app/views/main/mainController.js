@@ -1,5 +1,26 @@
 app.controller( 'mainController', function($scope, model, $state, utility) {
 
+		$scope.gotoState = function(state) {
+			$state.go(state);
+		};
+
+		$scope.getObjectLength = function(obj) {
+			if (obj) {
+				return Object.keys(obj).length;
+			}
+		};
+
+		$scope.isMe = function(id) {
+			if (utility.getIdFromJid(id) === model.user.info.xmpp.jid) {
+				return true;
+			}
+			if (utility.getIdFromJid(id) === model.user.info.nickname) {
+				return true;
+			}
+			return false;
+		};
+
+
 	var stateViewCols = {
 		chat: [
 			"col-xs-2",
@@ -38,15 +59,7 @@ app.controller( 'mainController', function($scope, model, $state, utility) {
 		var state = $state.current.name;
 		return stateViewCols[state][viewNumber - 1];
 	};
-	$scope.isViewAnimated = function(viewNumber) {
-		var state = $state.current.name;
-		if (state == "video.active") {
-			if (viewNumber === 2) {
-				return false;
-			}
-		}
-		return false;
-	};
+
 	$scope.getFriendFromId = function(id) {
 		if (!id) {
 			return;

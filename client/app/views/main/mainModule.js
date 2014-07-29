@@ -1,4 +1,4 @@
-var mainView = angular.module( 'mainView', []);
+var mainView = angular.module( 'mainModule', []);
 
 app.config( function ($stateProvider) {
 	$stateProvider.state('standard', {

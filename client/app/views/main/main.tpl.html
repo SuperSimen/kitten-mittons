@@ -1,6 +1,6 @@
 <div class="row hide-overflow fill-height">
 	<div ng-class="getCol(1)" class="fill-height">
-		<div ui-view="view1" class="fill-height" ng-class="{'animate-view': isViewAnimated(1)}"> </div>
+		<div ui-view="view1" class="fill-height"> </div>
 	</div>
 	<div ng-class="getCol(2)" class="fill-height">
 		<div ng-show="showConference()" class="row fill-height">
@@ -9,19 +9,11 @@
 			</div>
 			<iframe src={{conference.src}} class="fill-height fill-width"></iframe>
 		</div>
-		<div ui-view="view2" class="fill-height" ng-class="{'animate-view': isViewAnimated(2)}"></div>
+		<div ui-view="view2" class="fill-height"></div>
 	</div>
 	<div ng-class="getCol(3)" class="fill-height">
-		<div ui-view="view3" class="fill-height" ng-class="{'animate-view': isViewAnimated(3)}"></div>
+		<div ui-view="view3" class="fill-height"></div>
 	</div>
 </div>
 
 <audio src="resource/telephone.wav" ng-audio ng-bind="playAudio(receivingCall())"></audio>
-
-<script>
-	window.onbeforeunload = function() {
-		console.log("Signing out");
-		angular.element(document.body).injector().get('main').logOff();
-		return null;
-	};
-</script>
