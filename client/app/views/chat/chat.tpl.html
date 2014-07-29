@@ -28,19 +28,11 @@
 								</button>
 							</div>
 						</div>
-						<p ng-show="currentChat && !currentChat.isRoom">
+						<p ng-show="currentChat && !currentChat.isRoom" class="uninett-breadcrumbs-ellipsis">
 						Conversation <span class="glyphicon glyphicon-chevron-right uninett-glyphicon-sm"></span> {{getFriendFromId(currentChat.id) && getFriendFromId(currentChat.id).name}}
 						</p>
-						<p ng-show="currentChat.isRoom">
-						Conversation <span class="glyphicon glyphicon-chevron-right uninett-glyphicon-sm"></span>
-						Group conversation
-						<span ng-show="getObjectLength(currentChat.participants)"> 
-							with <span ng-repeat="friend in currentChat.participants"> 
-								<span ng-hide="friend.isMe() || !friend.isOnline()">
-									{{friend.name}}{{($index !== getObjectLength(currentChat.participants) - 1) && ", " || ""}}
-								</span>
-							</span>
-						</span>
+						<p ng-show="currentChat.isRoom" class="uninett-breadcrumbs-ellipsis" title="{{ getGroupRoomName() }}">
+							Conversation <span class="glyphicon glyphicon-chevron-right uninett-glyphicon-sm"></span> {{ getGroupRoomName() }}
 						</p>
 						<p ng-hide="currentChat">
 						Click on a contact to start a new conversation
@@ -101,7 +93,6 @@
 
 											<button class="btn btn-info" ng-show="file.acceptPossible()" ng-click="file.accept()"> Accept </button>
 											<button class="btn btn-info" ng-show="file.cancelPossible()" ng-click="file.cancel()"> Cancel </button>
-										</div>
 										</div>
 									</div>
 								</div>

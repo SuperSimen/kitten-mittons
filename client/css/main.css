@@ -372,6 +372,15 @@ span[ng-click][disabled] {
 	background: white;
 	width: auto;
 }
+
+.uninett-breadcrumbs-ellipsis {
+	width: 50%; 
+	overflow: hidden; 
+	text-overflow: ellipsis; 
+	display: block; 
+	white-space: nowrap;
+}
+
 .uninett-info-bar {
     clear: both;
     margin: 5px;
