@@ -93,7 +93,48 @@ app.controller( 'friendsController', function(main, $state, $scope, model, fileD
 		console.log("Signing off");
 		main.logOff();
 	};
+	
+	$scope.getBestFriends = function() {
+		return $scope.friends.bestFriends.map(function(id) {
+			return $scope.getFriendFromId(id);
+		});
+	};
+	
+	/**
+	 * Check if we're currently filtering the friends list
+	 * @returns {Boolean}
+	 */
+	$scope.isFiltering = function() {
+		return !$scope.search.isRealmSearch && $scope.search.query.length > 0;
+	};
 
+	/**
+	 * Filter friend by search query
+	 * @param {type} friend
+	 * @returns {Boolean}
+	 */
+	$scope.filterByQuery = function(friend) {
+		var exp = new RegExp($scope.search.query, 'i');
+		var ret = !$scope.isFiltering()
+			|| exp.test(friend.name);
+		return ret;
+	};
+
+});
+
+/**
+ * Object => array filter
+ * @param {type} param1
+ * @param {type} param2
+ */
+app.filter('array', function() {
+	return function(items) {
+		var filtered = [];
+		angular.forEach(items, function(item) {
+			filtered.push(item);
+		});
+		return filtered;
+	};
 });
 
 app.controller('friendSelectorController', function($scope,$modalInstance,data, $rootScope, model){
