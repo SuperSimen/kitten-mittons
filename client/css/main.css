@@ -357,11 +357,15 @@ span[ng-click][disabled] {
 
 .uninett-chatbox-entry-filerequest {
 	width: auto;
-	padding: 8px;
+	padding: 20px;
 	background-color: #fff !important;
 	font-weight: bold;
 	border-width: 3px;
 	color: #000;
+}
+
+.uninett-chatbox-entry-filerequest p {
+	margin: 0;
 }
 
 .uninett-chatbox-entry-video-request {
