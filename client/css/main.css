@@ -262,7 +262,11 @@ body {
 }
 
 .small-image {
-	width: 80px;
+	width: 95%;
+	border: solid 1px #c0c0c0;
+	border-radius: 3px;
+	padding: 2px;
+	margin: 3px;
 }
 
 .no-wrap {
@@ -397,6 +401,28 @@ span[ng-click][disabled] {
 	z-index: 99;
 	color: #c0c0c0;
 	font-size: 1.2em;
+}
+
+.uninett-search-results-panel {
+	margin-bottom: 5px;
+}
+
+.uninett-search-results-panel .panel-body  {
+	padding: 1px;
+}
+
+.uninett-search-results-panel .col-xs-4, .uninett-search-results-panel .col-xs-8  {
+	padding-left: 0;
+	padding-right: 0;
+}
+
+.uninett-search-results-panel .col-xs-4 {
+	padding-right: 3px;
+}
+
+.uninett-search-panel-header-icons i.fa-2x {
+	font-size: 1.3em;
+	margin-left: 5px;
 }
 
 .uninett-info-bar {

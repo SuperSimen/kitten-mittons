@@ -24,28 +24,38 @@
 						</ul>
 					</div>
 				</div>
+				
 				<div ng-show="search.isRealmSearch && search.query" class="fill-height">
 					<div class="row scroll-y fill-height">
 						<div class="col-md-12 small-font">
-							<div ng-repeat="person in search.list" ng-mouseenter="showHidden = true" ng-mouseleave="showHidden = false" ng-init="showHidden = false" class="row hover-white uninett-friend-list-entry">
-								<div ng-show="showHidden && person.hasImage()" class="col-md-4 inline-block">
-									<img class="small-image" ng-src="{{person.getImage()}}">
+							
+							<div ng-repeat="person in search.list" class="uninett-search-results-panel panel panel-default">
+								<div class="panel-heading">
+									<div class="pull-right uninett-search-panel-header-icons">
+										<i ng-click="addBestFriendUWAP(person)" class="pointer fa fa-plus fa-2x"></i>
+										<i ng-click="sendInvite(person)" class="pointer fa fa-paperclip fa-2x"></i>
+									</div>
+									<h4 class="panel-title">
+										<a data-toggle="collapse" data-parent="#accordion" href="#collapse{{$index}}">{{person.name}}</a>
+									</h4>
 								</div>
-								<div ng-class="{'col-md-8': showHidden && person.hasImage(), 'col-md-12': !(showHidden && person.hasImage()), 'small-image': showHidden}" class="vertical-align inline-block no-wrap">
-									<div class="">{{person.name}}</div>
-									<span ng-show="showHidden">
-										{{person.userid}}
-										<br>
-										{{person.mail}}
-										<br>
-										<div class="align-center">
-											<i ng-click="addBestFriendUWAP(person)" class="pointer fa fa-plus fa-inverse fa-2x"></i>
-											<i ng-click="sendInvite(person)" class="pointer fa fa-paperclip fa-inverse fa-2x"></i>
+								<div id="collapse{{$index}}" class="panel-collapse collapse">
+									<div class="panel-body">
+										
+										<div class="col-xs-4">
+											<img ng-show="person.hasImage()" class="small-image" ng-src="{{person.getImage()}}">
 										</div>
-									</span>
+										<div class="col-xs-8">
+											<span>
+												{{person.userid}}
+												<br />
+												{{person.mail}}
+											</span>
+										</div>
+									</div>
 								</div>
-
 							</div>
+							
 						</div>
 					</div>
 				</div>
