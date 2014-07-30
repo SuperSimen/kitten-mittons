@@ -1,4 +1,4 @@
-app.controller( 'callController', function(model, call, $scope) {
+app.controller( 'callController', function(call, $scope) {
 	$scope.smallVideo = call.model.video.local;
 	$scope.largeVideo = call.model.video.remote;
 	$scope.video = call.model.video;

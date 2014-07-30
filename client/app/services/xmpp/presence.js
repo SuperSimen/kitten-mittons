@@ -102,13 +102,13 @@
 						if (jid) {
 							$rootScope.$apply(function() {
 								var userName, friend;
-								if (model.groups.list[groupId] && data.to) {
+								if (userInfo.groups.list[groupId] && data.to) {
 									userName = utility.getIdFromJid(jid);
 									friend = model.friends.get(userName);
 									if (!friend) {
 										friend = addFriend(userName);
 									}
-									model.groups.list[groupId].addFriend(friend);
+									userInfo.groups.list[groupId].addFriend(friend);
 									if (data.type === "unavailable") {
 										friend.mucOnline = false;
 									}

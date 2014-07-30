@@ -49,7 +49,7 @@
 					var group = groups[i];
 					if (group.groupType === constants.uwap.orgUnit || group.groupType === constants.uwap.adHoc) {
 						var groupId = encodeURIComponent(group.id).toLowerCase();
-						model.groups.create(groupId, group.displayName);
+						userInfo.groups.create(groupId, group.displayName);
 						xmpp.joinRoom(groupId);
 					}
 				}

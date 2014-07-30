@@ -43,15 +43,15 @@
 							console.error("Is not conference");
 						}
 						this.conferenceOpen = true;
-						model.conference.mediaOpen = true;
-						model.conference.setActive(utility.getRoomIdFromJid(this.id));
+						chat.model.conference.mediaOpen = true;
+						chat.model.conference.setActive(utility.getRoomIdFromJid(this.id));
 					},
 					closeConference: function() {
 						if (!this.isRoom) {
 							console.error("Is not conference");
 						}
 						this.conferenceOpen = false;
-						model.conference.mediaOpen = false;
+						chat.model.conference.mediaOpen = false;
 					},
 					addParticipant: function(friend) {
 						if (!this.isRoom) {
@@ -245,6 +245,41 @@
 			}
 		};
 
+		chat.model.conference = {
+			
+			/**
+			 * Set to true if meetme conference is open for some conference
+			 */
+			mediaOpen: false,
+			
+			/**
+			 * Set to true if meetme conference media is active
+			 */
+			mediaActive: false,
+			
+			src: "",
+			active: false,
+			
+			/**
+			 * Current confernce object
+			 */
+			current: null,
+			
+			setActive: function(id) {
+				if (this.src) {
+					return console.log("Call already active");
+				}
+				this.src = $sce.trustAsResourceUrl(constants.conferenceUrl + "/" + id);
+				this.active = true;
+			},
+			closeActive: function() {
+				chat.model.conference.mediaActive = false;
+				model.chat.getCurrent().conferenceOpen = false;
+				this.src = "";
+				this.active = false;
+			},
+		};
+
 		chat.sendMessage = function(to, message) {
 			var jid = utility.getJidFromId(to);
 			var messageObject = chat.model.get(to).addMessage(userInfo.user.info.xmpp.jid, message, true);
@@ -268,7 +303,7 @@
 		chat.closeChat = function(id) {
 			if (chat.model.get(id).isRoom) {
 				if(chat.model.get(id).conferenceOpen) {
-					model.conference.closeActive();
+					chat.model.conference.closeActive();
 				}
 				xmpp.leaveRoom(id);
 			}

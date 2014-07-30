@@ -1,21 +1,21 @@
-app.controller( 'chatHistoryController', function($scope, model, dialogs, chat) {
+app.controller( 'chatHistoryController', function($scope, dialogs, chat) {
 
-	$scope.chat = model.chat;
-	$scope.conference = model.conference;
+	$scope.chat = chat.model;
+	$scope.conference = chat.model.conference;
 
-	$scope.$watch(function () {return model.chat.currentId;}, function() {
-		$scope.history = model.chat.sortableArray;
+	$scope.$watch(function () {return chat.model.currentId;}, function() {
+		$scope.history = chat.model.sortableArray;
 
 	});
 
 	$scope.clickEntry = function(id) {
 		$scope.gotoState('chat');
-		model.chat.setCurrent(id);
-		model.chat.getCurrent().unread = 0;
+		chat.model.setCurrent(id);
+		chat.model.getCurrent().unread = 0;
 	};
 
 	$scope.isActive = function(id) {
-		if (id === model.chat.currentId) {
+		if (id === chat.model.currentId) {
 			return true;
 		}
 		else {
@@ -28,7 +28,7 @@ app.controller( 'chatHistoryController', function($scope, model, dialogs, chat) 
 	};
 
 	$scope.getUnread = function(id) {
-		var unread = model.chat.get(id).unread;
+		var unread = chat.model.get(id).unread;
 		if (unread) {
 			return unread;
 		}
@@ -42,7 +42,7 @@ app.controller( 'chatHistoryController', function($scope, model, dialogs, chat) 
 	};
 	
 	$scope.clickConference = function(conference) {
-		model.conference.current = conference;
+		chat.model.conference.current = conference;
 		$scope.gotoState('conference');
 		//model.
 	};
@@ -52,7 +52,7 @@ app.controller( 'chatHistoryController', function($scope, model, dialogs, chat) 
 		var dlg = dialogs.create('app/dialogs/create.conference.html','conferenceDialogCtrl', {}, 'lg');
 		
 		dlg.result.then(function(name){
-			model.conference.create(name);
+			chat.model.conference.create(name);
 		}, function(){
 			if(angular.equals($scope.name,''))
 				$scope.name = 'You did not enter in your name!';

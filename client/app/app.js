@@ -5,7 +5,9 @@ var app = angular.module( 'app', [
 	'dialogs.main'
 ]);
 app.controller('appController', function($scope, model) {
-	$scope.application = model.application;
+	$scope.application = {
+		title: "UNINETT WebRTC application",
+	};
 });
 app.config( function ( $stateProvider) {
 	$stateProvider.state('base', {

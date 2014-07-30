@@ -1,10 +1,8 @@
-app.controller( 'friendsController', function($state, $scope, fileTransfer, friends) {
-	$scope.groups = model.groups;
+app.controller( 'friendsController', function($state, userInfo, $scope, fileTransfer, friends) {
+	$scope.groups = userInfo.groups;
 	$scope.friends = friends.model;
-	$scope.user = model.user;
+	$scope.user = userInfo.user;
 	$scope.search = search.model;
-	$scope.conference = model.conference;
-	$scope.model = model;
 	/**
 	 * Get the number of friends in group
 	 * @param {type} friends
@@ -41,7 +39,7 @@ app.controller( 'friendsController', function($state, $scope, fileTransfer, frie
 		if (friend.online || friend.mucOnline) {
 			if (currentState === "chat" || currentState == "conference") {
 				$scope.gotoState("chat");
-				model.chat.setCurrent(friend.id);
+				chat.model.setCurrent(friend.id);
 			}
 		}
 	};
@@ -122,7 +120,7 @@ app.filter('array', function() {
 	};
 });
 
-app.controller('friendSelectorController', function($scope,$modalInstance,data, $rootScope, model){
+app.controller('friendSelectorController', function($scope,$modalInstance,data, $rootScope){
 
 	$scope.friends = friends.model.list;
 	var selectedFriends = {};

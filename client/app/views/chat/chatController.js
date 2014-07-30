@@ -1,19 +1,19 @@
-app.controller( 'chatController', function($state, $scope, model, utility, dialogs, chat, call, fileTransfer, friends, fileList) {
+app.controller( 'chatController', function($state, $scope, utility, dialogs, chat, call, fileTransfer, friends, fileList) {
 	
 	$scope.call = call.model;
 	$scope.video = call.model.video;
-	$scope.conference = model.conference;
+	$scope.conference = chat.model.conference;
 	$scope.file = fileList;
 		
-	$scope.$watch(function () {return model.chat.currentId;}, function() {
-		$scope.currentChat = model.chat.getCurrent();
-		if($scope.currentChat && $scope.currentChat.conferenceOpen && model.conference.mediaActive) {
+	$scope.$watch(function () {return chat.model.currentId;}, function() {
+		$scope.currentChat = chat.model.getCurrent();
+		if($scope.currentChat && $scope.currentChat.conferenceOpen && chat.model.conference.mediaActive) {
 			$scope.gotoState("conference");
 		}
 	});
 
 	$scope.openConference = function() {
-		model.conference.mediaActive = true;
+		chat.model.conference.mediaActive = true;
 		
 		var currentChat = $scope.currentChat;
 		

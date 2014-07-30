@@ -1,4 +1,4 @@
-app.controller( 'mainController', function($scope, $rootScope, model, friends, $state, utility, call) {
+app.controller( 'mainController', function($scope, $rootScope, friends, $state, utility, call) {
 
 	$scope.$watch(function () {return call.model.video.active;}, function(newValue) {
 		if (!newValue) {
@@ -25,7 +25,7 @@ app.controller( 'mainController', function($scope, $rootScope, model, friends, $
 	};
 
 
-	$scope.$watch(function () {return model.conference.active;}, function(newValue) {
+	$scope.$watch(function () {return call.model.conference.active;}, function(newValue) {
 		if (!newValue) {
 			if ($state.current.name === "conference" || $state.current.name === "conference.fullscreen") {
 				$rootScope.gotoState("chat");
@@ -40,10 +40,10 @@ app.controller( 'mainController', function($scope, $rootScope, model, friends, $
 	};
 
 	$rootScope.isMe = function(id) {
-		if (utility.getIdFromJid(id) === model.user.info.xmpp.jid) {
+		if (utility.getIdFromJid(id) === userInfo.user.info.xmpp.jid) {
 			return true;
 		}
-		if (utility.getIdFromJid(id) === model.user.info.nickname) {
+		if (utility.getIdFromJid(id) === userInfo.user.info.nickname) {
 			return true;
 		}
 		return false;
@@ -72,12 +72,12 @@ app.controller( 'mainController', function($scope, $rootScope, model, friends, $
 			"hidden"
 		],
 	};
-	$scope.conference = model.conference;
+	$scope.conference = call.model.conference;
 	$scope.showConference = function() {
 		return $state.current.name === "conference" || $state.current.name === "conference.fullscreen";
 	};
 	$scope.closeConference = function() {
-		model.conference.closeActive();
+		call.model.conference.closeActive();
 	};
 
 	$rootScope.bytesToSize = function(bytes) {
