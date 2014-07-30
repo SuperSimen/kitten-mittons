@@ -21,7 +21,7 @@
 				var bestFriends = [];
 				for (var i in items) {
 					var id = utility.getIdFromJid(items[i].jid);
-					if (!model.friends.get(items[i])) {
+					if (!friends.model.get(items[i])) {
 						addFriend(id);
 					}
 					switch (items[i].subscription) {
