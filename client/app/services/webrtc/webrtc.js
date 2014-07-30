@@ -1,6 +1,6 @@
 (function () {
 
-	app.factory('webrtc', function(constants,  $rootScope, $sce, xmpp, $timeout, utility, peerConnections, dataSender, call, callVideo) {
+	app.factory('webrtc', function(constants,  $rootScope, $sce, xmpp, $timeout, utility, peerConnections, dataSender, callModel) {
 		var webrtc = {
 			init: function() {
 				xmpp.addHandler(handleOffer, constants.xmpp.webrtc, "message", "offer");
@@ -12,21 +12,21 @@
 		}
 			
 		function getUserMedia(callback) {
-			if (callVideo.local.stream) {
+			if (callModel.video.local.stream) {
 				console.log("already has stream");
-				callback(callVideo.local.stream);
+				callback(callModel.video.local.stream);
 				return;
 			}
 
 			try {
-				var currentCall = call.model.getCurrent();
+				var currentCall = callModel.getCurrent();
 				navigator.webkitGetUserMedia({
 					video: currentCall.video,
 					audio: currentCall.audio
 				},
 				function(stream) {
-					callVideo.local.src = $sce.trustAsResourceUrl(URL.createObjectURL(stream));
-					callVideo.local.stream = stream;
+					callModel.video.local.src = $sce.trustAsResourceUrl(URL.createObjectURL(stream));
+					callModel.video.local.stream = stream;
 					callback(stream);
 				}, function() {
 					console.error(arguments);
@@ -40,8 +40,8 @@
 		}
 
 		webrtc.call = function (to) {
-			if (!callVideo.active) {
-				callVideo.remote.userId = utility.getIdFromJid(to);
+			if (!callModel.video.active) {
+				callModel.video.remote.userId = utility.getIdFromJid(to);
 				videoCall(to);
 			}
 			else {
@@ -50,18 +50,18 @@
 		};
 
 		function reset() {
-			if (callVideo.active) {
+			if (callModel.video.active) {
 				video.close();
 			}
-			callVideo.remote.src = "";
-			callVideo.remote.userId = "";
-			callVideo.active = false;
-			if (callVideo.local.stream) {
-				callVideo.local.stream.stop();
-				callVideo.local.stream = null;
+			callModel.video.remote.src = "";
+			callModel.video.remote.userId = "";
+			callModel.video.active = false;
+			if (callModel.video.local.stream) {
+				callModel.video.local.stream.stop();
+				callModel.video.local.stream = null;
 			}
-			call.model.status = "free";
-			call.model.deleteCurrent();
+			callModel.status = "free";
+			callModel.deleteCurrent();
 		}
 
 		webrtc.hangup = function() { 
@@ -142,7 +142,7 @@
 			}
 
 			var type = data.getChildrenByTagName("x")[0].type;
-			if (type === "video" && call.model.currentId !== utility.getIdFromJid(data.from) && call.model.status === "accept") {
+			if (type === "video" && callModel.currentId !== utility.getIdFromJid(data.from) && callModel.status === "accept") {
 				console.log(data.from);
 				return console.log("already video call");
 			}
@@ -151,10 +151,10 @@
 			peerConnections.add(peerConnection, from, id, dataSender.onDataChannel(from));
 
 			if (type === "video") {
-				callVideo.active = true;
+				callModel.video.active = true;
 
 				getUserMedia(continueOfferHandling);
-				callVideo.remote.userId = utility.getIdFromJid(from);
+				callModel.video.remote.userId = utility.getIdFromJid(from);
 			}
 			else {
 				continueOfferHandling(null);

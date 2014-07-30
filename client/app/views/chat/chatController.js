@@ -1,7 +1,7 @@
-app.controller( 'chatController', function($state, $scope, utility, dialogs, chat, call, fileTransfer, friends, fileList, callVideo) {
+app.controller( 'chatController', function($state, $scope, utility, dialogs, chat, call, fileTransfer, friends, fileList, callModel) {
 	
 	$scope.call = call.model;
-	$scope.video = callVideo;
+	$scope.video = callModel.video;
 	$scope.conference = chat.model.conference;
 	$scope.file = fileList;
 		

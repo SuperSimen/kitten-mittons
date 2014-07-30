@@ -1,6 +1,6 @@
-app.controller( 'mainController', function($scope, $rootScope, friends, $state, utility, call, callVideo) {
+app.controller( 'mainController', function($scope, $rootScope, friends, $state, utility, call, callModel) {
 
-	$scope.$watch(function () {return callVideo.active;}, function(newValue) {
+	$scope.$watch(function () {return callModel.video.active;}, function(newValue) {
 		if (!newValue) {
 			if ($state.current.name === "call") {
 				$rootScope.gotoState("chat");
@@ -25,7 +25,7 @@ app.controller( 'mainController', function($scope, $rootScope, friends, $state, 
 	};
 
 
-	$scope.$watch(function () {return call.model.conference.active;}, function(newValue) {
+	$scope.$watch(function () {return chat.model.conference.active;}, function(newValue) {
 		if (!newValue) {
 			if ($state.current.name === "conference" || $state.current.name === "conference.fullscreen") {
 				$rootScope.gotoState("chat");
@@ -72,12 +72,12 @@ app.controller( 'mainController', function($scope, $rootScope, friends, $state, 
 			"hidden"
 		],
 	};
-	$scope.conference = call.model.conference;
+	$scope.conference = chat.model.conference;
 	$scope.showConference = function() {
 		return $state.current.name === "conference" || $state.current.name === "conference.fullscreen";
 	};
 	$scope.closeConference = function() {
-		call.model.conference.closeActive();
+		chat.model.conference.closeActive();
 	};
 
 	$rootScope.bytesToSize = function(bytes) {
@@ -114,8 +114,8 @@ app.controller( 'mainController', function($scope, $rootScope, friends, $state, 
 	 * @returns {Boolean}
 	 */
 	$scope.receivingCall = function() {
-		for(var i in call.model.list) {
-			if(!call.model.list[i].calling && !call.model.list[i].hidden) {
+		for(var i in callModel.list) {
+			if(!callModel.list[i].calling && !callModel.list[i].hidden) {
 				return true;
 			}
 		}
