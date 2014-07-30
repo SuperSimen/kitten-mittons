@@ -26,14 +26,6 @@ app.controller( 'chatController', function($state, $scope, model, utility, dialo
 		$scope.gotoState("conference");
 	};
 
-	$scope.toggleConferenceFullscreen = function() {
-
-	};
-
-	$scope.isConferenceFullscreen = function() {
-		return $state.current.name === "conference.fullscreen";
-	};
-
 
 	$scope.openFriendSelector = function() {
 		var dlg = dialogs.create('app/dialogs/friendSelector.html','friendSelectorController', {}, 'lg');
