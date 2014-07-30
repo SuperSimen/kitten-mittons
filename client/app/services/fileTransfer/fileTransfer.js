@@ -1,5 +1,5 @@
 (function () {
-	app.factory('fileTransfer', function(xmpp, model, $rootScope, fileSender, fileReceiver, utility) {
+	app.factory('fileTransfer', function(xmpp, model, $rootScope, fileSender, fileReceiver, utility, $q) {
 		var fileTransfer = {
 			init: function() {
 				fileSender.init();

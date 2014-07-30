@@ -35,7 +35,7 @@ app.controller( 'friendsController', function($state, $scope, model) {
 	};
 	
 	$scope.actionSendFileSelected = function(friend) {
-		fileTransfer.open().then(function(file) {
+		fileTransfer.openDialog().then(function(file) {
 			fileTransfer.sendFiles(friend.id, [file]);
 		});
 	};

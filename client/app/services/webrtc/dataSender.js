@@ -266,7 +266,7 @@
 			messageHandlers.addHandler(handler, type);
 		};
 
-		return webrtc;
+		return dataSender;
 
 	});
 })();

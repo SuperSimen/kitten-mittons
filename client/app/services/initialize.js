@@ -1,6 +1,5 @@
 (function () {
-
-	app.factory('init', function(fileTransfer, UWAP, chat, xmpp, model, $rootScope, $state, $http, constants, webrtc, utility, presence, call, search) {
+	app.factory('initialize', function(fileTransfer, UWAP, chat, xmpp, model, $rootScope, $state, $http, constants, webrtc, utility, presence, call, search) {
 		var init = {
 			init: function() {
 				globalModel = model;
@@ -15,6 +14,7 @@
 		
 
 		function gatherInfoPart1 () { 
+			console.log("gather info part 1");
 			$http.get('/api/info').success(function(data, status) {
 				model.user.info = data;
 				model.user.token = data.token;
@@ -27,6 +27,7 @@
 		}
 
 		function connectedCallback() {
+			console.log("connected callback");
 			window.onbeforeunload = function() {
 				console.log("Signing out");
 				xmpp.logOff();
@@ -44,6 +45,7 @@
 		}
 
 		function gatherInfoPart2 () {
+			console.log("gather info part 2");
 			UWAP.getGroups(model.user.token, function (data) {
 				var groups = data.Resources;
 				for (var i in groups) {
@@ -58,6 +60,8 @@
 			UWAP.getRealms(model.user.token, function (data) {
 				model.user.realms = data;
 			}); 
+
+			console.log("finished initialization");
 		}
 
 		return init;
