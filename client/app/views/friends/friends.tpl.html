@@ -7,8 +7,9 @@
 				</div>
 			</div>
 			<div class="fill-under-name-tag uninett-group">
-				<div class="input-group uninett-search-box">	
+				<div class="input-group uninett-search-box">
 					<input type="text" class="form-control" ng-model="search.query">
+					<span ng-show="search.query.length || search.isRealmSearch" ng-click="resetSearch()" title="Reset search" class="glyphicon glyphicon-remove-circle uninett-search-clear"></span>
 					<div class="input-group-btn">
 						<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" tabindex="-1">
 							<span class="caret"></span>

@@ -100,6 +100,11 @@ app.controller( 'friendsController', function(main, $state, $scope, model, fileD
 		});
 	};
 	
+	$scope.resetSearch = function() {
+		$scope.setLocalSearch();
+		$scope.search.query = '';
+	};
+	
 	/**
 	 * Check if we're currently filtering the friends list
 	 * @returns {Boolean}

@@ -389,6 +389,16 @@ span[ng-click][disabled] {
 	margin: 10px 0 10px 0;
 }
 
+.uninett-search-clear {
+	position: absolute;
+	top: 50%;
+	margin-top: -9px;
+	right: 42px;
+	z-index: 99;
+	color: #c0c0c0;
+	font-size: 1.2em;
+}
+
 .uninett-info-bar {
     clear: both;
     margin: 5px;
