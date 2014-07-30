@@ -41,7 +41,7 @@
 					storage[data.id].sender = dataSender.getSender(from, "fileReceiver");
 
 					$rootScope.$apply(function() {
-						storage[data.id].fileObject = model.file.add(data.id, data.filename, from, false, data.size);
+						storage[data.id].fileObject = model.file.get(data.id);
 
 						var watcher = $rootScope.$watch(function() {
 							if (storage[data.id]) {

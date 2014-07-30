@@ -6,7 +6,7 @@
 					<div>
 						<div ng-show="currentChat" >
 							<div ng-hide="currentChat.isRoom" class="btn-group button-group">
-								<button type="button" class="btn btn-default" ng-click="sendFileRequest()">
+								<button type="button" class="btn btn-default" ng-click="openFileDialog()">
 									<span class="glyphicon glyphicon-file"></span> Send File
 								</button>
 								<button type="button" class="btn btn-default" ng-click="clickAudioButton()" ng-disabled="isVideoButtonActive()">
@@ -17,7 +17,7 @@
 								</button>
 							</div>
 							<div ng-show="currentChat.isRoom" class="btn-group button-group">
-								<button type="button" class="btn btn-default" ng-click="sendFileRequest()">
+								<button type="button" class="btn btn-default" ng-disabled="isFileShareButtonDisabled()" ng-click="openFileDialog()">
 									<span class="glyphicon glyphicon-file"></span> Share File
 								</button>
 								<button type="button" class="btn btn-default" ng-click="openFriendSelector()">
@@ -32,7 +32,7 @@
 						Conversation <span class="glyphicon glyphicon-chevron-right uninett-glyphicon-sm"></span> {{getFriendFromId(currentChat.id) && getFriendFromId(currentChat.id).name}}
 						</p>
 						<p ng-show="currentChat.isRoom" class="uninett-breadcrumbs-ellipsis" title="{{ getGroupRoomName() }}">
-							Conversation <span class="glyphicon glyphicon-chevron-right uninett-glyphicon-sm"></span> {{ getGroupRoomName() }}
+						Conversation <span class="glyphicon glyphicon-chevron-right uninett-glyphicon-sm"></span> {{ getGroupRoomName() }}
 						</p>
 						<p ng-hide="currentChat">
 						Click on a contact to start a new conversation
@@ -55,22 +55,14 @@
 											<div style="word-wrap: break-word;" class="width-95">{{message.getMessage && message.getMessage() || message.message}}</div>
 										</div>
 									</div>
-									<div ng-show="message.requestId" class="uninett-chatbox-entry uninett-chatbox-entry-filerequest">
-										<div ng-show="message.responded">
-											<p>You {{ message.response ? 'accepted' : 'rejected' }} {{message.message}} from {{getFriendFromId(message.from).name}}</p>
-										</div>
-										<div ng-hide="message.responded">
-											<div class="btn-group pull-right" ng-click="message.responded = true">
-												<button type="button" ng-click="(message.response = true) && respondFileInvite(message.from, message.requestId, true)" class="btn btn-success">Accept</button>
-												<button type="button" ng-click="(message.response = false) && respondFileInvite(message.from, message.requestId, false)" class="btn btn-danger">Reject</button>
+									<div ng-show="message.fileId && !(file.pending && file.sending)" ng-init="file = getFile(message.fileId)">
+										<div class="uninett-chatbox-entry uninett-chatbox-entry-filerequest">
+											<div class="btn-group pull-right">
 											</div>
-											<div>{{getFriendFromId(message.from).name}} wants to share {{message.message}}</div>
-										</div>
-									</div>
-									<div ng-show="message.fileId" ng-init="file = getFile(message.fileId)">
-										<div class="uninett-chatbox-entry uninett-chatbox-entry-file" ng-class="file.sending ? 'uninett-chatbox-entry-file-send' : 'uninett-chatbox-entry-file-recv'">
 
-											<div ng-hide="file.finished || file.cancelled">
+											<div ng-show="file.pending">{{getFriendFromId(file.user).name}} wants to share {{file.filename}} <span class="tab">{{bytesToSize(file.size)}}</span></div>
+
+											<div ng-hide="file.finished || file.cancelled || file.pending">
 												<div>{{file.sending && "Sending " + file.filename + " to " || "Receiving " + file.filename + " from "}} {{getFriendFromId(file.user).name}}<span class="tab">{{bytesToSize(file.size)}}</span>{{file.failed && " - Failed"}}</div>
 												<div class="progress" >
 													<div class="progress-bar" ng-class="{'progress-bar-danger': file.failed}" ba-progress-bar progress="file.progress">
@@ -81,11 +73,12 @@
 												{{file.failed && failed || file.filename + (file.sending && ' was sent to ' || ' was received from ') + getFriendFromId(file.user).name}}
 											</div>
 											<div ng-show="file.cancelled">
-												{{file.filename + " was cancelled"}}
+												{{"File transfer of " + file.filename}} {{file.sending && " to " || " from "}} {{getFriendFromId(file.user).name}} was cancelled
 											</div>
 
 											<button class="btn btn-success" ng-show="file.acceptPossible()" ng-click="file.accept()">Save to disk</button>
 											<button class="btn btn-danger" ng-show="file.cancelPossible()" ng-click="file.cancel()">Discard</button>
+
 										</div>
 									</div>
 								</div>

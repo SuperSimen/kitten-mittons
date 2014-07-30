@@ -12,16 +12,16 @@
 							Conversation <span class="glyphicon glyphicon-chevron-right uninett-glyphicon-sm"></span> Video conference
 						</p>
 					</div>
+					<div class="btn-group button-group" ng-hide="isConferenceFullscreen()">
+						<button class="btn btn-info pointer" ng-click="toggleConferenceFullscreen()">Fullscreen</button>
+						<button class="btn btn-danger pointer" ng-click="closeConference()">Close Conference</button>
+					</div>
 				</div>
 			</div>
 			
 			<div ng-class="{'fill-height': isConferenceFullscreen(), 'fill-under-name-tag': !isConferenceFullscreen()}">
 				<div class="conference-menu">
 					<!--<i class="pointer fa fa-phone-square uninett-fontColor-red fa-2x tab" ng-click="closeConference()"></i>-->
-					<div ng-hide="isConferenceFullscreen()">
-						<button class="btn btn-info pointer" ng-click="toggleConferenceFullscreen()">Fullscreen</button>
-						<button class="btn btn-danger pointer" ng-click="closeConference()">Close Conference</button>
-					</div>
 					<div ng-show="isConferenceFullscreen()">
 						<i class="fa fa-2x pointer tab" ng-class="{'fa-compress': isConferenceFullscreen(), 'fa-expand': !isConferenceFullscreen()}" ng-click="toggleConferenceFullscreen()"></i>
 						<i class="pointer fa fa-phone-square uninett-fontColor-red fa-2x tab" ng-click="closeConference()"></i>

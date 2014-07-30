@@ -192,26 +192,27 @@ app.controller( 'chatController', function($state, $scope, model, utility, dialo
 	}
 	
 	$scope.sendFileToParticipants = function(file) {
-		function sendFiles(p, file) {
-			return function() {
-				fileTransfer.sendFiles(p.id, [file]);
-			};
-		}
-		
 		if(!$scope.currentChat) {
 			return;
 		}
 		
 		if(!$scope.currentChat.isRoom) {
-			fileTransfer.sendFiles($scope.currentChat.id, [file]);
-		} else {
-			
+			fileTransfer.sendFile($scope.currentChat.id, file);
+		}
+		else {
+			systemMessage("You offered to share " + file.name + " - " + $scope.bytesToSize(file.size));
+
 			for(var i in $scope.currentChat.participants) {
-				
 				var p = $scope.currentChat.participants[i];
-				
-				fileTransfer.sendFileInvite(p.id, $scope.currentChat.id, file).then(sendFiles(p, file));
+
+				fileTransfer.sendFile(p.id, file, $scope.currentChat.id);
 			}
+		}
+	};
+
+	$scope.isFileShareButtonDisabled = function() {
+		if ($scope.currentChat) {
+			return !$scope.getObjectLength($scope.currentChat.participants);
 		}
 	};
 	
@@ -230,7 +231,7 @@ app.controller( 'chatController', function($state, $scope, model, utility, dialo
 		}
 	};
 	
-	$scope.sendFileRequest = function() {
+	$scope.openFileDialog = function() {
 		fileTransfer.openDialog().then(function(file) {
 			$scope.sendFileToParticipants(file);
 		});

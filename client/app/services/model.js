@@ -48,65 +48,14 @@
 
 		model.file = {
 			
-			/**
-			 * List of promise objects for file send requests
-			 */
-			requests: [],
-			
-			generateRequestId: (function() {
-				var _last = 1000;
-				return function() {
-					return _last++;
-				};
-			})(),
-			
-			createRequest: function(friend_id, room_id, file) {
-				
-				var request = {
-					friendId: friend_id,
-					roomId: room_id,
-					id: model.file.generateRequestId(),
-					task: $q.defer()
-				};
-				
-				model.file.requests.push(request);
-				
-				return request;
-			},
-			
-			resolveRequest: function(request_id, is_accepted) {
-				
-				console.log("resolving request");
-				var requests = model.file.requests;
-				
-				for(var i = 0; i < requests.length; i++) {
-					if(requests[i].id == request_id) {
-						
-						var request = requests.splice(i, 1)[0];
-						
-						console.log('request', request);
-						
-						if(is_accepted) {
-							console.log("found request, resolved");
-							request.task.resolve();
-						} else {
-							console.log("found request, rejected");
-							request.task.reject();
-						}
-						
-						break;
-					}
-				}
-				
-			},
-			
 			list: {},
-			add: function(id, filename, user, sending, size) {
+			add: function(id, filename, user, sending, size, roomId) {
 				if (this.list[id]) {
-					return console.error("not unique file id");
+					return console.log("id not unique");
 				}
 				this.list[id] = {
 					id: id,
+					roomId: roomId,
 					filename: filename,
 					user: user,
 					sending: sending,
@@ -144,11 +93,19 @@
 					size: size,
 				};
 
-				model.chat.get(utility.getIdFromJid(user)).addFileMessage(id);
+				if (roomId) {
+					model.chat.get(utility.getIdFromJid(roomId)).addFileMessage(id);
+				}
+				else {
+					model.chat.get(utility.getIdFromJid(user)).addFileMessage(id);
+				}
 
 				return this.list[id];
 			},
 			get: function(id) {
+				if (!this.list[id]) {
+					console.log("file id does not exist");
+				}
 				return this.list[id];
 			},
 		};
@@ -258,7 +215,7 @@
 						this.addSystemMessage(null, dynamicMessage);
 						delete this.participants[friend.id];
 					},
-				  	addSystemMessage: function(message, dynamicMessage) {
+					addSystemMessage: function(message, dynamicMessage) {
 						var temp = {
 							arrived: true,
 							dynamicMessage: dynamicMessage,

@@ -33,12 +33,12 @@
 		};
 
 
-		fileSender.sendFile = function(file, to) {
-			sendFile(file,to);
+		fileSender.sendFile = function(file, to, fileModel) {
+			sendFile(file, to, fileModel);
 		};
 		
 
-		function sendFile (file, to) {
+		function sendFile (file, to, fileModel) {
 
 			if (!file || !to) {
 				return console.log("wrong input to sendFile");
@@ -74,16 +74,16 @@
 			var size = file.size;
 			var maxSize = 100*1024*1024;
 			var totalSlices = Math.ceil(size / maxSize);
-			var id = generateRandomFileId();
+
+			var id = fileModel.id;
 			
 			progress.totalSlices = totalSlices;
-			var fileObject = model.file.add(id, file.name, to, true, size);
 
 			function isCancelled() {
-				return fileObject.cancelled;
+				return fileModel.cancelled;
 			}
 
-			var watcher = $rootScope.$watch(function() {return fileObject.cancelled;}, function (newValue) {
+			var watcher = $rootScope.$watch(function() {return fileModel.cancelled;}, function (newValue) {
 				if (newValue) {
 					signalCancel(id);
 	
@@ -120,7 +120,7 @@
 					dataHandlers.remove(id);
 				}
 				else if (data.status === "cancel") {
-					fileObject.cancel();
+					fileModel.cancel();
 				}
 			}
 
@@ -238,14 +238,6 @@
 			}
 		}
 
-		var fileCounter = 0;
-
-		function generateRandomFileId() {
-			var me = model.user.info.xmpp.jid;
-			var userid = me.substring(0,me.indexOf("@"));
-			var id = userid + "-" + utility.randomString() + "-" + fileCounter++;
-			return id;
-		}
 
 		return fileSender;
 	});
