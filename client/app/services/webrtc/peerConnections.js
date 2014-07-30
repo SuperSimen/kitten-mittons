@@ -84,7 +84,7 @@
 				return this.list[id].iceCandidates;
 			},
 			generateRandomId: function() {
-				var me = model.user.info.xmpp.jid;
+				var me = userInfo.user.info.xmpp.jid;
 				var userid = utility.getIdFromJid(me);
 				var randomId = userid + " - " + utility.randomString() + "-" + this.counter++;
 				return randomId;
