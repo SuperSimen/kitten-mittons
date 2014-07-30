@@ -9,10 +9,10 @@
 								<button type="button" class="btn btn-default" ng-click="openFileDialog()">
 									<span class="glyphicon glyphicon-file"></span> Send File
 								</button>
-								<button type="button" class="btn btn-default" ng-click="clickAudioButton()" ng-disabled="isVideoButtonActive()">
+								<button type="button" class="btn btn-default" ng-click="clickAudioButton()" ng-disabled="isVideoButtonActive() || conference.mediaActive">
 									<span class="glyphicon glyphicon-earphone"></span> {{getAudioControlMsg()}}
 								</button>
-								<button type="button" ng-disabled="isAudioButtonActive()" class="btn" ng-click="clickVideoButton()" ng-class="!isVideoButtonActive() ? 'btn-success' : 'btn-danger'" >
+								<button type="button" ng-disabled="isAudioButtonActive() || conference.mediaActive" class="btn" ng-click="clickVideoButton()" ng-class="!isVideoButtonActive() ? 'btn-success' : 'btn-danger'" >
 									<span class="glyphicon glyphicon-facetime-video"></span> {{getVideoControlMsg()}}
 								</button>
 							</div>
