@@ -57,12 +57,12 @@
 									</div>
 									<div ng-show="message.requestId" class="uninett-chatbox-entry uninett-chatbox-entry-filerequest">
 										<div ng-show="message.responded">
-											<p>You accepted {{message.message}} from {{getFriendFromId(message.from).name}}</p>
+											<p>You {{ message.response ? 'accepted' : 'rejected' }} {{message.message}} from {{getFriendFromId(message.from).name}}</p>
 										</div>
 										<div ng-hide="message.responded">
 											<div class="btn-group pull-right" ng-click="message.responded = true">
-												<button type="button" ng-click="respondFileInvite(message.from, message.requestId, true)" class="btn btn-success">Accept</button>
-												<button type="button" ng-click="respondFileInvite(message.from, message.requestId, false)" class="btn btn-danger">Reject</button>
+												<button type="button" ng-click="(message.response = true) && respondFileInvite(message.from, message.requestId, true)" class="btn btn-success">Accept</button>
+												<button type="button" ng-click="(message.response = false) && respondFileInvite(message.from, message.requestId, false)" class="btn btn-danger">Reject</button>
 											</div>
 											<div>{{getFriendFromId(message.from).name}} wants to share {{message.message}}</div>
 										</div>
