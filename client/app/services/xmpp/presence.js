@@ -38,12 +38,12 @@
 				}
 				function add(id) {
 					return function() {
-						model.friends.addBestFriend(id);
+						friends.model.addBestFriend(id);
 					};
 				}
 				function remove(id) {
 					return function() {
-						model.friends.removeBestFriend(id);
+						friends.model.removeBestFriend(id);
 					};
 				}
 			},
@@ -63,7 +63,7 @@
 						return;
 					}
 					var from = utility.getIdFromJid(data.from);
-					var friend = model.friends.get(from);
+					var friend = friends.model.get(from);
 					if (!friend) {
 						friend = addFriend(from);
 					}
@@ -104,7 +104,7 @@
 								var userName, friend;
 								if (userInfo.groups.list[groupId] && data.to) {
 									userName = utility.getIdFromJid(jid);
-									friend = model.friends.get(userName);
+									friend = friends.model.get(userName);
 									if (!friend) {
 										friend = addFriend(userName);
 									}
@@ -116,20 +116,20 @@
 										friend.mucOnline = true;
 									}
 								}
-								else if (model.chat.getWithGroupId(groupId)){
+								else if (chat.model.getWithGroupId(groupId)){
 									userName = utility.getIdFromJid(jid);
-									friend = model.friends.get(userName);
+									friend = friends.model.get(userName);
 									if (!friend) {
 										friend = addFriend(userName);
 									}
 									if (!codes["110"]) {
 										if (data.type === "unavailable") {
 											friend.mucOnline = false;
-											model.chat.getWithGroupId(groupId).removeParticipant(friend);
+											chat.model.getWithGroupId(groupId).removeParticipant(friend);
 										}
 										else {
 											friend.mucOnline = true;
-											model.chat.getWithGroupId(groupId).addParticipant(friend);
+											chat.model.getWithGroupId(groupId).addParticipant(friend);
 										}
 									}
 								}
@@ -149,9 +149,9 @@
 
 		presence.setVCard = function () {
 			var properties = {};
-			properties.name = model.user.info.name;
-			properties.userid = model.user.info.userid;
-			properties.nickname = model.user.info.nickname;
+			properties.name = userInfo.user.info.name;
+			properties.userid = userInfo.user.info.userid;
+			properties.nickname = userInfo.user.info.nickname;
 			xmpp.setVCard(properties);
 		};
 
@@ -160,17 +160,17 @@
 				var userId = utility.getIdFromJid(jid);
 				if (stanza.getElementsByTagName("name").length) {
 					$rootScope.$apply(function () {
-						model.friends.get(userId).name = stanza.getElementsByTagName("name")[0].innerHTML;
+						friends.model.get(userId).name = stanza.getElementsByTagName("name")[0].innerHTML;
 					});
 				}
 				if (stanza.getElementsByTagName("userid").length) {
 					$rootScope.$apply(function () {
-						model.friends.get(userId).userid = stanza.getElementsByTagName("userid")[0].innerHTML;
+						friends.model.get(userId).userid = stanza.getElementsByTagName("userid")[0].innerHTML;
 					});
 				}
 				if (stanza.getElementsByTagName("nickname").length) {
 					$rootScope.$apply(function () {
-						model.friends.get(userId).nickname = stanza.getElementsByTagName("nickname")[0].innerHTML;
+						friends.model.get(userId).nickname = stanza.getElementsByTagName("nickname")[0].innerHTML;
 					});
 				}
 			});
@@ -178,12 +178,12 @@
 
 		function addFriend(id) {
 			var friend;
-			if (!model.friends.get(id)) {
-				friend = model.friends.create(id);
+			if (!friends.model.get(id)) {
+				friend = friends.model.create(id);
 				presence.getVCard(utility.getJidFromId(id));
 			}
 			else {
-				friend = model.friends.get(id);
+				friend = friends.model.get(id);
 			}
 			return friend;
 		}
