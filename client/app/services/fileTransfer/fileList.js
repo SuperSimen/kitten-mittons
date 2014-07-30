@@ -1,5 +1,5 @@
 (function () {
-	app.factory('fileList', function() {
+	app.factory('fileList', function(chat, utility) {
 		fileList = {
 			list: {},
 			add: function(id, filename, user, sending, size, roomId) {
@@ -47,10 +47,10 @@
 				};
 
 				if (roomId) {
-					model.chat.get(utility.getIdFromJid(roomId)).addFileMessage(id);
+					chat.model.get(utility.getIdFromJid(roomId)).addFileMessage(id);
 				}
 				else {
-					model.chat.get(utility.getIdFromJid(user)).addFileMessage(id);
+					chat.model.get(utility.getIdFromJid(user)).addFileMessage(id);
 				}
 
 				return this.list[id];
