@@ -138,7 +138,6 @@
 			return connections.getIceCandidates(id);
 		};
 
-
 		function createDesc(callback){
 			return function(desc) {
 				callback(desc);
@@ -154,8 +153,6 @@
 				model.video.remote.stream = e.stream;
 			});
 		}
-
-		
 
 		return peerConnections;
 

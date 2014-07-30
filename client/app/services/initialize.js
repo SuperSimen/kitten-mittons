@@ -43,7 +43,6 @@
 		}
 
 		function gatherInfoPart2 () {
-			console.log("gather info part 2");
 			UWAP.getGroups(model.user.token, function (data) {
 				var groups = data.Resources;
 				for (var i in groups) {

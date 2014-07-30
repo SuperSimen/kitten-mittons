@@ -116,8 +116,7 @@
 			getUserMedia(continueCall);
 
 			function continueCall (stream) {
-				var peerConnection = new webkitRTCPeerConnection(webrtc.config);
-				globalStream = stream;
+				var peerConnection = peerConnections.create();
 				peerConnection.addStream(stream);
 				video.setPeerConnection(peerConnection);
 
@@ -182,6 +181,7 @@
 
 				peerConnections.getIceCandidates(id).setReadyToSend(true);
 			}
+			console.log("handled offer");
 		}
 
 		function createDesc(callback){
