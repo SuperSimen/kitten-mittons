@@ -13,7 +13,6 @@
 			unsettable: false,
 			currentRealm: null,
 			setRealmSearch: function(realm) {
-				console.log(realm);
 				if (realm) {
 					this.currentRealm = realm;
 					this.isRealmSearch = true;
