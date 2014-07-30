@@ -326,12 +326,13 @@ span[ng-click][disabled] {
     margin: 10px;
     width: 60%;
     padding: 20px;
-    border: solid 1px transparent;
+    border: 0;
     border-radius: 5px;
+	box-shadow: 1px 1px 3px #c0c0c0;
 }
 
 .uninett-chatbox-entry-sent {
-    background: #90cef1;
+    background: #fff;
     float: right;
 }
 
@@ -359,7 +360,6 @@ span[ng-click][disabled] {
 	padding: 8px;
 	background-color: #46c1be !important;
 	font-weight: bold;
-	border-width: 3px;
 	color: #ffffff;
 }
 
