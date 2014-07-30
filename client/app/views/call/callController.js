@@ -17,7 +17,6 @@ app.controller( 'callController', function(model, call, $scope) {
 	};
 	$scope.hangup = function() {
 		call.hangup();
-		//$scope.returnToChat();
 	};
 	$scope.toggleVideo = function() {
 		call.toggleVideo();
