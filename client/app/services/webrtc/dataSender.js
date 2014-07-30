@@ -1,6 +1,6 @@
 (function () {
 
-	app.factory('dataSender', function(constants, model, xmpp, $timeout, utility, peerConnections) {
+	app.factory('dataSender', function(constants, xmpp, $timeout, utility, peerConnections) {
 		var dataSender = {};
 
 		var dataSenders = {

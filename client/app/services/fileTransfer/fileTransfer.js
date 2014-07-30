@@ -1,5 +1,5 @@
 (function () {
-	app.factory('fileTransfer', function(xmpp, model, $rootScope, fileSender, fileReceiver, utility, $q, $timeout) {
+	app.factory('fileTransfer', function(xmpp, model, userInfo, $rootScope, fileSender, fileReceiver, utility, $q, $timeout, fileList) {
 		var fileTransfer = {
 			init: function() {
 				fileSender.init();
@@ -18,7 +18,7 @@
 					var file = JSON.parse(body[0].children[0].data);
 
 					$rootScope.$apply(function() {
-						var fileModel = model.file.add(file.id, file.filename, data.from, false, file.size, file.roomId);
+						var fileModel = fileList.add(file.id, file.filename, data.from, false, file.size, file.roomId);
 						if (!fileModel.roomId) {
 							respondFileInvite(fileModel, true);
 						}
@@ -45,7 +45,7 @@
 
 				if (body) {
 					var response = JSON.parse(body[0].children[0].data);
-					var fileModel = model.file.get(response.id);
+					var fileModel = fileList.get(response.id);
 
 					if (fileModel) {
 						if (response.isAccepted) {
@@ -77,7 +77,7 @@
 		fileTransfer.sendFile = function(to, file, roomId) {
 			var jid = utility.getJidFromId(to);
 			var id = generateRandomFileId();
-			var fileModel = model.file.add(id, file.name, to, true, file.size, roomId);
+			var fileModel = fileList.add(id, file.name, to, true, file.size, roomId);
 			fileModel.pending = true;
 
 			sendFileInvite(fileModel).then(send);
@@ -93,7 +93,7 @@
 		var fileCounter = 0;
 
 		function generateRandomFileId() {
-			var me = model.user.info.xmpp.jid;
+			var me = userInfo.user.info.xmpp.jid;
 			var userid = me.substring(0,me.indexOf("@"));
 			var id = userid + "-" + utility.randomString() + "-" + fileCounter++;
 			return id;

@@ -1,8 +1,8 @@
-app.controller( 'friendsController', function($state, $scope, model, fileTransfer, friends) {
+app.controller( 'friendsController', function($state, $scope, fileTransfer, friends) {
 	$scope.groups = model.groups;
-	$scope.friends = model.friends;
+	$scope.friends = friends.model;
 	$scope.user = model.user;
-	$scope.search = model.search;
+	$scope.search = search.model;
 	$scope.conference = model.conference;
 	$scope.model = model;
 	/**
@@ -23,11 +23,11 @@ app.controller( 'friendsController', function($state, $scope, model, fileTransfe
 	};
 
 	$scope.setLocalSearch = function() {
-		model.search.setLocalSearch();
+		search.model.setLocalSearch();
 	};
 
 	$scope.setRealmSearch = function(realm) {
-		model.search.setRealmSearch(realm);
+		search.model.setRealmSearch(realm);
 	};
 	
 	$scope.actionSendFileSelected = function(friend) {
@@ -71,7 +71,7 @@ app.controller( 'friendsController', function($state, $scope, model, fileTransfe
 	};
 
 	$scope.tempFriendExists = function(friend) {
-		return model.friends.getWithUserid(friend.userid); 
+		return friends.model.getWithUserid(friend.userid); 
 	};
 	
 	$scope.getBestFriends = function() {
@@ -124,7 +124,7 @@ app.filter('array', function() {
 
 app.controller('friendSelectorController', function($scope,$modalInstance,data, $rootScope, model){
 
-	$scope.friends = model.friends.list;
+	$scope.friends = friends.model.list;
 	var selectedFriends = {};
 
 	$scope.toggleFriend = function(friend) {

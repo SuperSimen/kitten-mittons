@@ -1,6 +1,6 @@
 (function () {
 
-	app.factory('fileReceiver', function($rootScope, dataSender, model, utility) {
+	app.factory('fileReceiver', function($rootScope, dataSender, model, utility, fileList) {
 		var fileReceiver = {
 			init: function() {
 				dataSender.addMessageHandler(fileHandler, "fileSender");
@@ -41,7 +41,7 @@
 					storage[data.id].sender = dataSender.getSender(from, "fileReceiver");
 
 					$rootScope.$apply(function() {
-						storage[data.id].fileObject = model.file.get(data.id);
+						storage[data.id].fileObject = fileList.get(data.id);
 
 						var watcher = $rootScope.$watch(function() {
 							if (storage[data.id]) {
@@ -94,7 +94,7 @@
 						var progress = (storage[data.id].counter / (storage[data.id].totalSlices * storage[data.id].sliceSize)) * 100;
 
 						$rootScope.$apply(function() {
-							model.file.list[data.id].progress = progress;
+							fileList.list[data.id].progress = progress;
 						});
 					}
 
@@ -304,7 +304,7 @@
 										fileWriter.onwriteend = function(e) {
 											if (lastBlob) {
 
-												var watcher = $rootScope.$watch(function() {return model.file.list[id].accepted;}, function(newValue) {
+												var watcher = $rootScope.$watch(function() {return fileList.list[id].accepted;}, function(newValue) {
 													if (newValue) {
 														sandbox[id].downloadFile();
 														watcher();
@@ -312,7 +312,7 @@
 												});
 
 												$rootScope.$apply(function() {
-													model.file.list[id].finished = true;
+													fileList.list[id].finished = true;
 												});
 											}
 										};

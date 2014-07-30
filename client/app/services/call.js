@@ -6,21 +6,69 @@
 				xmpp.addHandler(xmppHandlers.call, null, "message", "call");
 			}
 		};
+		call.model = {
+			list: {},
+			status: "free",
+			currentId: "",
+			getCurrent: function() {
+				return this.list[this.currentId];
+			},
+			add: function(id, calling, audio, video) {
+				if (this.list[id]) {
+					console.log("already call with id");
+					return;
+				}
+				this.list[id] = {
+					id: id,
+					video: video,
+					audio: audio,
+					hidden: false,
+					calling: calling
+				};
+			},
+			deleteCurrent: function() {
+				if (this.list[this.currentId]) {
+					delete this.list[this.currentId];
+					this.currentId = "";
+				}
+			},
+			remove: function(id) {
+				if (this.list[id]) {
+					delete this.list[id];
+				}
+			}
+
+		};
+
+
+		call.model.video = {
+			active: null,
+			busy: null,
+			local: {
+				videoEnabled: true,
+				audioEnabled: true,
+				src: ""
+			},
+			remote: {
+				src: "",
+				userId: ""
+			}
+		};
 
 		call.videoCall = function(to) {
-			if (model.call.status === "free") {
-				model.call.status = "calling";
-				model.call.currentId = to;
-				model.call.add(to, true, true, true);
+			if (call.model.status === "free") {
+				call.model.status = "calling";
+				call.model.currentId = to;
+				call.model.add(to, true, true, true);
 				sendCallSignal(to, {type: "offer", audio: true, video: true});
 			}
 		};
 
 		call.audioCall = function(to) {
-			if (model.call.status === "free") {
-				model.call.status = "calling";
-				model.call.currentId = to;
-				model.call.add(to, true, true, false);
+			if (call.model.status === "free") {
+				call.model.status = "calling";
+				call.model.currentId = to;
+				call.model.add(to, true, true, false);
 				sendCallSignal(to, {type: "offer", audio: true, video: false});
 			}
 		};
@@ -30,46 +78,46 @@
 		}
 
 		call.cancelCall = function(to) {
-			if (model.call.status === "calling" && model.call.currentId === utility.getIdFromJid(to)) {
-				model.call.status = "free";
-				model.call.currentId = "";
+			if (call.model.status === "calling" && call.model.currentId === utility.getIdFromJid(to)) {
+				call.model.status = "free";
+				call.model.currentId = "";
 				sendCallSignal(to, {type: "cancel"});
 
-				model.call.remove(utility.getIdFromJid(to));
+				call.model.remove(utility.getIdFromJid(to));
 			}
 		};
 
 		call.acceptCall = function(to) {
-			model.call.currentId = utility.getIdFromJid(to);
-			model.call.status = "accept";
-			model.call.getCurrent().hidden = true;
+			call.model.currentId = utility.getIdFromJid(to);
+			call.model.status = "accept";
+			call.model.getCurrent().hidden = true;
 			sendCallSignal(to, {type: "accept"});
 		};
 
 		call.denyCall = function(to) {
-			model.call.remove(utility.getIdFromJid(to));
+			call.model.remove(utility.getIdFromJid(to));
 			sendCallSignal(to, {type: "deny"});
-			model.call.currentId = "";
-			model.call.status = "free";
+			call.model.currentId = "";
+			call.model.status = "free";
 		};
 
 		call.hangup = function() {
-			if (model.call.status === "in-call" && model.call.currentId) {
-				sendCallSignal(model.call.currentId, {type: "hangup"});
-				model.chat.get(model.call.currentId).addSystemMessage("Call ended");
+			if (call.model.status === "in-call" && call.model.currentId) {
+				sendCallSignal(call.model.currentId, {type: "hangup"});
+				model.chat.get(call.model.currentId).addSystemMessage("Call ended");
 				webrtc.hangup();
 			}
 		};
 
 		call.toggleVideo = function() {
-			var video = !model.video.local.videoEnabled;
-			model.video.local.videoEnabled = video;
+			var video = !call.model.video.local.videoEnabled;
+			call.model.video.local.videoEnabled = video;
 			webrtc.enableVideo(video);
 		};
 
 		call.toggleAudio = function() {
-			var audio = !model.video.local.audioEnabled;
-			model.video.local.audioEnabled = audio;
+			var audio = !call.model.video.local.audioEnabled;
+			call.model.video.local.audioEnabled = audio;
 			webrtc.enableAudio(audio);
 		};
 
@@ -82,10 +130,10 @@
 					console.log(type);
 					var from = utility.getIdFromJid(data.from);
 					if (type === "offer") {
-						if (model.call.status === "free") {
+						if (call.model.status === "free") {
 							$rootScope.$apply(function() {
 								model.chat.get(from).ping();
-								model.call.add(from, false, callMessage.audio, callMessage.video);
+								call.model.add(from, false, callMessage.audio, callMessage.video);
 							});
 						}
 						else {
@@ -93,33 +141,33 @@
 						}
 					}
 					else if (type === "accept" && 
-						model.call.status === "calling" &&
-						model.call.currentId === from) {
+						call.model.status === "calling" &&
+						call.model.currentId === from) {
 
 						$rootScope.$apply(function() {
-							model.call.getCurrent().hidden = true;
+							call.model.getCurrent().hidden = true;
 						});
 
 						webrtc.call(data.from);
 					}
 					else if (type === "deny" && 
-						model.call.status === "calling" &&
-						model.call.currentId === from) {
+						call.model.status === "calling" &&
+						call.model.currentId === from) {
 
 						$rootScope.$apply(function() {
 							model.chat.get(from).addSystemMessage("Call denied");
-							model.call.deleteCurrent();
+							call.model.deleteCurrent();
 						});
 
-						model.call.status = "free";
+						call.model.status = "free";
 					}
-					else if (type === "cancel" && model.call.status === "free") {
+					else if (type === "cancel" && call.model.status === "free") {
 						$rootScope.$apply(function() {
-							model.call.remove(from);
+							call.model.remove(from);
 							model.chat.get(from).addSystemMessage("Call canceled");
 						});
 					}
-					else if (type === "hangup" && model.call.status === "in-call") {
+					else if (type === "hangup" && call.model.status === "in-call") {
 						$rootScope.$apply(function() {
 							webrtc.hangup();
 							model.chat.get(from).addSystemMessage("Call ended");

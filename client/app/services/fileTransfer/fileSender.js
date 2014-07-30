@@ -1,6 +1,6 @@
 (function () {
 
-	app.factory('fileSender', function($rootScope, dataSender, model, utility) {
+	app.factory('fileSender', function($rootScope, dataSender, model, utility, fileList) {
 		var fileSender = {
 			init: function() {
 				dataSender.addMessageHandler(dataHandlers.main, "fileReceiver");
@@ -60,14 +60,14 @@
 						var value = progress.calculate();
 						if (value) {
 							$rootScope.$apply(function() {
-								model.file.list[id].progress = value;
+								fileList.list[id].progress = value;
 							});
 						}
 					}
 
 				}
 				else if (status === "failed") {
-					model.file.list[id].failed = true;
+					fileList.list[id].failed = true;
 				}
 			});
 
@@ -115,7 +115,7 @@
 				else if (data.status === "eof_ack") {
 					sender.finished();
 					$rootScope.$apply(function() {
-						model.file.list[id].finished = true;
+						fileList.list[id].finished = true;
 					});
 					dataHandlers.remove(id);
 				}
@@ -237,7 +237,6 @@
 				sender.send(tempFile);
 			}
 		}
-
 
 		return fileSender;
 	});

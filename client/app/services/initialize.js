@@ -1,5 +1,5 @@
 (function () {
-	app.factory('initialize', function(fileTransfer, UWAP, chat, xmpp, model, $rootScope, $state, $http, constants, webrtc, utility, presence, call, search) {
+	app.factory('initialize', function(fileTransfer, UWAP, chat, xmpp, model, userInfo, $rootScope, $state, $http, constants, webrtc, utility, presence, call, search) {
 		var init = {
 			init: function() {
 				globalModel = model;
@@ -15,11 +15,11 @@
 
 		function gatherInfoPart1 () { 
 			$http.get('/api/info').success(function(data, status) {
-				model.user.info = data;
-				model.user.token = data.token;
+				userInfo.user.info = data;
+				userInfo.user.token = data.token;
 
-				if (model.user.info.xmpp.registered) {
-					xmpp.connect(model.user.info.xmpp.jid, model.user.info.xmpp.password, constants.xmpp.boshUrl, connectedCallback);
+				if (userInfo.user.info.xmpp.registered) {
+					xmpp.connect(userInfo.user.info.xmpp.jid, userInfo.user.info.xmpp.password, constants.xmpp.boshUrl, connectedCallback);
 				}
 
 			}).error(utility.handleHttpError);
@@ -43,7 +43,7 @@
 		}
 
 		function gatherInfoPart2 () {
-			UWAP.getGroups(model.user.token, function (data) {
+			UWAP.getGroups(userInfo.user.token, function (data) {
 				var groups = data.Resources;
 				for (var i in groups) {
 					var group = groups[i];
@@ -54,8 +54,8 @@
 					}
 				}
 			}); 
-			UWAP.getRealms(model.user.token, function (data) {
-				model.user.realms = data;
+			UWAP.getRealms(userInfo.user.token, function (data) {
+				userInfo.user.realms = data;
 			}); 
 
 		}

@@ -1,7 +1,6 @@
 app.controller( 'chatHistoryController', function($scope, model, dialogs, chat) {
 
 	$scope.chat = model.chat;
-	$scope.file = model.file;
 	$scope.conference = model.conference;
 
 	$scope.$watch(function () {return model.chat.currentId;}, function() {

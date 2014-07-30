@@ -1,9 +1,9 @@
-app.controller( 'chatController', function($state, $scope, model, utility, dialogs, chat, call, fileTransfer) {
+app.controller( 'chatController', function($state, $scope, model, utility, dialogs, chat, call, fileTransfer, friends, fileList) {
 	
-	$scope.call = model.call;
-	$scope.video = model.video;
+	$scope.call = call.model;
+	$scope.video = call.model.video;
 	$scope.conference = model.conference;
-	$scope.file = model.file;
+	$scope.file = fileList;
 		
 	$scope.$watch(function () {return model.chat.currentId;}, function() {
 		$scope.currentChat = model.chat.getCurrent();
@@ -33,7 +33,7 @@ app.controller( 'chatController', function($state, $scope, model, utility, dialo
 		dlg.result.then(function(selectedFriends){
 			for (var i in selectedFriends) {
 				if (selectedFriends[i]) {
-					chat.sendRoomInvite(model.friends.get(i), $scope.currentChat.id);
+					chat.sendRoomInvite(friends.model.get(i), $scope.currentChat.id);
 				}
 			}
 		}, function(){
@@ -43,17 +43,17 @@ app.controller( 'chatController', function($state, $scope, model, utility, dialo
 
 	$scope.clickAudioButton = function() {
 		if ($scope.isInCall()) {
-			if (!model.call.getCurrent().video) {
+			if (!call.model.getCurrent().video) {
 				hangup();
 			}
 		}
 		else if ($scope.isCalling()){
-			if (!model.call.getCurrent().video) {
+			if (!call.model.getCurrent().video) {
 				cancelCall();
 			}
 		}
 		else if ($scope.hasIncomingCall()) {
-			if (!model.call.list[$scope.currentChat.id].video) {
+			if (!call.model.list[$scope.currentChat.id].video) {
 				$scope.acceptCall();
 			}
 		}
@@ -64,17 +64,17 @@ app.controller( 'chatController', function($state, $scope, model, utility, dialo
 
 	$scope.clickVideoButton = function() {
 		if ($scope.isInCall()) {
-			if (model.call.getCurrent().video) {
+			if (call.model.getCurrent().video) {
 				hangup();
 			}
 		}
 		else if ($scope.isCalling()){
-			if (model.call.getCurrent().video) {
+			if (call.model.getCurrent().video) {
 				cancelCall();
 			}
 		}
 		else if ($scope.hasIncomingCall()) {
-			if (model.call.list[$scope.currentChat.id].video) {
+			if (call.model.list[$scope.currentChat.id].video) {
 				$scope.acceptCall();
 			}
 		}
@@ -85,13 +85,13 @@ app.controller( 'chatController', function($state, $scope, model, utility, dialo
 
 	$scope.isVideoButtonActive = function() {
 		if ($scope.hasIncomingCall()) {
-			if (model.call.list[$scope.currentChat.id].video) {
+			if (call.model.list[$scope.currentChat.id].video) {
 				return true;
 			}
 		}
 
 		if($scope.isInCall() || $scope.isCalling()) {
-			if (model.call.getCurrent().video) {
+			if (call.model.getCurrent().video) {
 				return true;
 			}
 		}
@@ -100,13 +100,13 @@ app.controller( 'chatController', function($state, $scope, model, utility, dialo
 
 	$scope.isAudioButtonActive = function() {
 		if ($scope.hasIncomingCall()) {
-			if (!model.call.list[$scope.currentChat.id].video) {
+			if (!call.model.list[$scope.currentChat.id].video) {
 				return true;
 			}
 		}
 
 		if($scope.isInCall() || $scope.isCalling()) {
-			if (!model.call.getCurrent().video) {
+			if (!call.model.getCurrent().video) {
 				return true;
 			}
 		}
@@ -115,13 +115,13 @@ app.controller( 'chatController', function($state, $scope, model, utility, dialo
 
 	$scope.getVideoControlMsg = function() {
 		if ($scope.hasIncomingCall()) {
-			if (model.call.list[$scope.currentChat.id].video) {
+			if (call.model.list[$scope.currentChat.id].video) {
 				return "Accept Video Call";
 			}
 		}
 
 		if($scope.isInCall() || $scope.isCalling()) {
-			if (model.call.getCurrent().video) {
+			if (call.model.getCurrent().video) {
 				return "Stop Video Call";
 			}
 		}
@@ -131,13 +131,13 @@ app.controller( 'chatController', function($state, $scope, model, utility, dialo
 
 	$scope.getAudioControlMsg = function() {
 		if ($scope.hasIncomingCall()) {
-			if (!model.call.list[$scope.currentChat.id].video) {
+			if (!call.model.list[$scope.currentChat.id].video) {
 				return "Accept Audio";
 			}
 		}
 
 		if($scope.isInCall() || $scope.isCalling()) {
-			if (!model.call.getCurrent().video) {
+			if (!call.model.getCurrent().video) {
 				return "Stop Audio";
 			}
 		}
@@ -156,7 +156,7 @@ app.controller( 'chatController', function($state, $scope, model, utility, dialo
 	};
 
 	$scope.getFile = function(fileId) {
-		return model.file.list[fileId];
+		return fileList.list[fileId];
 	};
 
 	$scope.showInfoBar = function() {
@@ -243,10 +243,10 @@ app.controller( 'chatController', function($state, $scope, model, utility, dialo
 	 * @returns {Boolean}
 	 */
 	$scope.isCalling = function() {
-		if(!model.call || !model.call.currentId) {
+		if(!call.model || !call.model.currentId) {
 			return false;
 		}
-		return (model.call.status === "calling");
+		return (call.model.status === "calling");
 	};
 	
 	/**

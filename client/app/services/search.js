@@ -1,40 +1,104 @@
 (function () {
 
-	app.factory('search', function(UWAP, xmpp, model, $state, $rootScope, $timeout) {
+	app.factory('search', function(UWAP, xmpp, $state, $rootScope, $timeout) {
 		var search = {
 			init: function() {
-				$rootScope.$watch(function() {return model.search.query;}, onChange);
-				$rootScope.$watch(function() {return model.search.currentRealm;}, onChange);
+				$rootScope.$watch(function() {return search.model.query;}, onChange);
+				$rootScope.$watch(function() {return search.model.currentRealm;}, onChange);
 			}
+		};
+		search.model = {
+			query: "",
+			searchId: 0,
+			unsettable: false,
+			currentRealm: null,
+			setRealmSearch: function(realm) {
+				console.log(realm);
+				if (realm) {
+					this.currentRealm = realm;
+					this.isRealmSearch = true;
+					this.isLocalSearch = false;
+				}
+			},
+			setLocalSearch: function() {
+				this.currentRealm = null;
+				this.isRealmSearch = false;
+				this.isLocalSearch = true;
+			},
+			isLocalSearch: true,
+			isRealmSearch: false,
+			list: [],
+			addPeopleToResults: function(people, searchId) {
+				if (this.searchId !== searchId) {
+					return;
+				}
+				if (this.unsettable) {return;}
+				this.clearResults();
+
+				for (var i in people) {
+					this.addPersonToResults(people[i]);
+				}
+			},
+			addPersonToResults: function(person) {
+				if (this.unsettable) {return;}
+
+				this.list.push({
+					name: person.name,
+					mail: person.mail,
+					userid: person.userid,
+					o: person.o,
+					source: person.source,
+					image: {
+						preface: "data:image/jpeg;base64,",
+						data: person.jpegphoto
+					},
+					getImage: function() {
+						if (!this.image.data) {return "//:0";}
+						return this.image.preface + this.image.data;
+					},
+					hasImage: function() {
+						if (this.image.data) {return true;}
+						else {return false;}
+					}
+				});
+			},
+			getId: function() {
+				return ++this.searchId;
+			},
+
+			clearResults: function() {
+				this.list.length = 0;
+			}
+
 		};
 
 		var timeoutPromise;
 		function onChange(newValue) {
-			if (model.search.isRealmSearch) { 
+			if (search.model.isRealmSearch) { 
 				if (timeoutPromise) {
 					$timeout.cancel(timeoutPromise);
 				}
 				timeoutPromise = $timeout(function() {
-					model.search.unsettable = false;
+					search.model.unsettable = false;
 					startSearch();
 				}, 200);
 			}
 			else {
-				model.search.unsettable = true;
-				model.search.clearResults();
+				search.model.unsettable = true;
+				search.model.clearResults();
 			}
 		}
 		
 		function startSearch() {
-			if (!model.search.query || !model.search.currentRealm) {return;}
+			if (!search.model.query || !search.model.currentRealm) {return;}
 
 			UWAP.getPeople(model.user.token, (function(searchId) {
 				return function (data) {
 					if (data.people.length) {
-						model.search.addPeopleToResults(data.people, searchId);
+						search.model.addPeopleToResults(data.people, searchId);
 					}
 				};
-			})(model.search.getId()), model.search.currentRealm.realm , model.search.query);
+			})(search.model.getId()), search.model.currentRealm.realm , search.model.query);
 		}
 
 		return search;

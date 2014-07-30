@@ -1,6 +1,6 @@
 (function () {
 
-	app.factory('peerConnections', function($rootScope, constants, model, xmpp, utility, $sce) {
+	app.factory('peerConnections', function($rootScope, constants, model, xmpp, utility, $sce, call) {
 		var peerConnections = {};
 
 		var connections = {
@@ -146,10 +146,10 @@
 		function onAddStream (e){
 			$rootScope.$apply(function() {
 				console.log(e);
-				model.video.active = true;
-				model.call.status = "in-call";
-				model.video.remote.src = $sce.trustAsResourceUrl(URL.createObjectURL(e.stream));
-				model.video.remote.stream = e.stream;
+				call.model.video.active = true;
+				call.model.status = "in-call";
+				call.model.video.remote.src = $sce.trustAsResourceUrl(URL.createObjectURL(e.stream));
+				call.model.video.remote.stream = e.stream;
 			});
 		}
 

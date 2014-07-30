@@ -1,6 +1,6 @@
-app.controller( 'mainController', function($scope, $rootScope, model, $state, utility) {
+app.controller( 'mainController', function($scope, $rootScope, model, friends, $state, utility, call) {
 
-	$scope.$watch(function () {return model.video.active;}, function(newValue) {
+	$scope.$watch(function () {return call.model.video.active;}, function(newValue) {
 		if (!newValue) {
 			if ($state.current.name === "call") {
 				$rootScope.gotoState("chat");
@@ -95,18 +95,18 @@ app.controller( 'mainController', function($scope, $rootScope, model, $state, ut
 		}
 		id = utility.getBareJid(id);
 
-		var friend = model.friends.get(id);
+		var friend = friends.model.get(id);
 		if (friend) {
 			return friend;
 		}
 
-		friend = model.friends.getWithNickname(id);
+		friend = friends.model.getWithNickname(id);
 		if (friend) {
 			return friend;
 		}
 	};
 	$rootScope.getMe = function() {
-		return model.friends.get(model.user.info.xmpp.jid);
+		return friends.model.get(model.user.info.xmpp.jid);
 	};
 
 	/**
@@ -114,8 +114,8 @@ app.controller( 'mainController', function($scope, $rootScope, model, $state, ut
 	 * @returns {Boolean}
 	 */
 	$scope.receivingCall = function() {
-		for(var i in model.call.list) {
-			if(!model.call.list[i].calling && !model.call.list[i].hidden) {
+		for(var i in call.model.list) {
+			if(!call.model.list[i].calling && !call.model.list[i].hidden) {
 				return true;
 			}
 		}
