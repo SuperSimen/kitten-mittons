@@ -5,7 +5,7 @@
 	<div ng-class="getCol(2)" class="fill-height">
 		<div ng-show="showConference()" class="row fill-height">
 			
-			<div class="name-tag border-bottom uninett-section-header-bar" ng-class="border">
+			<div class="name-tag border-bottom uninett-section-header-bar" ng-hide="isConferenceFullscreen()" ng-class="border">
 				<div class="col-md-12 fill-height">
 					<div>
 						<p class="uninett-breadcrumbs-ellipsis">
@@ -15,11 +15,21 @@
 				</div>
 			</div>
 			
-			<div class="conference-menu">
-				<!--<i class="pointer fa fa-phone-square uninett-fontColor-red fa-2x tab" ng-click="closeConference()"></i>-->
-				<button class="btn btn-danger pointer" ng-click="closeConference()">Close Conference</button>
+			<div ng-class="{'fill-height': isConferenceFullscreen(), 'fill-under-name-tag': !isConferenceFullscreen()}">
+				<div class="conference-menu">
+					<!--<i class="pointer fa fa-phone-square uninett-fontColor-red fa-2x tab" ng-click="closeConference()"></i>-->
+					<div ng-hide="isConferenceFullscreen()">
+						<button class="btn btn-info pointer" ng-click="toggleConferenceFullscreen()">Fullscreen</button>
+						<button class="btn btn-danger pointer" ng-click="closeConference()">Close Conference</button>
+					</div>
+					<div ng-show="isConferenceFullscreen()">
+						<i class="fa fa-2x pointer tab" ng-class="{'fa-compress': isConferenceFullscreen(), 'fa-expand': !isConferenceFullscreen()}" ng-click="toggleConferenceFullscreen()"></i>
+						<i class="pointer fa fa-phone-square uninett-fontColor-red fa-2x tab" ng-click="closeConference()"></i>
+					</div>
+
+				</div>
+				<iframe src={{conference.src}} class="fill-height fill-width"></iframe>
 			</div>
-			<iframe src={{conference.src}} class="fill-height fill-width"></iframe>
 		</div>
 		<div ui-view="view2" class="fill-height"></div>
 	</div>

@@ -8,9 +8,26 @@ app.controller( 'mainController', function($scope, $rootScope, model, $state, ut
 		}
 	});
 
+	$scope.toggleConferenceFullscreen = function() {
+		if ($state.current.name === "conference.fullscreen") {
+			$rootScope.gotoState("conference");
+		}
+		else if ($state.current.name === "conference") {
+			$rootScope.gotoState("conference.fullscreen");
+		}
+		else {
+			console.error("tried to toggle conference fullscreen with no conference");
+		}
+	};
+
+	$scope.isConferenceFullscreen = function() {
+		return $state.current.name === "conference.fullscreen";
+	};
+
+
 	$scope.$watch(function () {return model.conference.active;}, function(newValue) {
 		if (!newValue) {
-			if ($state.current.name === "conference") {
+			if ($state.current.name === "conference" || $state.current.name === "conference.fullscreen") {
 				$rootScope.gotoState("chat");
 			}
 		}
@@ -57,7 +74,7 @@ app.controller( 'mainController', function($scope, $rootScope, model, $state, ut
 	};
 	$scope.conference = model.conference;
 	$scope.showConference = function() {
-		return $state.current.name === "conference";
+		return $state.current.name === "conference" || $state.current.name === "conference.fullscreen";
 	};
 	$scope.closeConference = function() {
 		model.conference.closeActive();

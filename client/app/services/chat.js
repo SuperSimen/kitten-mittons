@@ -31,18 +31,14 @@
 		};
 
 		chat.closeChat = function(id) {
-			console.log("closing chat");
 			if (model.chat.get(id).isRoom) {
-				console.log("is room");
 				if(model.chat.get(id).conferenceOpen) {
-					// Close meetme conference
 					model.conference.closeActive();
 				}
 				xmpp.leaveRoom(id);
 			}
 			model.chat.close(id);
 		};
-
 
 		var xmppHandlers = {
 			systemNotification: function(data) {
