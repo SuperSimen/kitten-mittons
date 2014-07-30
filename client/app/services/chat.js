@@ -161,7 +161,7 @@
 						this.makeSoundGoPing();
 						return temp;
 					},
-					makeSoundPing: function() {
+					makeSoundGoPing: function() {
 						if (this.id !== chat.model.currentId) {
 							$rootScope.messageAudioNotify();
 						}
