@@ -67,7 +67,6 @@
 					console.error("could not send IQ");
 				}
 				else {
-					//console.log(stanza);
 				}
 			};
 			connection.sendIQ(iq,
@@ -166,7 +165,7 @@
 
 		factory.joinRoom = function (roomId) {
 			var room = roomId + "@" + constants.xmpp.mucServerUrl;
-			var to = room + "/" + model.user.info.nickname;
+			var to = room + "/" + userInfo.user.info.nickname;
 
 			var pres = $pres({to: to}).c("x", {xmlns: constants.xmpp.muc});
 
@@ -174,7 +173,7 @@
 		};
 
 		factory.leaveRoom = function (roomJid) {
-			var to = roomJid + "/" + model.user.info.nickname;
+			var to = roomJid + "/" + userInfo.user.info.nickname;
 
 			var pres = $pres({to: to, type: "unavailable"}).c("x", {xmlns: constants.xmpp.muc});
 			console.log(to);
