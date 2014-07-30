@@ -32,7 +32,7 @@
 							<div ng-repeat="person in search.list" class="uninett-search-results-panel panel panel-default">
 								<div class="panel-heading">
 									<div class="pull-right uninett-search-panel-header-icons">
-										<i ng-click="addBestFriendUWAP(person)" class="pointer fa fa-plus fa-2x"></i>
+										<i ng-click="addBestFriendUWAP(person)" class="pointer fa fa-2x" ng-class="model.friends.isUserAdded(person.userid) ? 'uninett-btn-ok fa-check' : 'fa-plus'"></i>
 										<i ng-click="sendInvite(person)" class="pointer fa fa-paperclip fa-2x"></i>
 									</div>
 									<h4 class="panel-title">
@@ -47,7 +47,7 @@
 										</div>
 										<div class="col-xs-8">
 											<span>
-												{{person.userid}}
+												{{person.userid}} {{person.id}}
 												<br />
 												{{person.mail}}
 											</span>

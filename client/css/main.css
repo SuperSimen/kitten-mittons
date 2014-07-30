@@ -538,3 +538,7 @@ span[ng-click][disabled] {
 	padding: 5px;
 	margin: 0;
 }
+
+.uninett-btn-ok {
+	color: green;
+}
