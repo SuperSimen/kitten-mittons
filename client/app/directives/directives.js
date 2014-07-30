@@ -35,6 +35,17 @@
 		};
 	});
 
+	app.directive("ngAudioNotification", function(){
+		return function(scope, element, attrs){
+			element[0].loop = false;
+			scope.messageAudioNotify = function() {
+				element[0].currentTime = 0;
+				element[0].play();
+			};
+			window.global_messageAudioNotify = scope.messageAudioNotify;
+		};
+	});
+
 	app.directive("ngAudio", function(){
 		return function(scope, element, attrs){
 			element[0].loop = true;
