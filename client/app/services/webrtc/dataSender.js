@@ -122,7 +122,6 @@
 						};
 						dataChannel.onmessage = messageHandlers.mainHandler(to);
 						dataChannel.onopen = function () {
-							console.log("channel opened");
 							dataSenders.list[to].dataChannels.push(dataChannel);
 						};
 						dataChannel.onclose = function () {
@@ -267,9 +266,7 @@
 		};
 
 		dataSender.onDataChannel = function (to) {
-			console.log("on datachannel " + to);
 			return function(event) {
-				console.log("on datachannel event " + event);
 				dataSenders.getSender(to, true).addDataChannel(event.channel);
 				dataSenders.getSender(to, true).addPeerConnection(event.channel);
 			};

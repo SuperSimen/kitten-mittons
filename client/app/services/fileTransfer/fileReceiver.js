@@ -42,7 +42,6 @@
 
 					$rootScope.$apply(function() {
 						storage[data.id].fileObject = model.file.add(data.id, data.filename, from, false, data.size);
-						console.log(storage[data.id]);
 
 						var watcher = $rootScope.$watch(function() {
 							if (storage[data.id]) {
@@ -157,7 +156,6 @@
 						storage[data.id].receivedEntireFile) {
 
 					$rootScope.$apply(function() {
-						console.log("received entire file");
 					});
 					signalFile(data.id, "eof_ack", data.totalSlices, data.filename);
 

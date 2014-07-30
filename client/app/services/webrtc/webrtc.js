@@ -181,7 +181,6 @@
 
 				peerConnections.getIceCandidates(id).setReadyToSend(true);
 			}
-			console.log("handled offer");
 		}
 
 		function createDesc(callback){

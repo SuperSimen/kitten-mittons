@@ -35,7 +35,6 @@
 				}
 
 				if (onDataChannel) {
-					console.log(onDataChannel);
 					peerConnection.ondatachannel = onDataChannel; 
 				}
 

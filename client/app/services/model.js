@@ -411,8 +411,8 @@
 				}
 			},
 			isUserAdded: function(userid) {
-				return model.friends.getWithUserid(userid) !== undefined 
-						|| model.user.info.tempFriends.filter(function(user) {
+				return model.friends.getWithUserid(userid) !== undefined ||
+						model.user.info.tempFriends.filter(function(user) {
 							return user.userid == userid;
 						}).length;
 			}
