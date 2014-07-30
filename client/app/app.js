@@ -4,7 +4,7 @@ var app = angular.module( 'app', [
 	'ng-context-menu',
 	'dialogs.main'
 ]);
-app.controller('appController', function($scope, model) {
+app.controller('appController', function($scope) {
 	$scope.application = {
 		title: "UNINETT WebRTC application",
 	};
