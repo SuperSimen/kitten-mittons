@@ -1,6 +1,6 @@
 (function () {
 
-	app.factory('call', function(UWAP, xmpp,  $state, $rootScope, $http, constants, webrtc, fileSender, fileReceiver, $timeout, utility, $sce) {
+	app.factory('call', function(UWAP, xmpp,  $state, $rootScope, $http, constants, webrtc, fileSender, fileReceiver, $timeout, utility, $sce, callVideo) {
 		var call = {
 			init: function() {
 				xmpp.addHandler(xmppHandlers.call, null, "message", "call");
@@ -40,20 +40,6 @@
 
 		};
 
-
-		call.model.video = {
-			active: null,
-			busy: null,
-			local: {
-				videoEnabled: true,
-				audioEnabled: true,
-				src: ""
-			},
-			remote: {
-				src: "",
-				userId: ""
-			}
-		};
 
 		call.videoCall = function(to) {
 			if (call.model.status === "free") {
@@ -110,14 +96,14 @@
 		};
 
 		call.toggleVideo = function() {
-			var video = !call.model.video.local.videoEnabled;
-			call.model.video.local.videoEnabled = video;
+			var video = !callVideo.local.videoEnabled;
+			callVideo.local.videoEnabled = video;
 			webrtc.enableVideo(video);
 		};
 
 		call.toggleAudio = function() {
-			var audio = !call.model.video.local.audioEnabled;
-			call.model.video.local.audioEnabled = audio;
+			var audio = !callVideo.local.audioEnabled;
+			callVideo.local.audioEnabled = audio;
 			webrtc.enableAudio(audio);
 		};
 
@@ -182,6 +168,24 @@
 			},
 		};
 		return call;
+	});
+
+	app.factory('callVideo', function() {
+		callModel = {
+			active: null,
+			busy: null,
+			local: {
+				videoEnabled: true,
+				audioEnabled: true,
+				src: ""
+			},
+			remote: {
+				src: "",
+				userId: ""
+			}
+		};
+
+		return callModel;
 	});
 
 })();

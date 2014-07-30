@@ -1,6 +1,6 @@
 (function () {
 
-	app.factory('webrtc', function(constants,  $rootScope, $sce, xmpp, $timeout, utility, peerConnections, dataSender, call) {
+	app.factory('webrtc', function(constants,  $rootScope, $sce, xmpp, $timeout, utility, peerConnections, dataSender, call, callVideo) {
 		var webrtc = {
 			init: function() {
 				xmpp.addHandler(handleOffer, constants.xmpp.webrtc, "message", "offer");
@@ -12,9 +12,9 @@
 		}
 			
 		function getUserMedia(callback) {
-			if (call.model.video.local.stream) {
+			if (callVideo.local.stream) {
 				console.log("already has stream");
-				callback(call.model.video.local.stream);
+				callback(callVideo.local.stream);
 				return;
 			}
 
@@ -25,8 +25,8 @@
 					audio: currentCall.audio
 				},
 				function(stream) {
-					call.model.video.local.src = $sce.trustAsResourceUrl(URL.createObjectURL(stream));
-					call.model.video.local.stream = stream;
+					callVideo.local.src = $sce.trustAsResourceUrl(URL.createObjectURL(stream));
+					callVideo.local.stream = stream;
 					callback(stream);
 				}, function() {
 					console.error(arguments);
@@ -40,8 +40,8 @@
 		}
 
 		webrtc.call = function (to) {
-			if (!call.model.video.active) {
-				call.model.video.remote.userId = utility.getIdFromJid(to);
+			if (!callVideo.active) {
+				callVideo.remote.userId = utility.getIdFromJid(to);
 				videoCall(to);
 			}
 			else {
@@ -50,15 +50,15 @@
 		};
 
 		function reset() {
-			if (call.model.video.active) {
+			if (callVideo.active) {
 				video.close();
 			}
-			call.model.video.remote.src = "";
-			call.model.video.remote.userId = "";
-			call.model.video.active = false;
-			if (call.model.video.local.stream) {
-				call.model.video.local.stream.stop();
-				call.model.video.local.stream = null;
+			callVideo.remote.src = "";
+			callVideo.remote.userId = "";
+			callVideo.active = false;
+			if (callVideo.local.stream) {
+				callVideo.local.stream.stop();
+				callVideo.local.stream = null;
 			}
 			call.model.status = "free";
 			call.model.deleteCurrent();
@@ -151,10 +151,10 @@
 			peerConnections.add(peerConnection, from, id, dataSender.onDataChannel(from));
 
 			if (type === "video") {
-				call.model.video.active = true;
+				callVideo.active = true;
 
 				getUserMedia(continueOfferHandling);
-				call.model.video.remote.userId = utility.getIdFromJid(from);
+				callVideo.remote.userId = utility.getIdFromJid(from);
 			}
 			else {
 				continueOfferHandling(null);

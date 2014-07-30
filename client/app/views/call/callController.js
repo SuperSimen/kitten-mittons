@@ -1,17 +1,17 @@
-app.controller( 'callController', function(call, $scope) {
-	$scope.smallVideo = call.model.video.local;
-	$scope.largeVideo = call.model.video.remote;
-	$scope.video = call.model.video;
+app.controller( 'callController', function(call, $scope, callVideo) {
+	$scope.smallVideo = callVideo.local;
+	$scope.largeVideo = callVideo.remote;
+	$scope.video = callVideo;
 
 	$scope.inverse = false;
 	$scope.switchVideos = function() {
 		if ($scope.inverse) {
-			$scope.smallVideo = call.model.video.local;
-			$scope.largeVideo = call.model.video.remote;
+			$scope.smallVideo = callVideo.local;
+			$scope.largeVideo = callVideo.remote;
 		}
 		else {
-			$scope.smallVideo = call.model.video.remote;
-			$scope.largeVideo = call.model.video.local;
+			$scope.smallVideo = callVideo.remote;
+			$scope.largeVideo = callVideo.local;
 		}
 		$scope.inverse = !$scope.inverse;
 	};

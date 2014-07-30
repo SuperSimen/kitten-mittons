@@ -1,6 +1,6 @@
-app.controller( 'mainController', function($scope, $rootScope, friends, $state, utility, call) {
+app.controller( 'mainController', function($scope, $rootScope, friends, $state, utility, call, callVideo) {
 
-	$scope.$watch(function () {return call.model.video.active;}, function(newValue) {
+	$scope.$watch(function () {return callVideo.active;}, function(newValue) {
 		if (!newValue) {
 			if ($state.current.name === "call") {
 				$rootScope.gotoState("chat");
