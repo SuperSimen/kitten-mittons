@@ -1,4 +1,4 @@
-app.controller( 'friendsController', function($state, userInfo, $scope, fileTransfer, friends, chat) {
+app.controller( 'friendsController', function($state, userInfo, $scope, fileTransfer, friends, chat, search) {
 	$scope.groups = userInfo.groups;
 	$scope.friends = friends.model;
 	$scope.user = userInfo.user;
