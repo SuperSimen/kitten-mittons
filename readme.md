@@ -30,3 +30,8 @@ npm start
 ```
 
 That's it!
+
+
+## TODO
+
+Logout from UWAP
