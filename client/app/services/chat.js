@@ -113,7 +113,7 @@
 							hidden: false
 						};
 						this.addObjectToList(temp);
-						$rootScope.messageAudioNotify();
+						this.makeSoundGoPing();
 					},
 					addFileInviteMessage: function(request) {
 						this.addObjectToList({
@@ -125,7 +125,7 @@
 							requestId: request.id,
 							responded: false
 						});
-						$rootScope.messageAudioNotify();
+						this.makeSoundGoPing();
 					},
 					addFileMessage: function(fileId) {
 						var temp = {
@@ -137,7 +137,7 @@
 							fileId: fileId
 						};
 						this.addObjectToList(temp);
-						$rootScope.messageAudioNotify();
+						this.makeSoundGoPing();
 					},
 					ping: function() {
 						var temp = {
@@ -158,10 +158,13 @@
 							hidden: false
 						};
 						this.addObjectToList(temp);
-						if(from != userInfo.user.info.xmpp.jid) {
+						this.makeSoundGoPing();
+						return temp;
+					},
+					makeSoundPing: function() {
+						if (this.id !== chat.model.currentId) {
 							$rootScope.messageAudioNotify();
 						}
-						return temp;
 					},
 					addObjectToList: function(object) {
 						var time = Date.now();
