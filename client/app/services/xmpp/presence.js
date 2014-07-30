@@ -1,6 +1,6 @@
 (function () {
 
-	app.factory('presence', function(xmpp,  constants, $rootScope, utility, chat, friends) {
+	app.factory('presence', function(xmpp,  constants, $rootScope, utility, chat, friends, userInfo) {
 		var presence = {
 			init: function() {
 				xmpp.addHandler(xmppHandlers.mucPresence, constants.xmpp.mucUser, "presence");
