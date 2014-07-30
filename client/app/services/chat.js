@@ -274,7 +274,7 @@
 			},
 			closeActive: function() {
 				chat.model.conference.mediaActive = false;
-				model.chat.getCurrent().conferenceOpen = false;
+				chat.model.getCurrent().conferenceOpen = false;
 				this.src = "";
 				this.active = false;
 			},
