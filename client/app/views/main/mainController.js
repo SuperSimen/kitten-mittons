@@ -1,4 +1,4 @@
-app.controller( 'mainController', function($scope, $rootScope, friends, $state, utility, call, callModel, chat) {
+app.controller( 'mainController', function($scope, $rootScope, friends, $state, utility, call, callModel, chat, userInfo) {
 
 	$scope.$watch(function () {return callModel.video.active;}, function(newValue) {
 		if (!newValue) {
