@@ -1,4 +1,4 @@
-app.controller( 'friendsController', function(main, $state, $scope, model, fileDialog) {
+app.controller( 'friendsController', function($state, $scope, model) {
 	$scope.groups = model.groups;
 	$scope.friends = model.friends;
 	$scope.user = model.user;
@@ -35,8 +35,8 @@ app.controller( 'friendsController', function(main, $state, $scope, model, fileD
 	};
 	
 	$scope.actionSendFileSelected = function(friend) {
-		fileDialog.open().then(function(file) {
-			main.sendFiles(friend.id, [file]);
+		fileTransfer.open().then(function(file) {
+			fileTransfer.sendFiles(friend.id, [file]);
 		});
 	};
 
@@ -51,20 +51,20 @@ app.controller( 'friendsController', function(main, $state, $scope, model, fileD
 	};
 
 	$scope.addBestFriend = function(friend) {
-		main.addBestFriend(friend);
+		friends.addBestFriend(friend);
 	};
 	$scope.removeBestFriend = function(friend) {
-		main.removeBestFriend(friend);
+		friends.removeBestFriend(friend);
 	};
 	$scope.removeTempFriend = function(friend) {
-		main.removeTempFriend(friend);
+		friends.removeTempFriend(friend);
 	};
 	$scope.addBestFriendUWAP = function(friend) {
 		$scope.showSearch = false;
-		main.addBestFriendUWAP(friend);
+		friends.addBestFriendUWAP(friend);
 	};
 	$scope.sendInvite = function(friend) {
-		main.sendInviteToSearchPerson(friend);
+		friends.sendInviteToSearchPerson(friend);
 	};
 	
 	$scope.isBestFriend = function(friend) {
@@ -76,11 +76,6 @@ app.controller( 'friendsController', function(main, $state, $scope, model, fileD
 
 	$scope.tempFriendExists = function(friend) {
 		return model.friends.getWithUserid(friend.userid); 
-	};
-
-	$scope.signOff = function() {
-		console.log("Signing off");
-		main.logOff();
 	};
 	
 	$scope.getBestFriends = function() {

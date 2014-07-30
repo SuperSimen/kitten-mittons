@@ -1,4 +1,4 @@
-app.controller( 'mainController', function($scope, model, $state, utility) {
+app.controller( 'mainController', function($scope, $rootScope, model, $state, utility) {
 
 	$scope.$watch(function () {return model.video.active;}, function(newValue) {
 		if (!newValue) {
@@ -16,13 +16,13 @@ app.controller( 'mainController', function($scope, model, $state, utility) {
 		}
 	});
 
-	$scope.getObjectLength = function(obj) {
+	$rootScope.getObjectLength = function(obj) {
 		if (obj) {
 			return Object.keys(obj).length;
 		}
 	};
 
-	$scope.isMe = function(id) {
+	$rootScope.isMe = function(id) {
 		if (utility.getIdFromJid(id) === model.user.info.xmpp.jid) {
 			return true;
 		}
@@ -63,7 +63,7 @@ app.controller( 'mainController', function($scope, model, $state, utility) {
 		model.conference.closeActive();
 	};
 
-	$scope.bytesToSize = function(bytes) {
+	$rootScope.bytesToSize = function(bytes) {
 		return utility.bytesToSize(bytes, 2);
 	};
 
@@ -72,7 +72,7 @@ app.controller( 'mainController', function($scope, model, $state, utility) {
 		return stateViewCols[state][viewNumber - 1];
 	};
 
-	$scope.getFriendFromId = function(id) {
+	$rootScope.getFriendFromId = function(id) {
 		if (!id) {
 			return;
 		}
@@ -88,7 +88,7 @@ app.controller( 'mainController', function($scope, model, $state, utility) {
 			return friend;
 		}
 	};
-	$scope.getMe = function() {
+	$rootScope.getMe = function() {
 		return model.friends.get(model.user.info.xmpp.jid);
 	};
 

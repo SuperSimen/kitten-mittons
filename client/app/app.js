@@ -4,7 +4,7 @@ var app = angular.module( 'app', [
 	'ng-context-menu',
 	'dialogs.main'
 ]);
-app.controller('appController', function(model) {
+app.controller('appController', function($scope, model) {
 	$scope.application = model.application;
 });
 app.config( function ( $stateProvider) {

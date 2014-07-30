@@ -1,4 +1,4 @@
-app.controller( 'chatController', function($state, $scope, main, model, utility, fileDialog, dialogs) {
+app.controller( 'chatController', function($state, $scope, model, utility, dialogs, chat, call, fileTransfer) {
 	
 	$scope.call = model.call;
 	$scope.video = model.video;
@@ -15,12 +15,12 @@ app.controller( 'chatController', function($state, $scope, main, model, utility,
 	$scope.openConference = function() {
 		model.conference.mediaActive = true;
 		
-		var chat = $scope.currentChat;
+		var currentChat = $scope.currentChat;
 		
-		chat.openConference();
+		currentChat.openConference();
 		
 		for(var i in chat.participants) {
-			main.sendSystemNotification(chat.participants[i].id, chat.id, $scope.getMe().name + " went into the video conference");
+			chat.sendSystemNotification(currentChat.participants[i].id, currentChat.id, $scope.getMe().name + " went into the video conference");
 		}
 		
 		$scope.gotoState("conference");
@@ -41,7 +41,7 @@ app.controller( 'chatController', function($state, $scope, main, model, utility,
 		dlg.result.then(function(selectedFriends){
 			for (var i in selectedFriends) {
 				if (selectedFriends[i]) {
-					main.sendRoomInvite(model.friends.get(i), $scope.currentChat.id);
+					chat.sendRoomInvite(model.friends.get(i), $scope.currentChat.id);
 				}
 			}
 		}, function(){
@@ -202,7 +202,7 @@ app.controller( 'chatController', function($state, $scope, main, model, utility,
 	$scope.sendFileToParticipants = function(file) {
 		function sendFiles(p, file) {
 			return function() {
-				main.sendFiles(p.id, [file]);
+				fileTransfer.sendFiles(p.id, [file]);
 			};
 		}
 		
@@ -211,28 +211,20 @@ app.controller( 'chatController', function($state, $scope, main, model, utility,
 		}
 		
 		if(!$scope.currentChat.isRoom) {
-			main.sendFiles($scope.currentChat.id, [file]);
+			fileTransfer.sendFiles($scope.currentChat.id, [file]);
 		} else {
 			
 			for(var i in $scope.currentChat.participants) {
 				
 				var p = $scope.currentChat.participants[i];
 				
-				main.sendFileInvite(p.id, $scope.currentChat.id, file).then(sendFiles(p, file));
+				fileTransfer.sendFileInvite(p.id, $scope.currentChat.id, file).then(sendFiles(p, file));
 			}
-
-			
-			/*
-			for(var i in $scope.currentChat.participants) {
-				var p = $scope.currentChat.participants[i];
-				main.sendFiles(p.id, [file]);
-			}
-			*/
 		}
 	};
 	
 	$scope.respondFileInvite = function(from_id, request_id, is_accepted) {
-		main.respondFileInvite(
+		fileTransfer.respondFileInvite(
 			from_id, 
 			$scope.currentChat.id, 
 			request_id, 
@@ -247,7 +239,7 @@ app.controller( 'chatController', function($state, $scope, main, model, utility,
 	};
 	
 	$scope.sendFileRequest = function() {
-		fileDialog.open().then(function(file) {
+		fileTransfer.openDialog().then(function(file) {
 			$scope.sendFileToParticipants(file);
 		});
 	};
@@ -270,12 +262,12 @@ app.controller( 'chatController', function($state, $scope, main, model, utility,
 	 */
 	function videoCall() {
 		systemMessage("Call request has been sent");
-		main.videoCall($scope.currentChat.id);
+		call.videoCall($scope.currentChat.id);
 	}
 
 	function audioCall() {
 		systemMessage("Call request has been sent");
-		main.audioCall($scope.currentChat.id);
+		call.audioCall($scope.currentChat.id);
 	}
 	
 	/**
@@ -284,7 +276,7 @@ app.controller( 'chatController', function($state, $scope, main, model, utility,
 	 */
 	function cancelCall () {
 		systemMessage("Cancelled call request");
-		main.cancelCall($scope.currentChat.id);
+		call.cancelCall($scope.currentChat.id);
 	}
 	
 	/**
@@ -293,7 +285,7 @@ app.controller( 'chatController', function($state, $scope, main, model, utility,
 	 */
 	function hangup () {
 		systemMessage("Ended call");
-		main.hangup();
+		call.hangup();
 	}
 
 	/**
@@ -302,7 +294,7 @@ app.controller( 'chatController', function($state, $scope, main, model, utility,
 	 */
 	$scope.acceptCall = function() {
 		systemMessage("Accepted the call request");
-		main.acceptCall($scope.currentChat.id);
+		call.acceptCall($scope.currentChat.id);
 	};
 
 	/**
@@ -311,7 +303,7 @@ app.controller( 'chatController', function($state, $scope, main, model, utility,
 	 */
 	$scope.rejectCall = function() {
 		systemMessage("Call rejected");
-		main.denyCall($scope.currentChat.id);
+		call.denyCall($scope.currentChat.id);
 	};
 
 	$scope.enterVideoFull = function() {
@@ -390,10 +382,10 @@ app.controller( 'chatController', function($state, $scope, main, model, utility,
 	$scope.sendMessage = function() {
 		if($scope.chatMessage && $scope.currentChat) {
 			if ($scope.currentChat.isRoom) {
-				main.sendGroupMessage($scope.currentChat.id, $scope.chatMessage);
+				chat.sendGroupMessage($scope.currentChat.id, $scope.chatMessage);
 			}
 			else {
-				main.sendMessage($scope.currentChat.id, $scope.chatMessage);
+				chat.sendMessage($scope.currentChat.id, $scope.chatMessage);
 			}
 			$scope.chatMessage = "";
 		}
@@ -406,7 +398,7 @@ app.controller( 'chatController', function($state, $scope, main, model, utility,
 	};
 
 	$scope.clickVideo = function() {
-		main.call($scope.currentChat.id);
+		chat.call($scope.currentChat.id);
 	};
 		
 });

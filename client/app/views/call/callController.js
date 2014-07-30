@@ -1,4 +1,4 @@
-app.controller( 'callController', function(model, main, $scope) {
+app.controller( 'callController', function(model, call, $scope) {
 	$scope.smallVideo = model.video.local;
 	$scope.largeVideo = model.video.remote;
 	$scope.video = model.video;
@@ -16,14 +16,14 @@ app.controller( 'callController', function(model, main, $scope) {
 		$scope.inverse = !$scope.inverse;
 	};
 	$scope.hangup = function() {
-		main.hangup();
+		call.hangup();
 		//$scope.returnToChat();
 	};
 	$scope.toggleVideo = function() {
-		main.toggleVideo();
+		call.toggleVideo();
 	};
 	$scope.toggleAudio = function() {
-		main.toggleAudio();
+		call.toggleAudio();
 	};
 	
 	$scope.returnToChat = function() {

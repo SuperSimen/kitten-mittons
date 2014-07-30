@@ -78,7 +78,7 @@
 
 		var el = null;
 				
-		fileTransfer.getFileWithDialog = function () {
+		fileTransfer.openDialog = function () {
 			
 			var defer = $q.defer();
 			
