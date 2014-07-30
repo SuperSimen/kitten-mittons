@@ -2,6 +2,10 @@ html, body {
 	height: 100%;
 }
 
+iframe {
+	border: 0;
+}
+
 body {
 	padding-top: 0px;
 }
