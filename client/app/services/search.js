@@ -1,6 +1,6 @@
 (function () {
 
-	app.factory('search', function(UWAP, xmpp, $state, $rootScope, $timeout) {
+	app.factory('search', function(UWAP, xmpp, $state, $rootScope, $timeout, userInfo) {
 		var search = {
 			init: function() {
 				$rootScope.$watch(function() {return search.model.query;}, onChange);
@@ -92,7 +92,7 @@
 		function startSearch() {
 			if (!search.model.query || !search.model.currentRealm) {return;}
 
-			UWAP.getPeople(model.user.token, (function(searchId) {
+			UWAP.getPeople(userInfo.user.token, (function(searchId) {
 				return function (data) {
 					if (data.people.length) {
 						search.model.addPeopleToResults(data.people, searchId);
