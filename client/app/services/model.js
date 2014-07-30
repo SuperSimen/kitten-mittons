@@ -223,7 +223,20 @@
 						if (this.participants[friend.id]) {
 							return;
 						}
-						this.addSystemMessage(friend.name + " joined room");
+						if (!friend.name) {
+							console.log("adding unknown participant:");
+							console.log(friend);
+						}
+						var dynamicMessage = {
+							from: friend,
+							getMessage: function() {
+								if (this.from.name) {
+									return this.from.name + " joined room";
+								}
+								return "";
+							}
+						};
+						this.addSystemMessage(null, dynamicMessage);
 						this.participants[friend.id] = friend;
 					},
 					removeParticipant: function(friend) {
@@ -233,12 +246,30 @@
 						if (!this.participants[friend.id]) {
 							return;
 						}
-						this.addSystemMessage(friend.name + " left room");
+						var dynamicMessage = {
+							from: friend,
+							getMessage: function() {
+								if (this.from.name) {
+									return this.from.name + " left room";
+								}
+								return "";
+							}
+						};
+						this.addSystemMessage(null, dynamicMessage);
 						delete this.participants[friend.id];
 					},
-				  	addSystemMessage: function(message) {
+				  	addSystemMessage: function(message, dynamicMessage) {
 						var temp = {
 							arrived: true,
+							dynamicMessage: dynamicMessage,
+							getMessage: function() {
+								if (this.dynamicMessage) {
+									return "Info: " + dynamicMessage.getMessage();
+								}
+								else {
+									return this.message;
+								}
+							},
 							message: 'Info: ' + message,
 							type: 'system',
 							from: 'System',
