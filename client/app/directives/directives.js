@@ -35,14 +35,13 @@
 		};
 	});
 
-	app.directive("ngAudioNotification", function(){
+	app.directive("ngAudioNotification", function($rootScope) {
 		return function(scope, element, attrs){
 			element[0].loop = false;
-			scope.messageAudioNotify = function() {
+			$rootScope.messageAudioNotify = function() {
 				element[0].currentTime = 0;
 				element[0].play();
 			};
-			window.global_messageAudioNotify = scope.messageAudioNotify;
 		};
 	});
 

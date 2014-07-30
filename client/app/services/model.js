@@ -1,6 +1,6 @@
 (function () {
 
-	app.factory('model', function(constants, $sce, utility, $q) {
+	app.factory('model', function(constants, $sce, utility, $q, $rootScope) {
 		
 		var model = {};
 
@@ -276,6 +276,7 @@
 							hidden: false
 						};
 						this.addObjectToList(temp);
+						$rootScope.messageAudioNotify();
 					},
 					addFileInviteMessage: function(request) {
 						this.addObjectToList({
@@ -287,6 +288,7 @@
 							requestId: request.id,
 							responded: false
 						});
+						$rootScope.messageAudioNotify();
 					},
 					addFileMessage: function(fileId) {
 						var temp = {
@@ -298,6 +300,7 @@
 							fileId: fileId
 						};
 						this.addObjectToList(temp);
+						$rootScope.messageAudioNotify();
 					},
 					ping: function() {
 						var temp = {
@@ -318,6 +321,9 @@
 							hidden: false
 						};
 						this.addObjectToList(temp);
+						if(from != model.user.info.xmpp.jid) {
+							$rootScope.messageAudioNotify();
+						}
 						return temp;
 					},
 					addObjectToList: function(object) {
@@ -326,7 +332,6 @@
 						object.time = time;
 						if (model.chat.currentId !== id) {
 							this.unread ++;
-							global_messageAudioNotify(); // ugh...
 						}
 
 						this.messages.push(object);
