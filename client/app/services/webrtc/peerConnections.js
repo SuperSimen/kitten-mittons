@@ -1,6 +1,6 @@
 (function () {
 
-	app.factory('peerConnections', function($rootScope, constants, model, xmpp, utility, $sce, call) {
+	app.factory('peerConnections', function($rootScope, constants,  xmpp, utility, $sce, call) {
 		var peerConnections = {};
 
 		var connections = {

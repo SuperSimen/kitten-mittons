@@ -1,5 +1,5 @@
 (function () {
-	app.factory('initialize', function(fileTransfer, UWAP, chat, xmpp, model, userInfo, $rootScope, $state, $http, constants, webrtc, utility, presence, call, search) {
+	app.factory('initialize', function(fileTransfer, UWAP, chat, xmpp,  userInfo, $rootScope, $state, $http, constants, webrtc, utility, presence, call, search) {
 		var init = {
 			init: function() {
 				globalModel = model;

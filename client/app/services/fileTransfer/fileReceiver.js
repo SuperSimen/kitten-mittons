@@ -1,6 +1,6 @@
 (function () {
 
-	app.factory('fileReceiver', function($rootScope, dataSender, model, utility, fileList) {
+	app.factory('fileReceiver', function($rootScope, dataSender,  utility, fileList) {
 		var fileReceiver = {
 			init: function() {
 				dataSender.addMessageHandler(fileHandler, "fileSender");

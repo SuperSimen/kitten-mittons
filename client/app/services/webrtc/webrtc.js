@@ -1,6 +1,6 @@
 (function () {
 
-	app.factory('webrtc', function(constants, model, $rootScope, $sce, xmpp, $timeout, utility, peerConnections, dataSender, call) {
+	app.factory('webrtc', function(constants,  $rootScope, $sce, xmpp, $timeout, utility, peerConnections, dataSender, call) {
 		var webrtc = {
 			init: function() {
 				xmpp.addHandler(handleOffer, constants.xmpp.webrtc, "message", "offer");

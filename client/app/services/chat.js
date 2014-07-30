@@ -1,6 +1,6 @@
 (function () {
 
-	app.factory('chat', function(xmpp, model, $rootScope, constants, utility) {
+	app.factory('chat', function(xmpp,  $rootScope, constants, utility) {
 		var chat = {
 			init: function() {
 				xmpp.addHandler(xmppHandlers.mucMessage, null, "message", "groupchat" );

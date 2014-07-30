@@ -1,6 +1,6 @@
 (function () {
 
-	app.factory('call', function(UWAP, xmpp, model, $state, $rootScope, $http, constants, webrtc, fileSender, fileReceiver, $timeout, utility, $sce) {
+	app.factory('call', function(UWAP, xmpp,  $state, $rootScope, $http, constants, webrtc, fileSender, fileReceiver, $timeout, utility, $sce) {
 		var call = {
 			init: function() {
 				xmpp.addHandler(xmppHandlers.call, null, "message", "call");
