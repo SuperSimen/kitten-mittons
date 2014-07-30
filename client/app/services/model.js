@@ -338,6 +338,29 @@
 
 						model.chat.sort();
 					},
+					getGroupRoomName: function() {
+						
+						var arr = (function(obj) {
+							var arr = [];
+							for(var i in obj) {
+								arr.push(obj[i]);
+							}
+							return arr;
+						})(this.participants);
+
+						var names = arr.filter(function(friend) {
+							return !friend.isMe() && friend.isOnline();
+						}).map(function(friend) {
+							return friend.name;
+						});
+
+						if(names.length > 0) {
+							return "Group room" + " with " + names.join(", ");			
+						}
+						
+						return "Group room";
+						
+					}
 				});
 				this.sort();
 			},

@@ -197,6 +197,13 @@ body {
 	cursor: pointer;
 }
 
+.chat-entry-text-content {
+	overflow: hidden; 
+	text-overflow: ellipsis;
+	display: block; 
+	white-space: nowrap;
+}
+
 .visible-on-hover .visible-span {
 	visibility: hidden;
 }

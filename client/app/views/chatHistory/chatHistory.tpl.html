@@ -7,10 +7,10 @@
 				</div>
 			</div>
 			<div ng-repeat="entry in history" ng-init="active = 0" >
-				<div ng-click="clickEntry(entry.id)" ng-class="{'active uninett-chat-active': isActive(entry.id)}" class="row hide-overflow hover-white chat-entry">
+				<div title="{{entry.isRoom ? chat.get(entry.id).getGroupRoomName() : 'Conversation with ' + getFriendFromId(entry.id).name}}" ng-click="clickEntry(entry.id)" ng-class="{'active uninett-chat-active': isActive(entry.id)}" class="row hide-overflow hover-white chat-entry">
 					<div class="col-md-12 visible-on-hover">
-						<div class="width-95">
-							<span class="glyphicon glyphicon-user"></span> {{getFriendFromId(entry.id).name}} {{entry.isRoom && "Group"}}
+						<div class="width-95 chat-entry-text-content">
+							<span class="glyphicon glyphicon-user"></span> {{ entry.isRoom ? chat.get(entry.id).getGroupRoomName() : getFriendFromId(entry.id).name}}
 							<span class="badge" ng-bind="getUnread(entry.id)"></span>
 						</div>
 						<div class="visible-span width-3 right"><i ng-click="close(entry.id)" ba-click class="fa pointer fa-times"></i></div>
