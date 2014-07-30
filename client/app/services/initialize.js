@@ -14,7 +14,6 @@
 		
 
 		function gatherInfoPart1 () { 
-			console.log("gather info part 1");
 			$http.get('/api/info').success(function(data, status) {
 				model.user.info = data;
 				model.user.token = data.token;
@@ -27,7 +26,6 @@
 		}
 
 		function connectedCallback() {
-			console.log("connected callback");
 			window.onbeforeunload = function() {
 				console.log("Signing out");
 				xmpp.logOff();
@@ -61,7 +59,6 @@
 				model.user.realms = data;
 			}); 
 
-			console.log("finished initialization");
 		}
 
 		return init;

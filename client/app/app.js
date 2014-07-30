@@ -45,8 +45,8 @@ app.config( function ( $stateProvider) {
 		parent: "base",
 		views: {
 			"view2@base": {
-				controller: "videoActiveController",
-				templateUrl: "app/views/video/videoActive.tpl.html"
+				controller: "callController",
+				templateUrl: "app/views/call/call.tpl.html"
 			},
 		}
 	});

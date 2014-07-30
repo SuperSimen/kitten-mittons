@@ -52,6 +52,8 @@
 					return false;
 				}
 			};
+
+			console.log("sender 1");
 			
 
 			var sender = dataSender.getSender(to, "fileSender", function(status) {
@@ -71,6 +73,7 @@
 					model.file.list[id].failed = true;
 				}
 			});
+			console.log("sender 1");
 
 			var size = file.size;
 			var maxSize = 100*1024*1024;
@@ -84,6 +87,7 @@
 				return fileObject.cancelled;
 			}
 
+			console.log("sender 1");
 			var watcher = $rootScope.$watch(function() {return fileObject.cancelled;}, function (newValue) {
 				if (newValue) {
 					signalCancel(id);
@@ -92,6 +96,7 @@
 				}
 			});
 
+			console.log("sender 1");
 			dataHandlers.add(fileHandler, id);
 			var listOfCallbacks = [];
 
@@ -124,6 +129,7 @@
 					fileObject.cancel();
 				}
 			}
+			console.log("sender 1");
 
 			signalFile(id, "sof", totalSlices, file.name, size);
 
@@ -140,6 +146,7 @@
 
 			function senderLoop(i) {
 				return function () {
+			console.log("sender 1");
 					if (isCancelled()) {
 						return;
 					}
@@ -156,13 +163,16 @@
 
 				};
 			}
+			console.log("sender 1");
 
 			function eof() {
 				signalFile(id, "eof", totalSlices, file.name);
 	
 			}
 
+			console.log("sender 1");
 			function read(blob, slice, callback) {
+			console.log("sender 1");
 				var reader = new FileReader();
 
 				reader.onerror = function(event) {
@@ -170,6 +180,7 @@
 				};
 
 				reader.onload = function(event) {
+			console.log("sender 1");
 					var buffer = event.target.result;
 
 					var array = btoa(buffer).match(/.{1,51200}/g);
@@ -192,8 +203,10 @@
 				reader.readAsBinaryString(blob);
 			}
 
+			console.log("sender 1");
 
 			function sendFileChunk(id, chunk, status, slice, totalSlices, number, totalNumber, filename) {
+			console.log("signal file 1");
 				var tempFile = {
 					id: id,
 					base64: chunk,
@@ -216,6 +229,7 @@
 			}
 
 			function signalFile(id, status, totalSlices, filename, size) {
+			console.log("signal file 1");
 				var tempFile = {
 					id: id,
 					status: status,
@@ -223,10 +237,13 @@
 					totalSlices: totalSlices,
 					size: size
 				};
+			console.log("signal file 2");
 				sender.send(tempFile);
+			console.log("signal file 3");
 			}
 
 			function signalSlice(id, status, slice, totalSlices, totalNumber, filename) {
+			console.log("signal file 1");
 				var tempFile = {
 					id: id,
 					slice: slice,
@@ -237,6 +254,7 @@
 				};
 				sender.send(tempFile);
 			}
+			console.log("sender 1");
 		}
 
 		var fileCounter = 0;

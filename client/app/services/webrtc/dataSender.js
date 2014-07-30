@@ -1,6 +1,6 @@
 (function () {
 
-	app.factory('dataSender', function(webrtc, constants, model, xmpp, $timeout, utility) {
+	app.factory('dataSender', function(constants, model, xmpp, $timeout, utility, peerConnections) {
 		var dataSender = {};
 
 		var dataSenders = {
@@ -65,8 +65,8 @@
 							}
 						}, 10000);
 
-						var peerConnection = new webkitRTCPeerConnection(config);
-						var id = webrtc.addPeerConnection(peerConnection, to);
+						var peerConnection = peerConnections.create();
+						var id = peerConnections.add(peerConnection, to);
 
 						var dataChannel = peerConnection.createDataChannel("channel", {
 							ordered: false
@@ -122,6 +122,7 @@
 						};
 						dataChannel.onmessage = messageHandlers.mainHandler(to);
 						dataChannel.onopen = function () {
+							console.log("channel opened");
 							dataSenders.list[to].dataChannels.push(dataChannel);
 						};
 						dataChannel.onclose = function () {
@@ -217,7 +218,6 @@
 						else {
 							$timeout(this.restartDataSender, 1000);
 						}
-
 					},
 					restartDataSender: function() {
 						dataSenders.list[to].sender();
@@ -265,6 +265,21 @@
 		dataSender.addMessageHandler = function(handler, type) {
 			messageHandlers.addHandler(handler, type);
 		};
+
+		dataSender.onDataChannel = function (to) {
+			console.log("on datachannel " + to);
+			return function(event) {
+				console.log("on datachannel event " + event);
+				dataSenders.getSender(to, true).addDataChannel(event.channel);
+				dataSenders.getSender(to, true).addPeerConnection(event.channel);
+			};
+		};
+
+		function createDesc(callback){
+			return function(desc) {
+				callback(desc);
+			};
+		}
 
 		return dataSender;
 
