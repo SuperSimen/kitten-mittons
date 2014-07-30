@@ -4,8 +4,20 @@
 	</div>
 	<div ng-class="getCol(2)" class="fill-height">
 		<div ng-show="showConference()" class="row fill-height">
+			
+			<div class="name-tag border-bottom uninett-section-header-bar" ng-class="border">
+				<div class="col-md-12 fill-height">
+					<div>
+						<p class="uninett-breadcrumbs-ellipsis">
+							Conversation <span class="glyphicon glyphicon-chevron-right uninett-glyphicon-sm"></span> Video conference
+						</p>
+					</div>
+				</div>
+			</div>
+			
 			<div class="conference-menu">
-				<i class="pointer fa fa-phone-square uninett-fontColor-red fa-2x tab" ng-click="closeConference()"></i>
+				<!--<i class="pointer fa fa-phone-square uninett-fontColor-red fa-2x tab" ng-click="closeConference()"></i>-->
+				<button class="btn btn-danger pointer" ng-click="closeConference()">Close Conference</button>
 			</div>
 			<iframe src={{conference.src}} class="fill-height fill-width"></iframe>
 		</div>

@@ -91,8 +91,8 @@
 												{{file.filename + " was cancelled"}}
 											</div>
 
-											<button class="btn btn-info" ng-show="file.acceptPossible()" ng-click="file.accept()"> Accept </button>
-											<button class="btn btn-info" ng-show="file.cancelPossible()" ng-click="file.cancel()"> Cancel </button>
+											<button class="btn btn-success" ng-show="file.acceptPossible()" ng-click="file.accept()">Save to disk</button>
+											<button class="btn btn-danger" ng-show="file.cancelPossible()" ng-click="file.cancel()">Discard</button>
 										</div>
 									</div>
 								</div>

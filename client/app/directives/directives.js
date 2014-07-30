@@ -3,8 +3,6 @@
 	app.directive("ngDropFile", function() {
 		return function(scope, element, attrs) {
 			
-			console.log('aa', scope, element, attrs);
-			
 			var e = element[0];
 			
 			e.ondragover = function (event) { 
