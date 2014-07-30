@@ -16,21 +16,13 @@ app.controller( 'mainController', function($scope, $rootScope, model, $state, ut
 		}
 	});
 
-<<<<<<< HEAD
 	$rootScope.getObjectLength = function(obj) {
-=======
-	$scope.getObjectLength = function(obj) {
->>>>>>> e3619d763e6264c05e74f075604cac02ba5a42fa
 		if (obj) {
 			return Object.keys(obj).length;
 		}
 	};
 
-<<<<<<< HEAD
 	$rootScope.isMe = function(id) {
-=======
-	$scope.isMe = function(id) {
->>>>>>> e3619d763e6264c05e74f075604cac02ba5a42fa
 		if (utility.getIdFromJid(id) === model.user.info.xmpp.jid) {
 			return true;
 		}
