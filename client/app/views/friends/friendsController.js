@@ -1,4 +1,4 @@
-app.controller( 'friendsController', function($state, $scope, model) {
+app.controller( 'friendsController', function($state, $scope, model, fileTransfer, friends) {
 	$scope.groups = model.groups;
 	$scope.friends = model.friends;
 	$scope.user = model.user;
@@ -28,10 +28,6 @@ app.controller( 'friendsController', function($state, $scope, model) {
 
 	$scope.setRealmSearch = function(realm) {
 		model.search.setRealmSearch(realm);
-	};
-	
-	$scope.actionCallSelected = function(friend) {
-		console.log(friend);
 	};
 	
 	$scope.actionSendFileSelected = function(friend) {

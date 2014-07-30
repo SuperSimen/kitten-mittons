@@ -66,23 +66,12 @@
 							<span class="uninett-group-heading">
 								<span class="uninett-group-name">My friends</span>
 							</span>
-							<div ng-repeat="friend in getBestFriends() | filter: filterByQuery" context-menu data-target="contextMenu{{$index}}" ng-click="clickOnFriend(friend)" class="row hover-white uninett-friend-list-entry">
+							<div ng-repeat="friend in getBestFriends() | filter: filterByQuery" ng-click="clickOnFriend(friend)" class="row hover-white uninett-friend-list-entry">
 								<div class="col-md-12 visible-on-hover">
 									<i class="fa fa-circle icon presence-icon" ng-class="{'online': friend.online || friend.mucOnline, 'offline': !(friend.online || friend.mucOnline)}"></i>
 									<span class="tab" title="{{friend.name}} is {{ friend.online || friend.mucOnline ? 'online' : 'offline' }}">{{friend.name}}</span>
 									<span class="right visible-span pointer" ><i class="fa fa-times" ba-click ng-click="removeBestFriend(friend)"></i></span>
 								</div>
-
-								<!-- Context menu -->
-								<div class="dropdown" id="contextMenu{{$index}}" style="position: fixed; z-index: 100;">
-									<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu2">
-										<li><a class="pointer ng-binding" role="menuitem" tabindex="1" ng-disabled="!friend.online" ng-click="actionCallSelected(friend)">Call</a></li>
-										<li><a class="pointer ng-binding" role="menuitem" tabindex="2" ng-disabled="!friend.online" ng-click="clickOnFriend(friend)">Open chat</a></li>
-										<li><a class="pointer ng-binding" role="menuitem" tabindex="2" ng-disabled="!friend.online" ng-click="actionSendFileSelected(friend)">Send file</a></li>
-										<li><a class="pointer ng-binding" role="menuitem" tabindex="3" ng-click="removeBestFriend(friend)">Remove as friend</a></li>
-									</ul>
-								</div>
-
 							</div>
 							<div ng-repeat="tempFriend in user.info.tempFriends | filter: filterByQuery" class="row hover-white uninett-friend-list-entry">
 								<div ng-click="clickOnFriend(friend)" class="col-md-12 visible-on-hover" ng-hide="tempFriendExists(tempFriend)">
@@ -104,19 +93,7 @@
 											<p><i>No members are online</i></p>
 										</div>
 										<div ng-show="showMembers" ng-repeat="friend in group.friends | array | filter: filterByQuery" class="row hover-white pointer uninett-friend-list-entry">
-
-											<!-- Context menu -->
-											<div class="dropdown" id="g_contextMenu{{$index}}" style="position: fixed; z-index: 100;">
-												<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu2">
-													<li><a class="pointer ng-binding" role="menuitem" tabindex="1" ng-disabled="!friend.online" ng-click="actionCallSelected(friend)">Call</a></li>
-													<li><a class="pointer ng-binding" role="menuitem" tabindex="2" ng-disabled="!friend.online" ng-click="clickOnFriend(friend)">Open chat</a></li>
-													<li><a class="pointer ng-binding" role="menuitem" tabindex="2" ng-disabled="!friend.online" ng-click="actionSendFileSelected(friend)">Send file</a></li>
-													<li ng-show="!isBestFriend(friend)"><a class="pointer ng-binding" role="menuitem" tabindex="3" ng-click="addBestFriend(friend)">Add as friend</a></li>
-													<li ng-show="isBestFriend(friend)"><a class="pointer ng-binding" role="menuitem" tabindex="4" ng-click="removeBestFriend(friend)">Remove as friend</a></li>
-												</ul>
-											</div>
-
-											<div context-menu data-target="g_contextMenu{{$index}}" ng-hide="friend.isMe()" ng-click="clickOnFriend(friend)" class="col-md-12 visible-on-hover">
+											<div ng-hide="friend.isMe()" ng-click="clickOnFriend(friend)" class="col-md-12 visible-on-hover">
 												<div class="width-95">
 													<i class="fa fa-circle icon presence-icon" ng-class="{'online': friend.online || friend.mucOnline, 'offline': !(friend.online || friend.mucOnline)}"></i>
 													<span class="tab" title="{{friend.name}} is {{ friend.online || friend.mucOnline ? 'online' : 'offline' }}">{{friend.name}}</span>

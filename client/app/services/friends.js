@@ -1,6 +1,6 @@
 (function () {
 
-	app.factory('friends', function(xmpp, model, $http) {
+	app.factory('friends', function(xmpp, model, $http, utility) {
 		var friends = {};
 		
 		friends.sendInviteToSearchPerson = function(person) {
