@@ -120,7 +120,7 @@ app.filter('array', function() {
 	};
 });
 
-app.controller('friendSelectorController', function($scope,$modalInstance,data, $rootScope){
+app.controller('friendSelectorController', function($scope,$modalInstance,data, $rootScope, friends){
 
 	$scope.friends = friends.model.list;
 	var selectedFriends = {};
