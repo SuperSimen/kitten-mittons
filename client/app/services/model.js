@@ -295,8 +295,7 @@
 						object.time = time;
 						if (model.chat.currentId !== id) {
 							this.unread ++;
-							console.log($$rootScope);
-							//global_messageAudioNotify(); // ugh...
+							global_messageAudioNotify(); // ugh...
 						}
 
 						this.messages.push(object);
