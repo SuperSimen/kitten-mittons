@@ -3,6 +3,13 @@
 	app.factory('model', function(constants, $sce, utility, $q) {
 		
 		var model = {};
+
+		model.application = {
+			title: "UNINETT WebRTC application",
+			setTitle: function(title) {
+				this.title = title;
+			}
+		};
 		
 		model.conference = {
 			
@@ -94,8 +101,6 @@
 			},
 			
 			list: {},
-			selectedFiles: [],
-			pendingRoomFiles: {},
 			add: function(id, filename, user, sending, size) {
 				if (this.list[id]) {
 					return console.error("not unique file id");
@@ -421,7 +426,6 @@
 				return this.list[this.currentId];
 			},
 			add: function(id, calling, audio, video) {
-				console.log("add call");
 				if (this.list[id]) {
 					console.log("already call with id");
 					return;
@@ -441,14 +445,9 @@
 				}
 			},
 			remove: function(id) {
-				console.log("deleting id");
-				console.log(id);
-				console.log(this.list);
 				if (this.list[id]) {
 					delete this.list[id];
 				}
-				console.log("finished id");
-
 			}
 
 		};
@@ -535,15 +534,11 @@
 				return ++this.searchId;
 			},
 
-
-
 			clearResults: function() {
 				this.list.length = 0;
 			}
 
 		};
-
-
 
 		return model;
 	});

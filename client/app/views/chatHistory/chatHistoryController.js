@@ -1,4 +1,4 @@
-app.controller( 'chatHistoryController', function($scope, main, model, dialogs) {
+app.controller( 'chatHistoryController', function($scope, model, dialogs, chat) {
 
 	$scope.file = model.file;
 	$scope.conference = model.conference;
@@ -14,11 +14,6 @@ app.controller( 'chatHistoryController', function($scope, main, model, dialogs) 
 		model.chat.getCurrent().unread = 0;
 	};
 
-	$scope.invite = function(id) {
-		var friend = model.friends.getWithUserid("owesenle@uninett.no");
-		main.sendRoomInvite(friend, model.chat.get(id).id);
-	};
-
 	$scope.isActive = function(id) {
 		if (id === model.chat.currentId) {
 			return true;
@@ -29,7 +24,7 @@ app.controller( 'chatHistoryController', function($scope, main, model, dialogs) 
 	};
 
 	$scope.clickOnPlus = function() {
-		main.createRoom();
+		chat.createRoom();
 	};
 
 	$scope.getUnread = function(id) {
@@ -43,7 +38,7 @@ app.controller( 'chatHistoryController', function($scope, main, model, dialogs) 
 	};
 
 	$scope.close = function(id) {
-		main.closeChat(id);
+		chat.closeChat(id);
 	};
 	
 	$scope.clickConference = function(conference) {
@@ -54,7 +49,7 @@ app.controller( 'chatHistoryController', function($scope, main, model, dialogs) 
 	
 	$scope.createConference = function() {
 		
-		var dlg = dialogs.create('/dialogs/create.conference.html','conferenceDialogCtrl', {}, 'lg');
+		var dlg = dialogs.create('app/dialogs/create.conference.html','conferenceDialogCtrl', {}, 'lg');
 		
 		dlg.result.then(function(name){
 			model.conference.create(name);

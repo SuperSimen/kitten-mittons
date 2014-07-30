@@ -4,6 +4,9 @@ var app = angular.module( 'app', [
 	'ng-context-menu',
 	'dialogs.main'
 ]);
+app.controller('appController', function($scope, model) {
+	$scope.application = model.application;
+});
 app.config( function ( $stateProvider) {
 	$stateProvider.state('base', {
 		controller: "mainController",
@@ -42,13 +45,13 @@ app.config( function ( $stateProvider) {
 		parent: "base",
 		views: {
 			"view2@base": {
-				controller: "videoActiveController",
-				templateUrl: "app/views/video/videoActive.tpl.html"
+				controller: "callController",
+				templateUrl: "app/views/call/call.tpl.html"
 			},
 		}
 	});
 });
 
-app.run( function (main) {
-	main.init();
+app.run( function (initialize) {
+	initialize.init();
 });

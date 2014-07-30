@@ -1,24 +1,36 @@
-app.controller( 'mainController', function($scope, model, $state, utility) {
+app.controller( 'mainController', function($scope, $rootScope, model, $state, utility) {
 
-		$scope.gotoState = function(state) {
-			$state.go(state);
-		};
+	$scope.$watch(function () {return model.video.active;}, function(newValue) {
+		if (!newValue) {
+			if ($state.current.name === "call") {
+				$rootScope.gotoState("chat");
+			}
+		}
+	});
 
-		$scope.getObjectLength = function(obj) {
-			if (obj) {
-				return Object.keys(obj).length;
+	$scope.$watch(function () {return model.conference.active;}, function(newValue) {
+		if (!newValue) {
+			if ($state.current.name === "conference") {
+				$rootScope.gotoState("chat");
 			}
-		};
+		}
+	});
 
-		$scope.isMe = function(id) {
-			if (utility.getIdFromJid(id) === model.user.info.xmpp.jid) {
-				return true;
-			}
-			if (utility.getIdFromJid(id) === model.user.info.nickname) {
-				return true;
-			}
-			return false;
-		};
+	$rootScope.getObjectLength = function(obj) {
+		if (obj) {
+			return Object.keys(obj).length;
+		}
+	};
+
+	$rootScope.isMe = function(id) {
+		if (utility.getIdFromJid(id) === model.user.info.xmpp.jid) {
+			return true;
+		}
+		if (utility.getIdFromJid(id) === model.user.info.nickname) {
+			return true;
+		}
+		return false;
+	};
 
 
 	var stateViewCols = {
@@ -51,7 +63,7 @@ app.controller( 'mainController', function($scope, model, $state, utility) {
 		model.conference.closeActive();
 	};
 
-	$scope.bytesToSize = function(bytes) {
+	$rootScope.bytesToSize = function(bytes) {
 		return utility.bytesToSize(bytes, 2);
 	};
 
@@ -60,7 +72,7 @@ app.controller( 'mainController', function($scope, model, $state, utility) {
 		return stateViewCols[state][viewNumber - 1];
 	};
 
-	$scope.getFriendFromId = function(id) {
+	$rootScope.getFriendFromId = function(id) {
 		if (!id) {
 			return;
 		}
@@ -76,10 +88,10 @@ app.controller( 'mainController', function($scope, model, $state, utility) {
 			return friend;
 		}
 	};
-	$scope.getMe = function() {
+	$rootScope.getMe = function() {
 		return model.friends.get(model.user.info.xmpp.jid);
 	};
-	
+
 	/**
 	 * Checks if there's an incoming call request
 	 * @returns {Boolean}
@@ -92,7 +104,7 @@ app.controller( 'mainController', function($scope, model, $state, utility) {
 		}
 		return false;
 	};
-	
+
 
 });
 

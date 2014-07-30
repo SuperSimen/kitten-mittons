@@ -1,9 +1,9 @@
 (function () {
 
-	app.factory('fileReceiver', function($rootScope, webrtc, model, utility) {
+	app.factory('fileReceiver', function($rootScope, dataSender, model, utility) {
 		var fileReceiver = {
 			init: function() {
-				webrtc.addMessageHandler(fileHandler, "fileSender");
+				dataSender.addMessageHandler(fileHandler, "fileSender");
 				prepareSandbox();
 			}
 		};
@@ -38,7 +38,7 @@
 						},
 						slices: []
 					};
-					storage[data.id].sender = webrtc.getFileSender(from, "fileReceiver");
+					storage[data.id].sender = dataSender.getSender(from, "fileReceiver");
 
 					$rootScope.$apply(function() {
 						storage[data.id].fileObject = model.file.add(data.id, data.filename, from, false, data.size);
@@ -131,7 +131,7 @@
 					console.log("You should not see this. Status: " + data.status);
 				}
 
-				if (storage[data.id].slices[data.slice] &&
+				if (storage[data.id] && storage[data.id].slices[data.slice] &&
 					storage[data.id].slices[data.slice].eos &&
 						storage[data.id].slices[data.slice].counter ===
 							storage[data.id].slices[data.slice].totalChunks) {
@@ -152,7 +152,7 @@
 					signalSlice(data.id, "eos_ack", data.slice, data.totalSlices, data.totalNumber, data.filename);
 				}
 
-				if (storage[data.id].eof &&
+				if (storage[data.id] && storage[data.id].eof &&
 					storage[data.id].counter === storage[data.id].getTotalNumber() &&
 						storage[data.id].receivedEntireFile) {
 
@@ -166,7 +166,6 @@
 				}
 			}
 			else {
-				console.log("received file data without a home");
 			}
 
 		}

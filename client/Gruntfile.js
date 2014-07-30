@@ -56,6 +56,6 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-plato');
 	grunt.loadNpmTasks('grunt-open');
 
-	grunt.registerTask('default', ['jshint', 'includeSource' ,'wiredep', 'watch']);
+	grunt.registerTask('default', ['jshint', 'includeSource' ,'wiredep']);
 	grunt.registerTask('report', ['plato', 'open']);
 };

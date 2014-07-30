@@ -1,9 +1,9 @@
 (function () {
 
-	app.factory('fileSender', function($rootScope, webrtc, model, utility) {
+	app.factory('fileSender', function($rootScope, dataSender, model, utility) {
 		var fileSender = {
 			init: function() {
-				webrtc.addMessageHandler(dataHandlers.main, "fileReceiver");
+				dataSender.addMessageHandler(dataHandlers.main, "fileReceiver");
 			}
 		};
 
@@ -52,9 +52,8 @@
 					return false;
 				}
 			};
-			
 
-			var sender = webrtc.getFileSender(to, "fileSender", function(status) {
+			var sender = dataSender.getSender(to, "fileSender", function(status) {
 				if (status === "sent") {
 					progress.counter++;
 					if (progress.counter % 25 === 0) {
