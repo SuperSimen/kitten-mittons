@@ -131,7 +131,7 @@
 					console.log("You should not see this. Status: " + data.status);
 				}
 
-				if (storage[data.id].slices[data.slice] &&
+				if (storage[data.id] && storage[data.id].slices[data.slice] &&
 					storage[data.id].slices[data.slice].eos &&
 						storage[data.id].slices[data.slice].counter ===
 							storage[data.id].slices[data.slice].totalChunks) {
@@ -152,7 +152,7 @@
 					signalSlice(data.id, "eos_ack", data.slice, data.totalSlices, data.totalNumber, data.filename);
 				}
 
-				if (storage[data.id].eof &&
+				if (storage[data.id] && storage[data.id].eof &&
 					storage[data.id].counter === storage[data.id].getTotalNumber() &&
 						storage[data.id].receivedEntireFile) {
 
@@ -166,7 +166,6 @@
 				}
 			}
 			else {
-				console.log("received file data without a home");
 			}
 
 		}

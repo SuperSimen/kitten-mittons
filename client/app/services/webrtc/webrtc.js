@@ -9,7 +9,6 @@
 		};
 
 		function handleWebrtc(data) {
-			console.log(data);
 		}
 			
 		function getUserMedia(callback) {
@@ -164,7 +163,6 @@
 
 			function continueOfferHandling(stream) {
 				if (stream) {
-					globalStream = stream;
 					peerConnection.addStream(stream);
 					video.setPeerConnection(peerConnection);
 				}
