@@ -5,8 +5,6 @@ users/
 bower_components/
 start.command
 .DS_store
-client/index.html
-client/index.tpl.html
 fonts.zip
 server/basic_server.js
 report/
