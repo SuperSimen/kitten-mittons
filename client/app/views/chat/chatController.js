@@ -33,7 +33,6 @@ app.controller( 'chatController', function($state, $scope, utility, dialogs, cha
 		chat.model.conference.closeActive();
 	};
 	$rootScope.isOpenConferenceButtonDisabled = function() {
-		console.log(callModel.status);
 		if (callModel.status === "in-conference") {
 			return false;
 		}
