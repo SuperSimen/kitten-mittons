@@ -169,6 +169,9 @@
 			list: {},
 			status: "free",
 			currentId: "",
+			isIdActive: function(chatId) {
+				return callModel.currentId === chatId && callModel.status != "free";
+			},
 			getCurrent: function() {
 				return this.list[this.currentId];
 			},

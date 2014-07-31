@@ -3,6 +3,37 @@ app.controller( 'chatHistoryController', function($scope, dialogs, chat, callMod
 	$scope.chat = chat.model;
 	$scope.conference = chat.model.conference;
 
+	$scope.isChatInCall = function(chatId) {
+		
+		if(callModel.isIdActive(chatId)) {
+			return true;
+		}
+		
+		var chat_instance = chat.model.get(chatId);
+		var active = chat.model.get(chatId);
+		
+		if(active && active.conferenceOpen && chat.model.conference.mediaActive) {
+			return true;
+		}
+		
+		return false;
+	};
+	
+	$scope.isChatVideoActive = function(chatId) {
+		
+		var active = chat.model.get(chatId);
+		
+		if(active) {
+			if(active.isRoom) {
+				return true;
+			} else {
+				var call_current = callModel.getCurrent();
+				return call_current && call_current.video;
+			}
+		}
+		
+	};
+
 	$scope.$watch(function () {return chat.model.currentId;}, function() {
 		$scope.history = chat.model.sortableArray;
 
