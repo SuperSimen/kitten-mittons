@@ -85,7 +85,7 @@
 									<span class="right visible-span pointer"><i class="fa fa-times" ba-click ng-click="removeTempFriend(tempFriend)"></i></span>
 								</div>
 							</div>
-							<div ng-show="getNumGroups() > 0" class="row" ng-class="{'border-top': friends.bestFriends.length}">
+							<div ng-show="getNumGroups() > 0" class="row">
 								<div class="col-md-12">
 									<div class="uninett-group" ng-repeat="group in groups.list">
 										<div class="uninett-group-heading row hover-white" ng-click="showMembers = !showMembers" ng-init="showMembers = 1">

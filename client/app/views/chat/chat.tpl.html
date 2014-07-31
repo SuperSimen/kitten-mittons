@@ -48,7 +48,7 @@
 								<div class="col-md-12">
 									<div ng-hide="message.hidden">
 										<div class="uninett-chatbox-entry" ng-class="isSystemMessage(message) ? 'uninett-chatbox-entry-system' : isMyMessage(message) ? 'uninett-chatbox-entry-sent' : 'uninett-chatbox-entry-recv uninett-chatbox-entry-recv-color' + getColorId(message)">
-											<div ng-hide="isMyMessage(message) || isSystemMessage(message)"><b>{{getDisplayName(message)}} says:</b></div>
+											<div ng-hide="isMyMessage(message) || isSystemMessage(message)"><span class="uninett-message-time">{{formatTime(message.time)}}</span> <b>{{getDisplayName(message)}} says:</b></div>
 											<span class="right" ng-class="{'visible': !message.arrived, 'invisible': message.arrived}">
 												<i class="fa fa-spinner fa-spin"></i>
 											</span>

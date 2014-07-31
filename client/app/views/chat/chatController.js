@@ -52,6 +52,10 @@ app.controller( 'chatController', function($state, $scope, utility, dialogs, cha
 		return $state.current.name === "conference.fullscreen";
 	};
 
+	$scope.formatTime = function(time) {
+		var date = new Date(time);
+		return date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+	};
 
 	$scope.openFriendSelector = function() {
 		var dlg = dialogs.create('app/dialogs/friendSelector.html','friendSelectorController', {}, 'lg');

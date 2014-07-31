@@ -485,6 +485,19 @@ span[ng-click][disabled] {
 	right: 10px;
 }
 
+.uninett-message-time {
+	float: right;
+	opacity: 0.25;
+	-webkit-transition: opacity 0.3s ease-in-out;
+	-moz-transition: opacity 0.3s ease-in-out;
+	-ms-transition: opacity 0.3s ease-in-out;
+	-o-transition: opacity 0.3s ease-in-out;
+}
+
+.uninett-chatbox-entry:hover .uninett-message-time {
+	opacity: 1.0;
+}
+
 .uninett-chatbox-entry-video {
 	background: transparent;
 	width: 300px;
