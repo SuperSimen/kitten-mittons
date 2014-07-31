@@ -4,7 +4,7 @@
 			<div class="row border-bottom name-tag uninett-section-header-bar"> 
 				<div class="col-md-12 fill-height hide-overflow">
 					<div class="pull-right">
-						<button class="btn btn-primary" ng-click="settings.mute(!settings.mute())">
+						<button class="btn btn-primary" title="Click to turn sound {{ settings.mute() ? 'on' : 'off' }}" ng-click="settings.mute(!settings.mute())">
 							<span class="fa uninett-icon-fixed-width" ng-class="settings.mute() ? 'fa-volume-off' : 'fa-volume-up'"></span>
 						</button>
 					</div>
