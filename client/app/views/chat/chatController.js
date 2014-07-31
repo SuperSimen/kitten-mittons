@@ -55,6 +55,7 @@ app.controller( 'chatController', function($state, $scope, utility, dialogs, cha
 	$scope.formatTime = function(time) {
 		
 		function padLeft(chr, str, count) {
+			str = String(str);
 			while(str.length < count)
 				str = chr + str;
 			return str;
