@@ -55,10 +55,11 @@ app.controller( 'friendsController', function($state, userInfo, $scope, fileTran
 		friends.removeTempFriend(friend);
 	};
 	$scope.addBestFriendUWAP = function(friend) {
-		$scope.showSearch = false;
-		if (friend.userid !== userInfo.user.info.userid) {
-			friends.addBestFriendUWAP(friend);
+		if (friends.model.isUserAdded(friend.userid)) {
+			return;
 		}
+
+		friends.addBestFriendUWAP(friend);
 	};
 	$scope.sendInvite = function(friend) {
 		friends.sendInviteToSearchPerson(friend);

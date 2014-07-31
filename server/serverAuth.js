@@ -48,16 +48,14 @@ function registerNewXmppUser (user, callback) {
 	client.on('error', xmppError);
 }
 
-function inviteUninettPerson (person, sender) {
-	if (person.o.toLowerCase() !== "uninett") {
-		console.log("not uninett user");
-		return;
-	}
+var invitorClient;
+
+function startInvitor () {
 
 	var invitor;
 	try {
 		invitor = JSON.parse(fileSystem.readFileSync("users/invitor.txt", {encoding: 'utf8'}));
-		continueInvite();
+		continueStartup();
 	}
 	catch (e) {
 		invitor = {
@@ -69,25 +67,33 @@ function inviteUninettPerson (person, sender) {
 		};
 		registerNewXmppUser(invitor, continueInvite);
 	}
-	function continueInvite() {
-		var client = new Client({
+	function continueStartup() {
+		invitorClient = new Client({
 			jid: invitor.xmpp.jid,
 			password: invitor.xmpp.password,
 		});
-		client.on('online', function() {
-			var inviteMessage = "Hei. " + sender.name + " har invitert det til å besøke http://webrtc.akademia.no";
-			var jid = person.userid.substring(0,person.userid.indexOf("@") + 1) + "jabber.uninett.no";
-			var stanza = new ltx.Element('message', { to: jid, type: 'chat' }).
-				c('body').t(inviteMessage);
-			client.send(stanza);
-			console.log("send invite");
-			console.log(stanza);
-			client.end();
+		invitorClient.on('online', function() {
+			console.log("invitor online");
 		});
-		client.on('error', xmppError);
-
+		invitorClient.on('error', xmppError);
 	}
 
+}
+
+function inviteUninettPerson(person, sender) {
+	if (person.o.toLowerCase() !== "uninett") {
+		console.log("not uninett user");
+		return;
+	}
+	if (!invitorClient) {
+		console.log("something is very wrong");
+	}
+
+	var inviteMessage = "Hei. " + sender.name + " har invitert det til å besøke http://webrtc.akademia.no";
+	var jid = person.userid.substring(0,person.userid.indexOf("@") + 1) + "jabber.uninett.no";
+	var stanza = new ltx.Element('message', { to: jid, type: 'chat' }).
+		c('body').t(inviteMessage);
+	invitorClient.send(stanza);
 }
 
 function writeUserToFile(user) {
@@ -265,6 +271,8 @@ function init() {
 	app.use(passport.initialize());
 	app.use(passport.session());
 	app.use(bodyParser.json());
+
+	startInvitor();
 
 
 	var options = {
