@@ -1,4 +1,4 @@
-app.controller( 'chatHistoryController', function($scope, dialogs, chat) {
+app.controller( 'chatHistoryController', function($scope, dialogs, chat, callModel, call) {
 
 	$scope.chat = chat.model;
 	$scope.conference = chat.model.conference;
@@ -38,6 +38,9 @@ app.controller( 'chatHistoryController', function($scope, dialogs, chat) {
 	};
 
 	$scope.close = function(id) {
+		if (callModel.currentId === id) {
+			call.cleanUp();
+		}
 		chat.closeChat(id);
 	};
 	

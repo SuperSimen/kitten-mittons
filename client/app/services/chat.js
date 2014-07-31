@@ -274,12 +274,14 @@
 				}
 				this.src = $sce.trustAsResourceUrl(constants.conferenceUrl + "/" + id);
 				this.active = true;
+				callModel.status = "in-conference";
 			},
 			closeActive: function() {
 				chat.model.conference.mediaActive = false;
 				chat.model.getCurrent().conferenceOpen = false;
 				this.src = "";
 				this.active = false;
+				callModel.status = "free";
 			},
 		};
 
@@ -310,6 +312,7 @@
 				}
 				xmpp.leaveRoom(id);
 			}
+
 			chat.model.close(id);
 		};
 

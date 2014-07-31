@@ -25,17 +25,12 @@ app.controller( 'chatController', function($state, $scope, utility, dialogs, cha
 		}
 		
 		$scope.gotoState("conference");
-		callModel.status = "in-conference";
 	};
 
 	$rootScope.closeConference = function() {
-		callModel.status = "free";
 		chat.model.conference.closeActive();
 	};
 	$rootScope.isOpenConferenceButtonDisabled = function() {
-		if (callModel.status === "in-conference") {
-			return false;
-		}
 		if (callModel.status !== "free") {
 			return true;
 		}

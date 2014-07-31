@@ -59,10 +59,28 @@
 		};
 
 		call.hangup = function() {
-			if (callModel.status === "in-call" && callModel.currentId) {
+			if (callModel.status === "in-call" || callModel.status === "accept" && callModel.currentId) {
 				sendCallSignal(callModel.currentId, {type: "hangup"});
 				chat.model.get(callModel.currentId).addSystemMessage("Call ended");
 				webrtc.hangup();
+			}
+		};
+
+		call.cleanUp = function() {
+			var to;
+			if ((to = callModel.currentId)) {
+				switch (callModel.status) {
+					case "calling":
+						call.cancelCall(to);
+						break;
+					case "in-call":
+					case "accept":
+						call.hangup();
+						break;
+					case "getting-called":
+						call.denyCall(to);
+						break;
+				}
 			}
 		};
 
