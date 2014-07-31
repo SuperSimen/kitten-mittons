@@ -85,10 +85,14 @@
 						if (callModel.status === "free") {
 							$rootScope.$apply(function() {
 								chat.model.get(from).ping();
+								callModel.status = "getting-called";
 								callModel.add(from, false, callMessage.audio, callMessage.video);
 							});
 						}
 						else {
+							$rootScope.$apply(function() {
+								chat.model.get(from).addSystemMessage($rootScope.getFriendFromId(from).name + " tried to call you");
+							});
 							sendCallSignal(data.from, {type: "deny"});
 						}
 					}
@@ -113,7 +117,7 @@
 
 						callModel.status = "free";
 					}
-					else if (type === "cancel" && callModel.status === "free") {
+					else if (type === "cancel" && callModel.status === "getting-called") {
 						$rootScope.$apply(function() {
 							callModel.remove(from);
 							chat.model.get(from).addSystemMessage("Call canceled");
