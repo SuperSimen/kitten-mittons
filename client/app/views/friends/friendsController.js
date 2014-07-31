@@ -69,7 +69,13 @@ app.controller( 'friendsController', function($state, userInfo, $scope, fileTran
 	};
 
 	$scope.tempFriendExists = function(friend) {
-		return friends.model.getWithUserid(friend.userid); 
+		if (friends.model.getWithUserid(friend.userid)) {
+			friends.removeTempFriend(friend);
+			return true;
+		}
+		else {
+			return false;
+		}
 	};
 	
 	$scope.getBestFriends = function() {
