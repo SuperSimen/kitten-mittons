@@ -76,8 +76,8 @@
 												{{"File transfer of " + file.filename}} {{file.sending && " to " || " from "}} {{getFriendFromId(file.user).name}} was cancelled
 											</div>
 
-											<button class="btn btn-success" ng-show="file.acceptPossible()" ng-click="file.accept()">Save to disk</button>
-											<button class="btn btn-danger" ng-show="file.cancelPossible()" ng-click="file.cancel()">Discard</button>
+											<button class="btn btn-success" ng-show="file.acceptPossible()" ng-click="file.accept()">Save to Disk</button>
+											<button class="btn btn-danger" ng-show="file.cancelPossible()" ng-click="file.cancel()">Cancel</button>
 
 										</div>
 									</div>
