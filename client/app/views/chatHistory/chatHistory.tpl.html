@@ -11,7 +11,7 @@
 					<div class="col-md-12 visible-on-hover">
 						<div class="pull-right">
 							<span class="badge" ng-bind="getUnread(entry.id)"></span>
-							<span ng-show="isChatInCall(entry.id)" class="fa" ng-class="isChatVideoActive(entry.id) ? 'fa-video-camera' : 'fa-volume-up'"></span>
+							<span ng-show="isChatInCall(entry.id)" class="fa uninett-glyphicon-sm" ng-class="isChatVideoActive(entry.id) ? 'fa-camera' : 'fa-volume-up'"></span>
 							<i ng-click="close(entry.id)" ba-click class="fa pointer fa-times visible-span width-3"></i>
 						</div>
 						<div class="chat-entry-text-content">
