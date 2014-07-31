@@ -49,6 +49,13 @@
 	app.directive("ngAudio", function(settings){
 		return function(scope, element, attrs){
 			element[0].loop = true;
+			
+			element[0].addEventListener('timeupdate', function() {
+				if(settings.mute()) {
+					element[0].pause();
+				}
+			});
+			
 			scope.playAudio = function(status) {
 				if(status) {
 					if(!settings.mute())
