@@ -13,8 +13,8 @@
 						</p>
 					</div>
 					<div class="btn-group button-group" ng-hide="isConferenceFullscreen()">
-						<button class="btn btn-info pointer" ng-click="toggleConferenceFullscreen()">Fullscreen</button>
-						<button class="btn btn-danger pointer" ng-click="closeConference()">Close Conference</button>
+						<button class="btn btn-info pointer" ng-click="toggleConferenceFullscreen()" ng-disabled="areConferenceButtonsDisabled()">Fullscreen</button>
+						<button class="btn btn-danger pointer" ng-click="closeConference()" ng-disabled="areConferenceButtonsDisabled()">Close Conference</button>
 					</div>
 				</div>
 			</div>

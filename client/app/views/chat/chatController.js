@@ -1,4 +1,4 @@
-app.controller( 'chatController', function($state, $scope, utility, dialogs, chat, call, fileTransfer, friends, fileList, callModel) {
+app.controller( 'chatController', function($state, $scope, utility, dialogs, chat, call, fileTransfer, friends, fileList, callModel, $rootScope) {
 	
 	$scope.call = callModel;
 	$scope.video = callModel.video;
@@ -12,7 +12,7 @@ app.controller( 'chatController', function($state, $scope, utility, dialogs, cha
 		}
 	});
 
-	$scope.openConference = function() {
+	$rootScope.openConference = function() {
 		chat.model.conference.mediaActive = true;
 		
 		var currentChat = $scope.currentChat;
@@ -24,6 +24,37 @@ app.controller( 'chatController', function($state, $scope, utility, dialogs, cha
 		}
 		
 		$scope.gotoState("conference");
+		callModel.status = "in-conference";
+	};
+
+	$rootScope.closeConference = function() {
+		callModel.status = "free";
+		chat.model.conference.closeActive();
+	};
+
+	$rootScope.areConferenceButtonsDisabled = function() {
+		if (callModel.status === "in-conference"); {
+			return false;
+		}
+		if (callModel.status !== "free") {
+			return true;
+		}
+		return false;
+	};
+	$rootScope.toggleConferenceFullscreen = function() {
+		if ($state.current.name === "conference.fullscreen") {
+			$rootScope.gotoState("conference");
+		}
+		else if ($state.current.name === "conference") {
+			$rootScope.gotoState("conference.fullscreen");
+		}
+		else {
+			console.error("tried to toggle conference fullscreen with no conference");
+		}
+	};
+
+	$rootScope.isConferenceFullscreen = function() {
+		return $state.current.name === "conference.fullscreen";
 	};
 
 
