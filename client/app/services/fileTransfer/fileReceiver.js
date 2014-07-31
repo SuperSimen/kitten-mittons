@@ -25,7 +25,7 @@
 				$rootScope.$apply(function() {
 					storage[data.id].fileObject = fileList.get(data.id);
 
-					var watcher = $rootScope.$watch(function() {
+					var cancelWatcher = $rootScope.$watch(function() {
 						if (storage[data.id]) {
 							return storage[data.id].fileObject.cancelled;
 						}
@@ -34,13 +34,14 @@
 							signalFile(data.id, "cancel");
 							delete storage[data.id];
 
-							watcher();
+							cancelWatcher();
 						}
 					});
 				});
 
 				if (fileList.writeFailed) {
 					$rootScope.$apply(function() {
+						fileList.get(data.id).writeFailed = true;
 						fileList.get(data.id).cancel();
 					});
 					return;
@@ -260,8 +261,8 @@
 		}
 
 		function initiateFileSystem(id, filename, fileSize, totalSlices, callback) {
-			if (fileSize > 10) {
-				navigator.webkitPersistentStorage.requestQuota(fileSize + 1024, function(grantedBytes) {
+			if (false) {
+				navigator.webkitPersistentStorage.requestQuota(fileSize + 1024*10, function(grantedBytes) {
 					console.log("granted bytes " + grantedBytes);
 					window.webkitRequestFileSystem(window.PERSISTENT, grantedBytes, onInitFs(id, filename, totalSlices, callback), errorHandler);
 				}, errorHandler);

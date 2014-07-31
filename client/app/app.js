@@ -12,8 +12,8 @@ app.controller('appController', function($rootScope, $window) {
 			this.count = 0;
 			this.title = this.standard;
 		},
-		setTitle: function() {
-
+		setTitle: function(title) {
+			this.title = title;
 		},
 		count: 0,
 		ping: function() {

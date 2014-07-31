@@ -73,7 +73,7 @@
 												{{file.failed && failed || file.filename + (file.sending && ' was sent to ' || ' was received from ') + getFriendFromId(file.user).name}}
 											</div>
 											<div ng-show="file.cancelled">
-												{{"File transfer of " + file.filename}} {{file.sending && " to " || " from "}} {{getFriendFromId(file.user).name}} was cancelled
+												{{"File transfer of " + file.filename}} {{file.sending && " to " || " from "}} {{getFriendFromId(file.user).name}} {{file.writeFailed && " failed. Your browser does not support file sharing" || "was cancelled"}}
 											</div>
 
 											<button class="btn btn-success" ng-show="file.acceptPossible()" ng-click="file.accept()">Save to Disk</button>
