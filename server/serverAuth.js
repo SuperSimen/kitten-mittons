@@ -65,7 +65,7 @@ function startInvitor () {
 				password: randomString(),
 			}
 		};
-		registerNewXmppUser(invitor, continueInvite);
+		registerNewXmppUser(invitor, continueStartup);
 	}
 	function continueStartup() {
 		invitorClient = new Client({
