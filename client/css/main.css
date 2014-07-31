@@ -170,6 +170,12 @@ body {
 	display: inline-block;
 	width: calc(100% - 4px - 20px);
 }
+
+.width-80 {
+	display: inline-block;
+	width: 80%;
+}
+
 .width-3 {
 	display: inline-block;
 	width: 20px;
@@ -486,7 +492,6 @@ span[ng-click][disabled] {
 }
 
 .uninett-message-time {
-	float: right;
 	opacity: 0.25;
 	-webkit-transition: opacity 0.3s ease-in-out;
 	-moz-transition: opacity 0.3s ease-in-out;
