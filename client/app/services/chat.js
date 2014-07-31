@@ -167,6 +167,7 @@
 						}
 					},
 					addObjectToList: function(object) {
+						
 						var time = Date.now();
 						this.mostRecentTime = time;
 						object.time = time;
@@ -177,6 +178,8 @@
 						this.messages.push(object);
 
 						chat.model.sort();
+
+						$rootScope.application.ping();
 					},
 					getGroupRoomName: function() {
 						
