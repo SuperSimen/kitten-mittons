@@ -204,12 +204,9 @@ body {
 }
 
 .chat-entry-text-content {
-	width: 70%;
-	overflow: hidden;
+	overflow: auto;
 	text-overflow: ellipsis;
-	display: block; 
-	
-	white-space: nowrap;
+	display: block;
 }
 
 .visible-on-hover .visible-span {
@@ -252,8 +249,8 @@ body {
 }
 
 .badge {
-	position: relative;
-	right: 10px;
+	
+	margin: 0 1px 0 1px;
 	
     -webkit-animation-name: blinker;
     -webkit-animation-duration: 3s;
