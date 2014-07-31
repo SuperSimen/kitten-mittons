@@ -344,7 +344,6 @@ app.controller( 'chatController', function($state, $scope, utility, dialogs, cha
 	 * @returns {undefined}
 	 */
 	function hangup () {
-		systemMessage("Ended call");
 		call.hangup();
 	}
 
