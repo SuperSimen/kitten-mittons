@@ -47,9 +47,6 @@
 				}
 
 				initiateFileSystem(data.id, data.filename, data.size, data.totalSlices, function() {
-					if (storage[data.id]) {
-						return console.error("data.id is not unique. aborting...");
-					}
 						storage[data.id].filename = data.filename;
 						storage[data.id].counter = 0;
 						storage[data.id].eof = false;
@@ -263,8 +260,8 @@
 		}
 
 		function initiateFileSystem(id, filename, fileSize, totalSlices, callback) {
-			if (false) {
-				navigator.webkitPersistentStorage.requestQuota(fileSize, function(grantedBytes) {
+			if (fileSize > 10) {
+				navigator.webkitPersistentStorage.requestQuota(fileSize + 1024, function(grantedBytes) {
 					console.log("granted bytes " + grantedBytes);
 					window.webkitRequestFileSystem(window.PERSISTENT, grantedBytes, onInitFs(id, filename, totalSlices, callback), errorHandler);
 				}, errorHandler);
