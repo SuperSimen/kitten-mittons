@@ -83,7 +83,16 @@ app.controller( 'chatController', function($state, $scope, utility, dialogs, cha
 		}
 	};
 
-	$scope.isVideoButtonActive = function() {
+	$scope.isAudioButtonDisabled = function() {
+		if (!$scope.currentChat) {
+			return true;
+		}
+		if (callModel.status !== "free" && callModel.currentId !== $scope.currentChat.id) {
+			return true;
+		}
+		if (chat.model.conference.mediaActive) {
+			return true;
+		}
 		if ($scope.hasIncomingCall()) {
 			if (callModel.list[$scope.currentChat.id].video) {
 				return true;
@@ -98,7 +107,16 @@ app.controller( 'chatController', function($state, $scope, utility, dialogs, cha
 		return false;
 	};
 
-	$scope.isAudioButtonActive = function() {
+	$scope.isVideoButtonDisabled = function() {
+		if (!$scope.currentChat) {
+			return true;
+		}
+		if (callModel.status !== "free" && callModel.currentId !== $scope.currentChat.id) {
+			return true;
+		}
+		if (chat.model.conference.mediaActive) {
+			return true;
+		}
 		if ($scope.hasIncomingCall()) {
 			if (!callModel.list[$scope.currentChat.id].video) {
 				return true;
@@ -113,35 +131,42 @@ app.controller( 'chatController', function($state, $scope, utility, dialogs, cha
 		return false;
 	};
 
+	$scope.isVideoButtonActive = function() {
+		return $scope.getVideoControlMsg() !== "Video Call";
+	};
+
 	$scope.getVideoControlMsg = function() {
 		if ($scope.hasIncomingCall()) {
-			if (callModel.list[$scope.currentChat.id].video) {
+			if (callModel.currentId === $scope.currentChat.id && callModel.list[$scope.currentChat.id].video) {
 				return "Accept Video Call";
 			}
 		}
 
 		if($scope.isInCall() || $scope.isCalling()) {
-			if (callModel.getCurrent().video) {
+			if (callModel.currentId === $scope.currentChat.id && callModel.getCurrent().video) {
 				return "Stop Video Call";
 			}
 		}
 		return "Video Call";
-		
+	};
+
+	$scope.isAudioButtonActive = function() {
+		return $scope.getAudioControlMsg() !== "Audio Call";
 	};
 
 	$scope.getAudioControlMsg = function() {
 		if ($scope.hasIncomingCall()) {
-			if (!callModel.list[$scope.currentChat.id].video) {
-				return "Accept Audio";
+			if (callModel.currentId === $scope.currentChat.id && !callModel.list[$scope.currentChat.id].video) {
+				return "Accept Audio Call";
 			}
 		}
 
 		if($scope.isInCall() || $scope.isCalling()) {
-			if (!callModel.getCurrent().video) {
-				return "Stop Audio";
+			if (callModel.currentId === $scope.currentChat.id && !callModel.getCurrent().video) {
+				return "Stop Audio Call";
 			}
 		}
-		return "Audio call";
+		return "Audio Call";
 	};
 
 	$scope.hasTranferringFile = function() {
@@ -254,8 +279,12 @@ app.controller( 'chatController', function($state, $scope, utility, dialogs, cha
 	 * @returns {undefined}
 	 */
 	function videoCall() {
-		systemMessage("Call request has been sent");
-		call.videoCall($scope.currentChat.id);
+		if (call.videoCall($scope.currentChat.id)) {
+			systemMessage("Call request has been sent");
+		}
+		else {
+			systemMessage("Cannot call at the moment");
+		}
 	}
 
 	function audioCall() {

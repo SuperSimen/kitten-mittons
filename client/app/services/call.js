@@ -14,7 +14,9 @@
 				callModel.currentId = to;
 				callModel.add(to, true, true, true);
 				sendCallSignal(to, {type: "offer", audio: true, video: true});
+				return true;
 			}
+			return false;
 		};
 
 		call.audioCall = function(to) {
@@ -23,7 +25,9 @@
 				callModel.currentId = to;
 				callModel.add(to, true, true, false);
 				sendCallSignal(to, {type: "offer", audio: true, video: false});
+				return true;
 			}
+			return false;
 		};
 
 		function sendCallSignal (to, object) {
@@ -85,6 +89,7 @@
 						if (callModel.status === "free") {
 							$rootScope.$apply(function() {
 								chat.model.get(from).ping();
+								callModel.currentId = from;
 								callModel.status = "getting-called";
 								callModel.add(from, false, callMessage.audio, callMessage.video);
 							});
@@ -113,13 +118,14 @@
 						$rootScope.$apply(function() {
 							chat.model.get(from).addSystemMessage("Call denied");
 							callModel.deleteCurrent();
+							callModel.status = "free";
 						});
 
-						callModel.status = "free";
 					}
 					else if (type === "cancel" && callModel.status === "getting-called") {
 						$rootScope.$apply(function() {
 							callModel.remove(from);
+							callModel.status = "free";
 							chat.model.get(from).addSystemMessage("Call canceled");
 						});
 					}
