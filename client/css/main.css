@@ -585,3 +585,7 @@ span[ng-click][disabled] {
 .uninett-btn-ok {
 	color: green;
 }
+
+span.uninett-icon-fixed-width {
+	width: 1em;
+}
