@@ -181,7 +181,6 @@
 			var to = roomJid + "/" + userInfo.user.info.nickname;
 
 			var pres = $pres({to: to, type: "unavailable"}).c("x", {xmlns: constants.xmpp.muc});
-			console.log(to);
 
 			send(pres);
 		};

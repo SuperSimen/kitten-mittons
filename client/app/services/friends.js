@@ -68,7 +68,8 @@
 				return friends.model.getWithUserid(userid) !== undefined ||
 						userInfo.user.info.tempFriends.filter(function(user) {
 							return user.userid == userid;
-						}).length;
+						}).length ||
+							userid === userInfo.user.info.userid;
 			}
 		};
 		

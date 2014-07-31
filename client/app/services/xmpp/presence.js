@@ -133,6 +133,11 @@
 										}
 									}
 								}
+								else {
+									console.log("received unfitted presence");
+									console.log(data);
+									console.log(chat.model.getWithGroupId(groupId));
+								}
 							});
 						}
 

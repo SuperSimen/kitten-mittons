@@ -8,7 +8,6 @@ start.command
 fonts.zip
 server/basic_server.js
 client/index.tpl.html
-client/index.html
 report/
 server/auth/server.crt
 server/auth/server.key
