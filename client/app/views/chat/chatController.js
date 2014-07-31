@@ -13,6 +13,7 @@ app.controller( 'chatController', function($state, $scope, utility, dialogs, cha
 	});
 
 	$rootScope.openConference = function() {
+
 		chat.model.conference.mediaActive = true;
 		
 		var currentChat = $scope.currentChat;
@@ -31,9 +32,9 @@ app.controller( 'chatController', function($state, $scope, utility, dialogs, cha
 		callModel.status = "free";
 		chat.model.conference.closeActive();
 	};
-
-	$rootScope.areConferenceButtonsDisabled = function() {
-		if (callModel.status === "in-conference"); {
+	$rootScope.isOpenConferenceButtonDisabled = function() {
+		console.log(callModel.status);
+		if (callModel.status === "in-conference") {
 			return false;
 		}
 		if (callModel.status !== "free") {
