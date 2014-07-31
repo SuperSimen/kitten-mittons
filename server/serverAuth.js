@@ -186,7 +186,7 @@ var userList = {
 		this.list[id].addToRoster = function(friend) {
 			for (var i in this.tempFriends) {
 				if (this.tempFriends[i].userid === friend.userid) {
-					this.tempFriends.splice(i,1);
+					//this.tempFriends.splice(i,1);
 				}
 			}
 

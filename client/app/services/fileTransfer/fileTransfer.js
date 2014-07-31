@@ -25,13 +25,11 @@
 						else {
 							fileModel.pending = true;
 							fileModel.accept = function() {
-								console.log("accept");
 								this.accepted = true;
 								this.pending = false;
 								respondFileInvite(fileModel, true);
 							};
 							fileModel.cancel = function() {
-								console.log("cancel");
 								this.cancelled = true;
 								this.pending = false;
 								respondFileInvite(fileModel, false);

@@ -1,6 +1,6 @@
 (function () {
 
-	app.factory('call', function(UWAP, xmpp,  $state, $rootScope, $http, constants, webrtc, fileSender, fileReceiver, $timeout, utility, $sce, callModel) {
+	app.factory('call', function(UWAP, xmpp,  $state, $rootScope, $http, constants, webrtc, fileSender, fileReceiver, $timeout, utility, $sce, callModel, chat) {
 		var call = {
 			init: function() {
 				xmpp.addHandler(xmppHandlers.call, null, "message", "call");
@@ -57,7 +57,7 @@
 		call.hangup = function() {
 			if (callModel.status === "in-call" && callModel.currentId) {
 				sendCallSignal(callModel.currentId, {type: "hangup"});
-				model.chat.get(callModel.currentId).addSystemMessage("Call ended");
+				chat.model.get(callModel.currentId).addSystemMessage("Call ended");
 				webrtc.hangup();
 			}
 		};
@@ -80,12 +80,11 @@
 				if (body) {
 					var callMessage = JSON.parse(body[0].children[0].data);
 					var type = callMessage.type;
-					console.log(type);
 					var from = utility.getIdFromJid(data.from);
 					if (type === "offer") {
 						if (callModel.status === "free") {
 							$rootScope.$apply(function() {
-								model.chat.get(from).ping();
+								chat.model.get(from).ping();
 								callModel.add(from, false, callMessage.audio, callMessage.video);
 							});
 						}
@@ -108,7 +107,7 @@
 						callModel.currentId === from) {
 
 						$rootScope.$apply(function() {
-							model.chat.get(from).addSystemMessage("Call denied");
+							chat.model.get(from).addSystemMessage("Call denied");
 							callModel.deleteCurrent();
 						});
 
@@ -117,13 +116,13 @@
 					else if (type === "cancel" && callModel.status === "free") {
 						$rootScope.$apply(function() {
 							callModel.remove(from);
-							model.chat.get(from).addSystemMessage("Call canceled");
+							chat.model.get(from).addSystemMessage("Call canceled");
 						});
 					}
 					else if (type === "hangup" && callModel.status === "in-call") {
 						$rootScope.$apply(function() {
 							webrtc.hangup();
-							model.chat.get(from).addSystemMessage("Call ended");
+							chat.model.get(from).addSystemMessage("Call ended");
 						});
 					}
 					else {
