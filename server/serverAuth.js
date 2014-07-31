@@ -80,6 +80,8 @@ function inviteUninettPerson (person, sender) {
 			var stanza = new ltx.Element('message', { to: jid, type: 'chat' }).
 				c('body').t(inviteMessage);
 			client.send(stanza);
+			console.log("send invite");
+			console.log(stanza);
 			client.end();
 		});
 		client.on('error', xmppError);

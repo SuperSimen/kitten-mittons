@@ -56,7 +56,9 @@ app.controller( 'friendsController', function($state, userInfo, $scope, fileTran
 	};
 	$scope.addBestFriendUWAP = function(friend) {
 		$scope.showSearch = false;
-		friends.addBestFriendUWAP(friend);
+		if (friend.userid !== userInfo.user.info.userid) {
+			friends.addBestFriendUWAP(friend);
+		}
 	};
 	$scope.sendInvite = function(friend) {
 		friends.sendInviteToSearchPerson(friend);
