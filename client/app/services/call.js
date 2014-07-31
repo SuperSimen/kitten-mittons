@@ -205,11 +205,13 @@
 			local: {
 				videoEnabled: true,
 				audioEnabled: true,
+				mute: true,
 				src: ""
 			},
 			remote: {
 				src: "",
-				userId: ""
+				userId: "",
+				mute: false,
 			}
 		};
 

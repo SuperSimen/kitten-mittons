@@ -87,7 +87,7 @@
 						</div>
 						<div ng-show="currentChat && isInCall()">
 							<div class="uninett-chatbox-entry uninett-chatbox-entry-video">
-								<video class="pointer" title="Tip: Double click to enter full screen" ng-show="call.getCurrent().video" ng-click="enterVideoFull()" autoplay="true" ba-auto-update="{{video.remote.src}}" src="{{video.remote.src}}"></video>
+								<video class="pointer"  ng-show="call.getCurrent().video" ng-click="enterVideoFull()" autoplay="true" ba-auto-update="{{video.remote.src}}" src="{{video.remote.src}}"></video>
 								<div ng-hide="call.getCurrent().video" class="uninett-chatbox-entry-audio align-center uninett-fontColor-white">
 									<i class="fa fa-volume-up fa-5x"></i>
 								</div>

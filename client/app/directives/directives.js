@@ -35,6 +35,24 @@
 		};
 	});
 
+	app.directive("baMute", function() { 
+		function link (scope, element, attrs) {
+			console.log(element);
+			globalElement = element;
+
+			scope.$watch(function() {return scope.mute;}, function(newValue) {
+				element.prop('muted', newValue);
+			});
+		}
+
+		return {
+			link: link,
+			scope: {
+				mute: '='
+			}
+		};
+	});
+
 	app.directive("ngAudioNotification", function($rootScope, settings) {
 		return function(scope, element, attrs){
 			element[0].loop = false;
