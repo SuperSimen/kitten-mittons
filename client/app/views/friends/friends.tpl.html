@@ -88,7 +88,7 @@
 							<div ng-show="getNumGroups() > 0" class="row">
 								<div class="col-md-12">
 									<div class="uninett-group" ng-repeat="group in groups.list">
-										<div class="uninett-group-heading row hover-white" ng-click="showMembers = !showMembers" ng-init="showMembers = 1">
+										<div class="uninett-group-heading row hover-white" ng-click="showMembers = !showMembers" ng-init="showMembers = 0">
 											<div class="col-md-12">
 												<span class="btn btn-sm pull-right glyphicon" ng-class="showMembers ? 'glyphicon-chevron-up' : 'glyphicon-chevron-down'"></span>
 												<span class="uninett-group-name">{{group.displayName}}</span> <span class="uninett-group-membercount" ng-show="!showMembers">({{groupMembersCount(group.friends)}})</span>
