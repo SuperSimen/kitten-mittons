@@ -35,22 +35,24 @@
 		};
 	});
 
-	app.directive("ngAudioNotification", function($rootScope) {
+	app.directive("ngAudioNotification", function($rootScope, settings) {
 		return function(scope, element, attrs){
 			element[0].loop = false;
 			$rootScope.messageAudioNotify = function() {
 				element[0].currentTime = 0;
-				element[0].play();
+				if(!settings.mute())
+					element[0].play();
 			};
 		};
 	});
 
-	app.directive("ngAudio", function(){
+	app.directive("ngAudio", function(settings){
 		return function(scope, element, attrs){
 			element[0].loop = true;
 			scope.playAudio = function(status) {
 				if(status) {
-					element[0].play();
+					if(!settings.mute())
+						element[0].play();
 				}
 				else {
 					element[0].pause();

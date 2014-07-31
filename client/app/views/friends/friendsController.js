@@ -1,8 +1,9 @@
-app.controller( 'friendsController', function($state, userInfo, $scope, fileTransfer, friends, chat, search) {
+app.controller( 'friendsController', function($state, userInfo, $scope, fileTransfer, friends, chat, search, settings) {
 	$scope.groups = userInfo.groups;
 	$scope.friends = friends.model;
 	$scope.user = userInfo.user;
 	$scope.search = search.model;
+	$scope.settings = settings;
 	/**
 	 * Get the number of friends in group
 	 * @param {type} friends
