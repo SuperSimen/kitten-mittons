@@ -1,5 +1,5 @@
 (function () {
-	app.factory('fileTransfer', function(xmpp,  userInfo, $rootScope, fileSender, fileReceiver, utility, $q, $timeout, fileList) {
+	app.factory('fileTransfer', function(xmpp,  userInfo, $rootScope, fileSender, fileReceiver, utility, $q, $timeout, fileList, $window) {
 		var fileTransfer = {
 			init: function() {
 				fileSender.init();
@@ -126,7 +126,7 @@
 			el.onchange = onFileSubmitted;
 
 			var e =  new MouseEvent('click', {
-				'view': window,
+				'view': $window,
 				'bubbles': true,
 				'cancelable': true
 			});

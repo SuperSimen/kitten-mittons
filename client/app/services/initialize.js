@@ -1,5 +1,5 @@
 (function () {
-	app.factory('initialize', function(fileTransfer, UWAP, chat, xmpp,  userInfo, $rootScope, $state, $http, constants, webrtc, utility, presence, call, search) {
+	app.factory('initialize', function(fileTransfer, UWAP, chat, xmpp,  userInfo, $rootScope, $state, $http, constants, webrtc, utility, presence, call, search, $window) {
 		var init = {
 			init: function() {
 				$rootScope.gotoState = function(state) {
@@ -25,9 +25,10 @@
 		}
 
 		function connectedCallback() {
-			window.onbeforeunload = function() {
-				console.log("Signing out");
-				xmpp.logOff();
+			$window.onbeforeunload = function() {
+				xmpp.runSync(function () {
+					call.cleanUp();
+				});
 				return null;
 			};
 

@@ -149,11 +149,16 @@
 			send(msg);
 		};
 
-		factory.logOff = function() {
-			connection.options.sync = true;
-			connection.disconnect();
+		factory.setSync = function() {
+			connection.options.sync = sync;
 		};
 
+		factory.runSync = function(runnable) {
+			connection.options.sync = true;
+			runnable();
+			connection.flush();
+			connection.disconnect();
+		};
 
 		function logOn() {
 			send($pres());

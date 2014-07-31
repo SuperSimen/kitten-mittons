@@ -1,6 +1,6 @@
 (function () {
 
-	app.factory('fileReceiver', function($rootScope, dataSender,  utility, fileList) {
+	app.factory('fileReceiver', function($rootScope, dataSender,  utility, fileList, $window) {
 		var fileReceiver = {
 			init: function() {
 				dataSender.addMessageHandler(fileHandler, "fileSender");
@@ -225,7 +225,7 @@
 
 
 		function prepareSandbox() {
-			window.webkitRequestFileSystem(window.TEMPORARY, 0, onInit, errorHandler);
+			$window.webkitRequestFileSystem(window.TEMPORARY, 0, onInit, errorHandler);
 
 			function onInit(fs) {
 				function readEntries () {
