@@ -145,7 +145,6 @@
 
 		function onAddStream (e){
 			$rootScope.$apply(function() {
-				console.log(e);
 				callModel.video.active = true;
 				callModel.status = "in-call";
 				callModel.video.remote.src = $sce.trustAsResourceUrl(URL.createObjectURL(e.stream));
