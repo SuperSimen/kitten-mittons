@@ -53,8 +53,15 @@ app.controller( 'chatController', function($state, $scope, utility, dialogs, cha
 	};
 
 	$scope.formatTime = function(time) {
+		
+		function padLeft(chr, str, count) {
+			while(str.length < count)
+				str = chr + str;
+			return str;
+		}
+		
 		var date = new Date(time);
-		return date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+		return date.getHours() + ":" + padLeft('0', date.getMinutes(), 2) + ":" + padLeft('0', date.getSeconds(), 2);
 	};
 
 	$scope.openFriendSelector = function() {
