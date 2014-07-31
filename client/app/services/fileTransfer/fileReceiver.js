@@ -19,43 +19,51 @@
 
 			if (data.status === "sof") {
 
+				storage[data.id] = {};
+				storage[data.id].sender = dataSender.getSender(from, "fileReceiver");
+
+				$rootScope.$apply(function() {
+					storage[data.id].fileObject = fileList.get(data.id);
+
+					var watcher = $rootScope.$watch(function() {
+						if (storage[data.id]) {
+							return storage[data.id].fileObject.cancelled;
+						}
+					}, function (newValue) {
+						if (newValue) {
+							signalFile(data.id, "cancel");
+							delete storage[data.id];
+
+							watcher();
+						}
+					});
+				});
+
+				if (fileList.writeFailed) {
+					$rootScope.$apply(function() {
+						fileList.get(data.id).cancel();
+					});
+					return;
+				}
+
 				initiateFileSystem(data.id, data.filename, data.size, data.totalSlices, function() {
 					if (storage[data.id]) {
 						return console.error("data.id is not unique. aborting...");
 					}
-					storage[data.id] = {
-						filename: data.filename,
-						counter: 0,
-						eof: false,
-						totalSlices: data.totalSlices,
-						totalNumbers: [],
-						getTotalNumber: function() {
+						storage[data.id].filename = data.filename;
+						storage[data.id].counter = 0;
+						storage[data.id].eof = false;
+						storage[data.id].totalSlices = data.totalSlices;
+						storage[data.id].totalNumbers = [];
+						storage[data.id].getTotalNumber = function() {
 							var total = 0;
 							for (var i = 1; i < this.totalNumbers.length; i++) {
 								total += this.totalNumbers[i];
 							}
 							return total;
-						},
-						slices: []
-					};
-					storage[data.id].sender = dataSender.getSender(from, "fileReceiver");
+						};
+						storage[data.id].slices = [];
 
-					$rootScope.$apply(function() {
-						storage[data.id].fileObject = fileList.get(data.id);
-
-						var watcher = $rootScope.$watch(function() {
-							if (storage[data.id]) {
-								return storage[data.id].fileObject.cancelled;
-							}
-						}, function (newValue) {
-							if (newValue) {
-								signalFile(data.id, "cancel");
-								delete storage[data.id];
-
-								watcher();
-							}
-						});
-					});
 
 
 					signalFile(data.id, "sof_ack", data.totalSlices, data.filename);
@@ -345,7 +353,7 @@
 		}
 
 		function errorHandler(e) {
-			console.error(e);
+			fileList.writeFailed = true;
 		}
 
 		return fileReceiver;

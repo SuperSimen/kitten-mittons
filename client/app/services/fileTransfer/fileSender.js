@@ -120,7 +120,9 @@
 					dataHandlers.remove(id);
 				}
 				else if (data.status === "cancel") {
-					fileModel.cancel();
+					$rootScope.$apply(function() {
+						fileModel.cancel();
+					});
 				}
 			}
 
