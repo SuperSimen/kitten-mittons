@@ -16,6 +16,7 @@
 			$http.get('/api/info').success(function(data, status) {
 				userInfo.user.info = data;
 				userInfo.user.token = data.token;
+				userInfo.user.id = data.xmpp.jid;
 
 				if (userInfo.user.info.xmpp.registered) {
 					xmpp.connect(userInfo.user.info.xmpp.jid, userInfo.user.info.xmpp.password, constants.xmpp.boshUrl, connectedCallback);

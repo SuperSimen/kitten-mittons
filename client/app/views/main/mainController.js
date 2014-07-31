@@ -88,7 +88,7 @@ app.controller( 'mainController', function($scope, $rootScope, friends, $state, 
 		}
 	};
 	$rootScope.getMe = function() {
-		return friends.model.get(model.user.info.xmpp.jid);
+		return friends.model.get(userInfo.user.info.xmpp.jid);
 	};
 
 	/**

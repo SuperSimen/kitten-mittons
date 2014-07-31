@@ -1,4 +1,4 @@
-app.controller( 'chatController', function($state, $scope, utility, dialogs, chat, call, fileTransfer, friends, fileList, callModel, $rootScope) {
+app.controller( 'chatController', function($state, $scope, utility, dialogs, chat, call, fileTransfer, friends, fileList, callModel, $rootScope, userInfo) {
 	
 	$scope.call = callModel;
 	$scope.video = callModel.video;
@@ -20,8 +20,8 @@ app.controller( 'chatController', function($state, $scope, utility, dialogs, cha
 		
 		currentChat.openConference();
 		
-		for(var i in chat.participants) {
-			chat.sendSystemNotification(currentChat.participants[i].id, currentChat.id, $scope.getMe().name + " went into the video conference");
+		for(var i in currentChat.participants) {
+			chat.sendSystemNotification(currentChat.participants[i].id, currentChat.id, userInfo.user.info.name + " went into the video conference");
 		}
 		
 		$scope.gotoState("conference");
