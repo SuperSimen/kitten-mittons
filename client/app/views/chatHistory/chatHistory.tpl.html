@@ -1,11 +1,11 @@
 <div class="row color-grey fill-height border-right default-cursor auto-overflow">
-	<div class="col-md-12 fill-height">
-		<div class="fill-top">
-			<div class="row border-bottom name-tag uninett-section-header-bar">
-				<div class="col-md-12 fill-height">
-					<h3 class="uninett-section-header align-center name-tag">Conversations</h3>
-				</div>
-			</div>
+	<div class="row border-bottom name-tag uninett-section-header-bar">
+		<div class="col-md-12 fill-height">
+			<h3 class="uninett-section-header align-center name-tag">Conversations</h3>
+		</div>
+	</div>
+	<div class="fill-under-name-tag">
+		<div class="col-md-12 fill-top scroll-y">
 			<div ng-repeat="entry in history" ng-init="active = 0" >
 				<div title="{{entry.isRoom ? chat.get(entry.id).getGroupRoomName() : 'Conversation with ' + getFriendFromId(entry.id).name}}" ng-click="clickEntry(entry.id)" ng-class="{'active uninett-chat-active': isActive(entry.id)}" class="row hide-overflow hover-white chat-entry">
 					<div class="col-md-12 visible-on-hover">
@@ -18,7 +18,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="fill-bottom align-center fill-width"> 
+		<div class="col-md-12 fill-bottom align-center fill-width"> 
 			<button class="btn btn-primary form-control" ng-click="clickOnPlus()">New group room</button>
 		</div>
 	</div>
