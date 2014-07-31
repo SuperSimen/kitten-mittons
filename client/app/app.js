@@ -4,10 +4,43 @@ var app = angular.module( 'app', [
 	'ng-context-menu',
 	'dialogs.main'
 ]);
-app.controller('appController', function($scope) {
-	$scope.application = {
-		title: "UNINETT WebRTC application",
+app.controller('appController', function($rootScope, $window) {
+	$rootScope.application = {
+		standard: "UNINETT WebRTC application",
+		title: this.standard,
+		resetTitle: function() {
+			this.count = 0;
+			this.title = this.standard;
+		},
+		setTitle: function() {
+
+		},
+		count: 0,
+		ping: function() {
+			if (this.focus) {
+				return;
+			}
+			this.title = "(" + (++this.count) + ")" + " - " + this.standard;
+		},
+		focus: true,
 	};
+
+	$window.onblur = function() {
+		$rootScope.$apply(function() {
+			$rootScope.application.focus = false;
+		});
+	};
+	$window.onfocus = function() {
+		$rootScope.$apply(function() {
+			$rootScope.application.focus = true;
+		});
+	};
+
+	$rootScope.$watch(function() {return $rootScope.application.focus;}, function(newValue) {
+		if (newValue) {
+			$rootScope.application.resetTitle();
+		}
+	});
 });
 app.config( function ( $stateProvider) {
 	$stateProvider.state('base', {
