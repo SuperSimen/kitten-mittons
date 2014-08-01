@@ -1,6 +1,6 @@
 <div class="row fill-height">
-	<video src={{largeVideo.src}} ng-click="returnToChat()" ba-mute="largeVideo.mute" class="pointer large-video fill-width" autoplay ba-center-video></video>
-	<video src={{smallVideo.src}} ng-click="switchVideos()" ba-mute="smallVideo.mute"class="small-video pointer" autoplay></video>
+	<video src={{largeVideo.src}} ng-click="returnToChat()" ba-mute mute="largeVideo.mute" class="pointer large-video fill-width" autoplay ba-center-video></video>
+	<video src={{smallVideo.src}} ng-click="switchVideos()" ba-mute mute="smallVideo.mute"class="small-video pointer" autoplay></video>
 	<div class="video-menu">
 		<i class="pointer fa fa-2x tab" ng-click="toggleVideo()" ng-class="{'fa-eye': video.local.videoEnabled, 'fa-eye-slash': !video.local.videoEnabled}"></i>
 		<i class="pointer fa fa-microphone fa-2x tab" ng-click="toggleAudio()" ng-class="{'fa-microphone': video.local.audioEnabled, 'fa-microphone-slash': !video.local.audioEnabled}"></i>
