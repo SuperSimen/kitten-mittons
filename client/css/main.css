@@ -638,6 +638,7 @@ span.uninett-icon-fixed-width {
 .uninett-profile-picture-container {
 	display: inline-block;
 	padding: 1px;
+	text-align: center;
 }
 
 img.uninett-profile-picture {
@@ -648,5 +649,5 @@ img.uninett-profile-picture {
 }
 
 .uninett-fa-profile {
-	
+	width: 32px;
 }
