@@ -215,7 +215,7 @@
 							this.newPeerConnection(this.restartDataSender);
 						}
 						else {
-							$timeout(this.restartDataSender, 1000);
+							$timeout(this.restartDataSender, 100);
 						}
 					},
 					restartDataSender: function() {
