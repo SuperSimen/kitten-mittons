@@ -1,7 +1,6 @@
 *.sw*
 *~
 node_modules/
-users/
 bower_components/
 start.command
 .DS_store
