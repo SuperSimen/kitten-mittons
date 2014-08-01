@@ -38,7 +38,7 @@
 								<div class="panel-heading">
 									<div class="pull-right uninett-search-panel-header-icons">
 										<i title="{{friends.isUserAdded(person.userid) ? person.name + ' is in my friend list' : 'Add to my friend list'}}" ng-click="addBestFriendUWAP(person)" class="pointer fa fa-2x" ng-class="friends.isUserAdded(person.userid) ? 'uninett-btn-ok fa-check' : 'fa-plus'"></i>
-										<i ng-show="person.o.toLowerCase() === 'uninett'" title="Send invitation to join this site" ng-click="sendInvite(person)" class="pointer fa fa-paperclip fa-2x"></i>
+										<i ng-show="person.o.toLowerCase() === 'uninett'" title="Send invitation to join this site" ng-click="sendInvite(person)" class="pointer fa fa-exclamation fa-2x"></i>
 									</div>
 									<h4 class="panel-title">
 										<a data-toggle="collapse" data-parent="#accordion" href="#collapse{{$index}}">{{person.name}}</a>
