@@ -15,7 +15,11 @@
 							<i ng-click="close(entry.id)" ba-click class="fa pointer fa-times visible-span width-3"></i>
 						</div>
 						<div class="chat-entry-text-content">
-							<span class="glyphicon glyphicon-user"></span> {{ entry.isRoom ? chat.get(entry.id).getGroupRoomName() : getFriendFromId(entry.id).name}}
+							<div class="uninett-profile-picture-container">
+								<img ng-show="!entry.isRoom && getFriendFromId(entry.id).picture" width="32" height="32" class="uninett-profile-picture" ng-src="{{ getFriendFromId(entry.id).picture }}" />
+								<span ng-show="entry.isRoom || !getFriendFromId(entry.id).picture" class="fa fa-user uninett-fa-profile"></span>
+							</div>
+							{{ entry.isRoom ? chat.get(entry.id).getGroupRoomName() : getFriendFromId(entry.id).name}}
 						</div>
 					</div>
 				</div>

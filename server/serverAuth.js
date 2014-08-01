@@ -275,12 +275,12 @@ function init() {
 	startInvitor();
 
 
-	//var options = {
-	//	key: fileSystem.readFileSync('auth/server.key'),
-	//	cert: fileSystem.readFileSync('auth/server.crt')
-	//};
+	var options = {
+		key: fileSystem.readFileSync('auth/server.key'),
+		cert: fileSystem.readFileSync('auth/server.crt')
+	};
 
-//	https.createServer(options, app).listen(443);
+	https.createServer(options, app).listen(443);
 	http.createServer(app).listen(80);
 
 	app.get('/', function(req, res, next){
