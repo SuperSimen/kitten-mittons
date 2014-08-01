@@ -84,6 +84,15 @@
 			}
 		};
 
+		call.isAudioEnabled = function() {
+			return webrtc.isAudioEnabled();
+		};
+
+		call.isVideoEnabled = function() {
+			return webrtc.isVideoEnabled();
+		};
+		
+
 		call.toggleVideo = function() {
 			var video = !callModel.video.local.videoEnabled;
 			callModel.video.local.videoEnabled = video;
@@ -206,8 +215,6 @@
 			active: null,
 			busy: null,
 			local: {
-				videoEnabled: true,
-				audioEnabled: true,
 				muted: true,
 				src: ""
 			},
