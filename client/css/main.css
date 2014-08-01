@@ -403,7 +403,7 @@ span[ng-click][disabled] {
 
 .uninett-chatbox-entry-system {
 	width: auto;
-	padding: 8px;
+	padding: 10px 20px 10px 20px;
 	background-color: #3a3a3a !important;
 	font-weight: bold;
 	color: #ffffff;
@@ -488,8 +488,37 @@ span[ng-click][disabled] {
 	right: 10px;
 }
 
+.uninett-video-button-container {
+	position: relative;
+}
+
+.uninett-video-button {
+	float: right;
+	position: absolute;
+	top: 5px;
+	right: 5px;
+	z-index: 99;
+	color: white;
+	background: black;
+	padding: 1px 3px 1px 3px;
+	border-radius: 3px;
+}
+
+.uninett-video-button-fullscreen {	
+	
+}
+
+.uninett-video-button-togglevideo {
+	right: 28px;
+}
+
+.uninett-video-button-togglemute {
+	right: 50px;
+}
+
 .uninett-message-time {
 	opacity: 0.25;
+	font-weight: 100 !important;
 	-webkit-transition: opacity 0.3s ease-in-out;
 	-moz-transition: opacity 0.3s ease-in-out;
 	-ms-transition: opacity 0.3s ease-in-out;

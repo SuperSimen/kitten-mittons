@@ -369,6 +369,14 @@ app.controller( 'chatController', function($state, $scope, utility, dialogs, cha
 		$scope.gotoState("call");
 	};
 
+	$scope.toggleAudio = function() {
+		call.toggleAudio();
+	};
+
+	$scope.toggleVideo = function() {
+		call.toggleVideo();
+	};
+
 	/**
 	 * Checks whether the message was sent by current user
 	 * @param {type} message
