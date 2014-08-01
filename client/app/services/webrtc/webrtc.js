@@ -77,11 +77,15 @@
 		};
 
 		webrtc.isAudioEnabled = function() {
-			return video.stream.getAudioTracks()[0].enabled;
+			if (video.stream) {
+				return video.stream.getAudioTracks()[0].enabled;
+			}
 		};
 
 		webrtc.isVideoEnabled = function() {
-			return video.stream.getVideoTracks()[0].enabled;
+			if (video.stream) {
+				return video.stream.getAudioTracks()[0].enabled;
+			}
 		};
 		
 		var video = {
