@@ -59,7 +59,7 @@
 		};
 
 		call.hangup = function() {
-			if (callModel.status === "in-call" || callModel.status === "accept" && callModel.currentId) {
+			if (callModel.currentId && (callModel.status === "in-call" || callModel.status === "accept")) {
 				sendCallSignal(callModel.currentId, {type: "hangup"});
 				chat.model.get(callModel.currentId).addSystemMessage("Call ended");
 				webrtc.hangup();
@@ -75,7 +75,7 @@
 						break;
 					case "in-call":
 					case "accept":
-						call.hangup();
+						sendCallSignal(callModel.currentId, {type: "hangup"});
 						break;
 					case "getting-called":
 						call.denyCall(to);
@@ -208,13 +208,13 @@
 			local: {
 				videoEnabled: true,
 				audioEnabled: true,
-				mute: true,
+				muted: true,
 				src: ""
 			},
 			remote: {
 				src: "",
 				userId: "",
-				mute: false,
+				muted: false,
 			}
 		};
 

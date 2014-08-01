@@ -69,10 +69,7 @@
 
 	app.directive("baMute", function() { 
 		function link (scope, element, attrs) {
-			console.log(element);
-			globalElement = element;
-
-			scope.$watch(function() {return scope.mute;}, function(newValue) {
+			scope.$watch(function() {return scope.isMuted;}, function(newValue) {
 				element.prop('muted', newValue);
 			});
 		}
@@ -80,7 +77,7 @@
 		return {
 			link: link,
 			scope: {
-				mute: '='
+				isMuted: '='
 			}
 		};
 	});
