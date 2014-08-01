@@ -19,7 +19,8 @@
 			conferenceUrl: "https://meet.akademia.no",
 			uwap: {
 				orgUnit: "uwap:group:type:orgUnit",
-				adHoc: "uwap:group:type:ad-hoc"
+				adHoc: "uwap:group:type:ad-hoc",
+				inst: "uwap:grp:inst"
 			},
 			xmpp: {
 				boshUrl: "https://meet-test.akademia.no/http-bind",
