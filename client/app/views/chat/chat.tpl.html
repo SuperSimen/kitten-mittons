@@ -88,8 +88,8 @@
 						<div ng-show="currentChat && isInCall()">
 							<div class="uninett-chatbox-entry uninett-chatbox-entry-video">
 								<div ng-show="call.getCurrent().video" class="uninett-video-button-container">
-									<span title="{{ isAudioEnabled() ? 'Click to mute microphone' : 'Click to unmute microphone' }}" ng-click="toggleAudio()" ng-class="isAudioEnabled() ? 'fa-microphone' : 'fa-microphone-slash'" class="fa fa-fw uninett-video-button uninett-video-button-togglemute"></span>
 									<span title="{{ isVideoEnabled() ? 'Click to stop sharing video' : 'Click to share video' }}" ng-click="toggleVideo()" ng-class=" isVideoEnabled() ? 'fa-eye' : 'fa-eye-slash'" class="fa fa-fw uninett-video-button uninett-video-button-togglevideo"></span>
+									<span title="{{ isAudioEnabled() ? 'Click to mute microphone' : 'Click to unmute microphone' }}" ng-click="toggleAudio()" ng-class="isAudioEnabled() ? 'fa-microphone' : 'fa-microphone-slash'" class="fa fa-fw uninett-video-button uninett-video-button-togglemute"></span>
 									<span title="Click to toggle full screen" ng-click="enterVideoFull()" class="fa fa-fw fa-expand uninett-video-button uninett-video-button-fullscreen"></span>
 									<video class="pointer"  ng-click="enterVideoFull()" autoplay="true" ba-auto-update="{{video.remote.src}}" src="{{video.remote.src}}"></video>
 								</div>
