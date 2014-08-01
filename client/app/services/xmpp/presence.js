@@ -1,6 +1,6 @@
 (function () {
 
-	app.factory('presence', function(xmpp,  constants, $rootScope, utility, chat, friends, userInfo) {
+	app.factory('presence', function(xmpp,  constants, $rootScope, utility, chat, friends, userInfo, userImage) {
 		var presence = {
 			init: function() {
 				xmpp.addHandler(xmppHandlers.mucPresence, constants.xmpp.mucUser, "presence");
@@ -186,6 +186,14 @@
 			if (!friends.model.get(id)) {
 				friend = friends.model.create(id);
 				presence.getVCard(utility.getJidFromId(id));
+				
+				// Get profile picture
+				userImage.getPicture(friend).then(function(image) {
+					friend.picture = image;
+				}, function() {
+					friend.picture = null;
+				});
+				
 			}
 			else {
 				friend = friends.model.get(id);

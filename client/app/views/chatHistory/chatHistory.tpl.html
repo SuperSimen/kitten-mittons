@@ -15,7 +15,10 @@
 							<i ng-click="close(entry.id)" ba-click class="fa pointer fa-times visible-span width-3"></i>
 						</div>
 						<div class="chat-entry-text-content">
-							<span class="glyphicon glyphicon-user"></span> {{ entry.isRoom ? chat.get(entry.id).getGroupRoomName() : getFriendFromId(entry.id).name}}
+							<div class="uninett-profile-picture-container">
+								<img width="32" height="32" class="uninett-profile-picture" ng-src="{{(!entry.isRoom && getFriendFromId(entry.id).picture) || 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAIAAAAlC+aJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAP1SURBVGhD7Zk/UuswEMbJTIakDB0lN0iOkDIlBQUldCkZLkDFcISUHCElx+AYHIEy7xvvl521/qzlxH4xM/4V71m7sqRvtSsZuDr8cUYBl2YUcGlGAZdmFHBp+hXw+fl5d3d3FQEjXOx0Hn0JyC09Bt12ux1fa+Lr62u9XlvxXQooX3TM29sbR3G5vb1F5/l8znaHAhBFWUrA4+Pj7+8vOiB4kAceHh7oqxNrSMT7CNtdCfj5+UFUOPYRXbqgm2Pjhw6bzUbsINCg8VYN0g1IE3Qj4OXlRcZdrVZ20ZaPjw/ps91uaaoINHx/f9NxOGhQVIM0gXQA3QiQUIH9fk9TG6ABqSIj3N/f02o0A9HAhiMgTrtGbPaLxT4XgsDLW4CmikADnxwBcZkD6HFUafiR9GKRJpBmIYvFIvmW1aDQFwug3/TQAENVnN82/Oplu6UAvpN6S2tMoaNEQBxgS84Liz7os4A6kfM02FLpCdg2IDQ2fwAdjgAZPRlgC30ZL3h/f4eXjfqBGySqGAHbBlTmzc0N3fVzLOwdjO6HH4gXsJ3CdsDc0gTBeUprNBRWr+Uh0FER9rYV8/r6yqd8gOl2BQB0wCWldxkIDlysko5oKPuWQEdFYmLdhMlkIg+Avgi6XQHIwyCEuLnoO6JbDWg6Ep9CdFQkJo5fwF4jQlXhtag8wVaREHxiCPRFeWVhj0YBgB2P2E3MVV7ultB3Y/EW6QPYTsEejQIQbJs8AUGEbNEn14fUhxcfCLkqEmQQwHYK9mgUYON9fX3Np4p4f4OrntY6ODr5lMGpYAt7NAqwa5pOp/jXj19cMwpigRpgvzy2gtumWVqxXdNsNqM1jyaST04P3UeSGuxhQFNFWgCwGhqj6GzCCSRTMfvNwv9T2LhiibS6SMkKeP3p6YmNApbLJZ9Sm0BHdKV6AmxcsRonOwW7ehBUPCZ29MjloCELNsGpck8ACAZ1NNjV46J1it7BhoymCueebhAASvbBVtjJqxc4Sj2LaEqd480CQKMGjdCZqwd2w8WSO3+EIgHA0WAT9MzVgziLcuePUCoA5DQ4CXoaHCsiGZ12UwYa5H5g2/2QbAWHi6C7TuuYWQ3g+fmZTx2FH3C4OrnonDKr1VDyQ09btI4BTXlOnBXpaKcBXeUPiOvY4fSwBblEa0dw0F4FgFahagUH7VsA4Dy9CUhe/JaBCiiv44EKKE/OgQoAHPfvCtAswm7QlGK4AvRX6lBCU4rhCsBdyaHdwYcrAJRk0aAFlGTRoAWUZNGgBQCOPgrIwuFHATk4ek8CCn8tfg56krIdcdbE9i8JNHWNfNU5P+6dNbF+M3b482Rb+orcf2MUcFkOh39sG6cYLSHYRAAAAABJRU5ErkJggg==' }}" />
+							</div>
+							{{ entry.isRoom ? chat.get(entry.id).getGroupRoomName() : getFriendFromId(entry.id).name}}
 						</div>
 					</div>
 				</div>

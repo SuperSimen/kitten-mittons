@@ -634,3 +634,15 @@ span[ng-click][disabled] {
 span.uninett-icon-fixed-width {
 	width: 1em;
 }
+
+.uninett-profile-picture-container {
+	display: inline-block;
+	padding: 1px;
+}
+
+img.uninett-profile-picture {
+	width: 32px;
+	height: 32px;
+	/*border: solid 1px #c0c0c0;*/
+	border-radius: 3px;
+}
