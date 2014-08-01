@@ -48,7 +48,7 @@
 				var groups = data.Resources;
 				for (var i in groups) {
 					var group = groups[i];
-					if (group.groupType === constants.uwap.orgUnit || group.groupType === constants.uwap.adHoc) {
+					if (group.groupType === constants.uwap.orgUnit || group.groupType === constants.uwap.adHoc || group.groupType === constants.uwap.inst) {
 						var groupId = encodeURIComponent(group.id).toLowerCase();
 						userInfo.groups.create(groupId, group.displayName);
 						xmpp.joinRoom(groupId);

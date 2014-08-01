@@ -24,7 +24,13 @@ app.controller( 'callController', function(call, $scope, callModel) {
 	$scope.toggleAudio = function() {
 		call.toggleAudio();
 	};
+	$scope.isAudioEnabled = function() {
+		return call.isAudioEnabled();
+	};
 	
+	$scope.isVideoEnabled = function() {
+		return call.isVideoEnabled();
+	};
 	$scope.returnToChat = function() {
 		$scope.gotoState("chat");
 	};
