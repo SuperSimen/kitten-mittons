@@ -87,9 +87,14 @@
 						</div>
 						<div ng-show="currentChat && isInCall()">
 							<div class="uninett-chatbox-entry uninett-chatbox-entry-video">
-								<video class="pointer"  ng-show="call.getCurrent().video" ng-click="enterVideoFull()" autoplay="true" ba-auto-update="{{video.remote.src}}" src="{{video.remote.src}}"></video>
+								<div ng-show="call.getCurrent().video" class="uninett-video-button-container">
+									<span title="{{ call.video.local.audioEnabled ? 'Click to mute microphone' : 'Click to unmute microphone' }}" ng-click="toggleAudio()" ng-class="call.video.local.audioEnabled ? 'fa-microphone' : 'fa-microphone-slash'" class="fa fa-fw uninett-video-button uninett-video-button-togglemute"></span>
+									<span title="{{ call.video.local.videoEnabled ? 'Click to stop sharing video' : 'Click to share video' }}" ng-click="toggleVideo()" ng-class="call.video.local.videoEnabled ? 'fa-eye' : 'fa-eye-slash'" class="fa fa-fw uninett-video-button uninett-video-button-togglevideo"></span>
+									<span title="Click to toggle full screen" ng-click="enterVideoFull()" class="fa fa-fw fa-external-link-square uninett-video-button uninett-video-button-fullscreen"></span>
+									<video class="pointer"  ng-click="enterVideoFull()" autoplay="true" ba-auto-update="{{video.remote.src}}" src="{{video.remote.src}}"></video>
+								</div>
 								<div ng-hide="call.getCurrent().video" class="uninett-chatbox-entry-audio align-center uninett-fontColor-white">
-									<i class="fa fa-volume-up fa-5x"></i>
+									<i title="Toggle audio" ng-click="toggleAudio()" ng-class="!call.video.local.audioEnabled ? 'fa-volume-off' : 'fa-volume-up'" class="fa fa-5x"></i>
 								</div>
 							</div>
 						</div>
