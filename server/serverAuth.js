@@ -89,7 +89,7 @@ function inviteUninettPerson(person, sender) {
 		console.log("something is very wrong");
 	}
 
-	var inviteMessage = "Hei. " + sender.name + " har invitert det til å besøke http://webrtc.akademia.no";
+	var inviteMessage = "Hei. " + sender.mail + " har invitert deg til å besøke http://webrtc.akademia.no";
 	var jid = person.userid.substring(0,person.userid.indexOf("@") + 1) + "jabber.uninett.no";
 	var stanza = new ltx.Element('message', { to: jid, type: 'chat' }).
 		c('body').t(inviteMessage);
@@ -275,12 +275,12 @@ function init() {
 	startInvitor();
 
 
-	var options = {
-		key: fileSystem.readFileSync('auth/server.key'),
-		cert: fileSystem.readFileSync('auth/server.crt')
-	};
+	//var options = {
+	//	key: fileSystem.readFileSync('auth/server.key'),
+	//	cert: fileSystem.readFileSync('auth/server.crt')
+	//};
 
-	https.createServer(options, app).listen(443);
+//	https.createServer(options, app).listen(443);
 	http.createServer(app).listen(80);
 
 	app.get('/', function(req, res, next){
