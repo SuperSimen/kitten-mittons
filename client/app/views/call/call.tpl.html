@@ -2,6 +2,7 @@
 	<video src={{largeVideo.src}} ng-click="returnToChat()" ba-mute is-muted="largeVideo.muted" class="pointer large-video fill-width" autoplay ng-video-resize ba-center-video></video>
 	<video src={{smallVideo.src}} ng-click="switchVideos()" ba-mute is-muted="smallVideo.muted" class="small-video pointer" autoplay></video>
 	<div class="video-menu">
+		<i class="fa fa-2x fa-compress pointer tab" ng-click="returnToChat()"></i>
 		<i class="pointer fa fa-2x tab" ng-click="toggleVideo()" ng-class="{'fa-eye': isVideoEnabled(), 'fa-eye-slash': !isVideoEnabled()}"></i>
 		<i class="pointer fa fa-microphone fa-2x tab" ng-click="toggleAudio()" ng-class="{'fa-microphone': isAudioEnabled(), 'fa-microphone-slash': !isAudioEnabled()}"></i>
 		<i class="pointer fa fa-phone-square uninett-fontColor-red fa-2x tab" ng-click="hangup()"></i>
