@@ -68,12 +68,12 @@
 			reset();
 		};
 
-		webrtc.enableVideo = function(enable) {
-			video.enableVideo(enable);
+		webrtc.toggleVideo = function(enable) {
+			video.enableVideo(!webrtc.isVideoEnabled());
 
 		};
-		webrtc.enableAudio = function(enable) {
-			video.enableAudio(enable);
+		webrtc.toggleAudio = function(enable) {
+			video.enableAudio(!webrtc.isAudioEnabled());
 		};
 
 		webrtc.isAudioEnabled = function() {

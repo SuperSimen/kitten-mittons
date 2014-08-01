@@ -94,15 +94,11 @@
 		
 
 		call.toggleVideo = function() {
-			var video = !callModel.video.local.videoEnabled;
-			callModel.video.local.videoEnabled = video;
-			webrtc.enableVideo(video);
+			webrtc.toggleVideo();
 		};
 
 		call.toggleAudio = function() {
-			var audio = !callModel.video.local.audioEnabled;
-			callModel.video.local.audioEnabled = audio;
-			webrtc.enableAudio(audio);
+			webrtc.toggleAudio();
 		};
 
 		var xmppHandlers = {
