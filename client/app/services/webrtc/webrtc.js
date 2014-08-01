@@ -77,12 +77,10 @@
 		};
 
 		webrtc.isAudioEnabled = function() {
-			console.log(video.stream.getAudioTracks()[0].enabled);
 			return video.stream.getAudioTracks()[0].enabled;
 		};
 
 		webrtc.isVideoEnabled = function() {
-			console.log(video.stream.getVideoTracks()[0].enabled);
 			return video.stream.getVideoTracks()[0].enabled;
 		};
 		

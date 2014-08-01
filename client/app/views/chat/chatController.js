@@ -12,6 +12,14 @@ app.controller( 'chatController', function($state, $scope, utility, dialogs, cha
 		}
 	});
 
+	$scope.isAudioEnabled = function() {
+		return call.isAudioEnabled();
+	};
+	
+	$scope.isVideoEnabled = function() {
+		return call.isVideoEnabled();
+	};
+
 	$rootScope.openConference = function() {
 
 		chat.model.conference.mediaActive = true;
