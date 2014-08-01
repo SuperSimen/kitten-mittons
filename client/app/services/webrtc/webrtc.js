@@ -80,12 +80,14 @@
 			if (video.stream) {
 				return video.stream.getAudioTracks()[0].enabled;
 			}
+			return true;
 		};
 
 		webrtc.isVideoEnabled = function() {
 			if (video.stream) {
-				return video.stream.getAudioTracks()[0].enabled;
+				return video.stream.getVideoTracks()[0].enabled;
 			}
+			return true;
 		};
 		
 		var video = {
