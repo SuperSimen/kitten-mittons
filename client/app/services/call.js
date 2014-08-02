@@ -7,7 +7,6 @@
 			}
 		};
 
-
 		call.videoCall = function(to) {
 			if (callModel.status === "free") {
 				callModel.status = "calling";

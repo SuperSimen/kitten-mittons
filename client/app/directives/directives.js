@@ -203,6 +203,7 @@
 			$window.onresize = function() {
 				scope.$apply();
 			};
+
 		}
 
 		return {
