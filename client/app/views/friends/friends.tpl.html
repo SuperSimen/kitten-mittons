@@ -41,7 +41,7 @@
 										<i ng-show="person.o.toLowerCase() === 'uninett'" title="Send invitation to join this site" ng-click="sendInvite(person)" class="pointer fa fa-exclamation fa-2x"></i>
 									</div>
 									<h4 class="panel-title">
-										<a data-toggle="collapse" data-parent="#accordion">{{person.name}}</a>
+										<a data-toggle="collapse" data-parent="#accordion" href="#collapse{{$index}}">{{person.name}}</a>
 									</h4>
 								</div>
 								<div id="collapse{{$index}}" class="panel-collapse collapse">
@@ -91,7 +91,7 @@
 										<div class="uninett-group-heading row hover-white" ng-click="showMembers = !showMembers" ng-init="showMembers = 0">
 											<div class="col-md-12">
 												<span class="btn btn-sm pull-right glyphicon" ng-class="showMembers ? 'glyphicon-chevron-up' : 'glyphicon-chevron-down'"></span>
-												<span class="uninett-group-name">{{group.displayName}}</span> <span class="uninett-group-membercount" ng-show="!showMembers">({{groupMembersCount(group.friends)}})</span>
+												<span class="uninett-group-name">{{group.displayName}}</span> <span class="uninett-group-membercount" ng-show="!showMembers && groupMembersCount(group.friends) >= 0">({{groupMembersCount(group.friends)}})</span>
 											</div>
 										</div>
 										<div ng-show="showMembers && (getObjectLength(group.friends) === 1)">
