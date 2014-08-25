@@ -78,11 +78,11 @@
 
 		webrtc.isAudioEnabled = function() {
 			if (video.stream) {
-				if (video.stream.getVideoTracks().length) {
+				if (video.stream.getAudioTracks().length) {
 					return video.stream.getAudioTracks()[0].enabled;
 				}
 				else {
-					return false
+					return false;
 				}
 			}
 			return true;
