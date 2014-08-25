@@ -94,7 +94,7 @@
 									<video class="pointer"  ng-click="enterVideoFull()" autoplay="true" ba-auto-update="{{video.remote.src}}" src="{{video.remote.src}}"></video>
 								</div>
 								<div ng-hide="call.getCurrent().video" class="uninett-chatbox-entry-audio align-center uninett-fontColor-white pointer" ng-click="toggleAudio()" title="{{ isAudioEnabled() ? 'Click to mute microphone' : 'Click to unmute microphone'}}">
-									<i ng-class="!isAudioEnabled() ? 'fa-microphone-slash' : 'fa-microphone-slash'" class="fa fa-5x"></i>
+									<i ng-class="!isAudioEnabled() ? 'fa-microphone-slash' : 'fa-microphone'" class="fa fa-5x"></i>
 								</div>
 							</div>
 						</div>
