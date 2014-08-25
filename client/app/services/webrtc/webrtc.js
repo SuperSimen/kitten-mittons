@@ -84,10 +84,10 @@
 		};
 
 		webrtc.isVideoEnabled = function() {
-			if (!video.stream.getVideoTracks()) {
-				return false;
-			}
 			if (video.stream) {
+				if (!video.stream.getVideoTracks().length) {
+					return false;
+				}
 				return video.stream.getVideoTracks()[0].enabled;
 			}
 			return true;
