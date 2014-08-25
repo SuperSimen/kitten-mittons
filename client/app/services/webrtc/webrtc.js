@@ -84,6 +84,9 @@
 		};
 
 		webrtc.isVideoEnabled = function() {
+			if (!video.stream.getVideoTracks()) {
+				return false;
+			}
 			if (video.stream) {
 				return video.stream.getVideoTracks()[0].enabled;
 			}
