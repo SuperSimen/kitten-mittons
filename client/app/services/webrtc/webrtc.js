@@ -81,7 +81,9 @@
 				if (video.stream.getVideoTracks().length) {
 					return video.stream.getAudioTracks()[0].enabled;
 				}
-
+				else {
+					return false
+				}
 			}
 			return true;
 		};
