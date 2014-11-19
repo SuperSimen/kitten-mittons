@@ -148,15 +148,13 @@
 					sendOnAvailableChannel: function(object) {
 						var counter = 0;
 						while (counter++ < this.dataChannels.length) {
-							try {
+							if (this.dataChannels[this.currentChannel].bufferedAmount === 0) {
 								var message = JSON.stringify(object.msg);
 								this.dataChannels[this.currentChannel].send(message);
 								if (object.callback) {
 									object.callback("sent");
 								}
 								return true;
-							}
-							catch (err) {
 							}
 							this.incrementCurrentChannel();
 						}
